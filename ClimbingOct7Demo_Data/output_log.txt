@@ -1,0 +1,64 @@
+Initialize engine version: 5.4.1f1 (649f48bbbf0f)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 1070 (ID=0x1b81)
+    Vendor:   NVIDIA
+    VRAM:     8145 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+- Completed reload, in  0.044 seconds
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\Projects\Virtual Reality\Rock Climbing Project\ClimbingGame\ClimbingOct7Demo_Data\Managed\System.dll (this message is harmless)
+<RI> Initializing input.
+<RI> Input initialized.
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initialized touch support.
+OpenVR initialized!
+ 
+(Filename:  Line: 347)
+
+UnloadTime: 0.518095 ms
+Connected to lighthouse:LHR-467ABE5B
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+Parent of RectTransform is being set with parent property. Consider using the SetParent method instead, with the worldPositionStays argument set to false. This will retain local orientation and scale rather than world orientation and scale, which can prevent common UI scaling issues.
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at TeleportLocation.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 21414 -> priority: 1 
+Falling coroutine started
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
+
+NullReferenceException: Object reference not set to an instance of an object
+  at ControllerShooter.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+OpenVR Shutdown
+ 
+(Filename:  Line: 701)
+
