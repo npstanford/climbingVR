@@ -9,6 +9,7 @@ TagManager:
   - Bullet
   - Ground
   - Grapple
+  - RoundRock
   layers:
   - Default
   - TransparentFX

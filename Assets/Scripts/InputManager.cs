@@ -5,7 +5,9 @@ using UnityEngine;
 public class InputManager : MonoBehaviour {
     public ControllerState lController;
     public ControllerState rController;
-    public Rigidbody Body;
+    public Rigidbody Body; //note this should more accurately be understood as Room and not body
+    public BoxCollider OverheadCollider;
+    //private OverheadCollider ohc;
 
     public float walkHookDiff = 1.0f;
 
@@ -13,15 +15,19 @@ public class InputManager : MonoBehaviour {
     private Walk walk;
     private Climb climb;
     private Hookshot hookshot;
+    private Glide glide;
 
     private float lTouchpadPressTime;
     private float rTouchpadPressTime;
+
 
     // Use this for initialization
     void Start () {
         walk = GetComponent<Walk>();
         climb = GetComponent<Climb>();
         hookshot = GetComponent<Hookshot>();
+        glide = GetComponent<Glide>();
+
 	}
 
     // Update is called once per frame
@@ -43,6 +49,9 @@ public class InputManager : MonoBehaviour {
         //climbing
         CheckClimbing(rController);
         CheckClimbing(lController);
+
+        //gliding
+        CheckGliding(lController);
 
         //HACK -- problem is users could slip out of gripping blocks without letting up on the trigger
         if (!rController.canGrip && !lController.canGrip)
@@ -99,4 +108,37 @@ public class InputManager : MonoBehaviour {
             hookshot.StopScan();
         }
     }
-}
+
+
+    void CheckGliding(ControllerState lController)
+    {
+        //TODO change logic so that we are only doing this for left controller
+
+
+        /*
+            if (CheckOverheadHand(rController) && rController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+            {
+                glide.StartGliding(rController);
+            } else 
+            */
+            
+            if (CheckOverheadHand(lController) && lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+            {
+                glide.StartGliding(lController);
+            } else
+            {
+                glide.StopGliding();
+            }
+
+
+
+    }
+
+    bool CheckOverheadHand(ControllerState controller)
+    {
+        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
+        return controllerCollider.bounds.Intersects(OverheadCollider.bounds);
+
+    }
+
+    }

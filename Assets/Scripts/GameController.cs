@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
     public enum TimerStates { NotStarted, Started, Ended };
     public enum GameStates { NotStarted, Started, Lost, Won };
     public enum PlayerStates { Normal, Injured }
-    public enum FallingStates { Standing, Climbing, Falling}
+    public enum FallingStates { Standing, Climbing, Falling, Gliding};
 
     //probably don't want this
     public Blink BlinkMask;
@@ -196,7 +196,7 @@ public class GameController : MonoBehaviour {
         Debug.Log("Player recovered");
         yield return null;
     }
-    /*
+
     private void EnterFallingState()
     {
         FallingActionCoroutine = StartCoroutine(FallingAction());
@@ -210,7 +210,7 @@ public class GameController : MonoBehaviour {
 
     IEnumerator FallingAction()
     {
-        Debug.Log("Falling coroutine started");
+
         yield return new WaitForSecondsRealtime(0.25f);
         FallingFilter.enabled = true;
 
@@ -231,5 +231,5 @@ public class GameController : MonoBehaviour {
 
     }
 
-    */
+
 }

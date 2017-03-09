@@ -10,7 +10,9 @@ public class ColliderManager : MonoBehaviour {
 
 
     public BoxCollider playerCollider;
+    public GameObject OverheadCollider;
     public GameObject playerHead;
+    public float OverheadColliderHeight;
 
     public GameObject displayCube;
     public GameController gc;
@@ -36,18 +38,19 @@ public class ColliderManager : MonoBehaviour {
 
         playerCollider.size = new Vector3(0.2f, colliderCenter.y * 2, 0.2f);
 
+        OverheadCollider.transform.position = playerHead.transform.position + Vector3.up * OverheadColliderHeight;
 
         //update display cube for testing purposes
         displayCube.transform.localPosition = colliderCenter;
         displayCube.transform.localScale = playerCollider.size;
     }
 
-    void OnTriggerEnter (Collider other)
+    void OnCollisionStay (Collision other)
     {
-        if (other.CompareTag("Ground"))
+        //if (other.CompareTag("Ground"))
         {
             gc.PlayerIsTouchingGround = true;
-            TeleportLocation tl = other.GetComponent<TeleportLocation>();
+            TeleportLocation tl = other.collider.GetComponent<TeleportLocation>();
             if (tl != null)
             {
                 teleporter.LastTeleportLocation = tl;
@@ -55,9 +58,9 @@ public class ColliderManager : MonoBehaviour {
         }
     }
 
-    void OnTriggerExit (Collider other)
+    void OnCollisionExit (Collision other)
     {
-        if (other.CompareTag("Ground"))
+        //if (other.CompareTag("Ground"))
         {
             gc.PlayerIsTouchingGround = false;
         }
