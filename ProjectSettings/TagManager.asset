@@ -10,6 +10,8 @@ TagManager:
   - Ground
   - Grapple
   - RoundRock
+  - RunningColliderTop
+  - RunningColliderBottom
   layers:
   - Default
   - TransparentFX

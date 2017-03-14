@@ -9,8 +9,9 @@ public class Walk : MonoBehaviour {
     public float StepSize = 1.0f;
     private bool Stepped = false;
     public float StepTime = 0.1f;
-    public float InitialStepVelocity;
-    public GameController gc;    
+    public bool UseTrigStep = true;
+    public bool IsRunning = true;
+    private GameController gc;    
     
 
 
@@ -25,8 +26,21 @@ public class Walk : MonoBehaviour {
 
     public void Step(SteamVR_TrackedObject controller) {
         if (gc.PlayerIsTouchingGround)
-        {
-            Vector3 walkDirection = new Vector3(controller.transform.forward.x, 0, controller.transform.forward.z).normalized;
+        {   //note commented out the below to try to get the running mechanic to work
+
+            Vector3 walkDirection;
+
+            if (IsRunning)
+            {
+                walkDirection = new Vector3(controller.transform.up.x, 0, controller.transform.up.z).normalized;
+                walkDirection = -walkDirection;
+            } else
+            {
+                walkDirection = new Vector3(controller.transform.forward.x, 0, controller.transform.forward.z).normalized;
+
+            }
+
+
             float walkDistance;
             //trim walk so it doesn't go through a wall
             //TODO with new walking mechanism that is time and trig based, this no longer works
@@ -82,24 +96,35 @@ public class Walk : MonoBehaviour {
         Vector3 walkingDirection = (finalPosition - startPosition).normalized;
 
 
+        float x = 0;
+
         while (elapsedTime < StepTime)
         {
             elapsedTime += Time.deltaTime;
 
-            //use trig functions Sin(0) -> Sin (pi)
-            // some bearing vector normalized times a small step size 
-            Room.transform.position += walkingDirection * Mathf.Sin((elapsedTime / StepTime) * Mathf.PI);
+            if (UseTrigStep) { 
+                //use trig functions Sin(0) -> Sin (pi)
+                // some bearing vector normalized times a small step size 
+                x = (elapsedTime / StepTime) * Mathf.PI/2 - Mathf.PI / 4.0f;
+
+                //TODO: this has the problem that you'll walk super slowly towards a wall... but I can fix that later. Solution is to make StepTime a function of walking distance
+                Vector3 newPosition = Vector3.Lerp(startPosition, finalPosition, (Mathf.Tan(x) / 2 + 0.5f));
+                Room.transform.position = newPosition;
+
+                //Room.transform.position += walkingDirection * Mathf.Sin((elapsedTime / StepTime) * Mathf.PI);
 
 
-            Room.velocity = Vector3.zero;
-            //BlinkMask.color = Color.Lerp(BlinkMask.color, Color.clear, elapsedTime / StepTime);
-            yield return null;
+                Room.velocity = Vector3.zero;
+                yield return null;
+            } else
+            {
+                x = (elapsedTime / StepTime);
+                Room.transform.position = Vector3.Lerp(startPosition, finalPosition, x);
+            }
+
 
         }
 
-        //BlinkMask.enabled = false;
-
-        //FallingFilter.enabled = false;
     }
 
 }

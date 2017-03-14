@@ -5,12 +5,15 @@ using UnityEngine.UI;
 
 
 public class BlurVisionInWalls : MonoBehaviour {
+    /*
+
     public Image HeadBlur;
     public Color flashColor = new Color(0f, 0f, 0f, 1f);
 
 
     // Use this for initialization
     void Start () {
+
     }
 	
 	// Update is called once per frame
@@ -28,14 +31,20 @@ public class BlurVisionInWalls : MonoBehaviour {
         HeadBlur.color = Color.clear;
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("collided with: " + other.name);
-        BlurVision();
-    }
 
+    void OnTriggerStay(Collider other)
+    {
+        Debug.Log("Head entered: " + other.gameObject.name);
+        //inefficent hacky call just to see if thsi works.
+        //it doesn't work... I think it is because probuilder uses fancy colliders that don't count the inside 
+        if (other.bounds.Intersects(this.GetComponent<Collider>().bounds))
+        {
+            BlurVision();
+        }
+    }
     void OnTriggerExit()
     {
         UnBlurVision();
     }
+    */
 }

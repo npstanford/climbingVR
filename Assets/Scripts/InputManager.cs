@@ -7,6 +7,9 @@ public class InputManager : MonoBehaviour {
     public ControllerState rController;
     public Rigidbody Body; //note this should more accurately be understood as Room and not body
     public BoxCollider OverheadCollider;
+    public BoxCollider RunningColliderTop;
+    public BoxCollider RunningColliderBottom;
+
     //private OverheadCollider ohc;
 
     public float walkHookDiff = 1.0f;
@@ -16,6 +19,7 @@ public class InputManager : MonoBehaviour {
     private Climb climb;
     private Hookshot hookshot;
     private Glide glide;
+    private Run run;
 
     private float lTouchpadPressTime;
     private float rTouchpadPressTime;
@@ -27,6 +31,7 @@ public class InputManager : MonoBehaviour {
         climb = GetComponent<Climb>();
         hookshot = GetComponent<Hookshot>();
         glide = GetComponent<Glide>();
+        run = GetComponent<Run>();
 
 	}
 
@@ -39,12 +44,16 @@ public class InputManager : MonoBehaviour {
         }
 
         //walking
-        CheckWalking(rController, ref rTouchpadPressTime);
-        CheckWalking(lController, ref lTouchpadPressTime);
+        //CheckWalking(rController, ref rTouchpadPressTime);
+        //CheckWalking(lController, ref lTouchpadPressTime);
+
+        //running
+        CheckRunning(lController);
+        //CheckRunning(rController);
 
         //shoooting
-        CheckShooting(rController, ref rTouchpadPressTime);
-        CheckShooting(lController, ref lTouchpadPressTime);
+        CheckShooting(rController);
+        //CheckShooting(lController, ref lTouchpadPressTime);
 
         //climbing
         CheckClimbing(rController);
@@ -52,6 +61,8 @@ public class InputManager : MonoBehaviour {
 
         //gliding
         CheckGliding(lController);
+
+        
 
         //HACK -- problem is users could slip out of gripping blocks without letting up on the trigger
         if (!rController.canGrip && !lController.canGrip)
@@ -93,10 +104,11 @@ public class InputManager : MonoBehaviour {
         }
     }
 
-    void CheckShooting(ControllerState controller, ref float touchpadPressTime)
+    void CheckShooting(ControllerState controller)
     {
-        if (touchpadPressTime > walkHookDiff)
+        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
         {
+
             hookshot.Scan(controller);
             if(controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
@@ -134,6 +146,32 @@ public class InputManager : MonoBehaviour {
 
     }
 
+    void CheckRunning(ControllerState controller)
+    {
+        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+        {
+            run.Step(controller);
+        }
+
+        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        {
+            run.Stop();
+        }
+        /*
+        if (Time.time - controller.RunBottomTime < 0.1f || Time.time - controller.RunTopTime < 0.1f)
+        {
+            //maybe have a counter so that you don't run on your first arm pump but it takes two to get started...
+            if (Mathf.Abs(controller.RunBottomTime - controller.RunTopTime) < run.ArmSpeed)
+            {
+                //just run at constant speed now. add variable speed later
+                //will also factor out into run later... I can and probably should reuse Walk code
+                run.Step(lController, rController);
+            }
+        }
+        */
+    }
+
+
     bool CheckOverheadHand(ControllerState controller)
     {
         BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
@@ -141,4 +179,22 @@ public class InputManager : MonoBehaviour {
 
     }
 
+    /*
+
+    bool CheckRunningTop(ControllerState controller)
+    {
+        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
+        return controllerCollider.bounds.Intersects(RunningColliderTop.bounds);
+
     }
+
+
+    bool CheckRunningBottom(ControllerState controller)
+    {
+        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
+        return controllerCollider.bounds.Intersects(RunningColliderBottom.bounds);
+
+    }
+
+    */
+}

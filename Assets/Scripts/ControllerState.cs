@@ -15,6 +15,7 @@ public class ControllerState : MonoBehaviour
     public SteamVR_Controller.Device device;
 
 
+
     //end area of locomotion variables
 
     [HideInInspector]
@@ -45,17 +46,34 @@ public class ControllerState : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
+        if (ia != null)
+        {
+            if (ia.CanClimb)
+            {
+                canGrip = true;
 
-            canGrip = true;
+            }
+        }
+        
+
 
     }
 
     void OnTriggerExit(Collider other)
     {
+        InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
+        if (ia != null)
+        {
+            if (ia.CanClimb)
+            {
+                canGrip = false;
 
-            canGrip = false;
-
+            }
+        }
     }
+
+
 
 }
 

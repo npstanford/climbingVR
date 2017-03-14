@@ -24,18 +24,21 @@ public class GrappleCollider : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-
-        if (other.gameObject.layer == 10)  // level 10 is grip
+        InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
+        if (ia != null)
         {
-            Grappled = true;
+            if (ia.CanHookshot)
 
-            IEnumerator coroutineReelInPlayer;
-            coroutineReelInPlayer = ReelInPlayer(controller);
-            StartCoroutine(coroutineReelInPlayer);
+            {
+                Grappled = true;
 
-            StopCoroutine(coroutineShoot);
+                IEnumerator coroutineReelInPlayer;
+                coroutineReelInPlayer = ReelInPlayer(controller);
+                StartCoroutine(coroutineReelInPlayer);
+
+                StopCoroutine(coroutineShoot);
+            }
         }
-
     }
 
 

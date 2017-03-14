@@ -37,6 +37,7 @@ public class Hookshot : MonoBehaviour
     {
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
         layerMask += (1 << 2); //ignore raycast layer 
+        layerMask += (1 << 9); //ignore the player's body
         layerMask = ~layerMask;
         RaycastHit hit;
         if (Physics.Raycast(controller.controller.transform.position, controller.controller.transform.forward, out hit, GrappleLength, layerMask))

@@ -11,8 +11,12 @@ public class ColliderManager : MonoBehaviour {
 
     public BoxCollider playerCollider;
     public GameObject OverheadCollider;
+    public GameObject RunningColliderTop;
+    public GameObject RunningColliderBottom;
     public GameObject playerHead;
     public float OverheadColliderHeight;
+    public float RunningColliderTopHeight;
+    public float RunningColliderBottomHeight;
 
     public GameObject displayCube;
     public GameController gc;
@@ -39,6 +43,8 @@ public class ColliderManager : MonoBehaviour {
         playerCollider.size = new Vector3(0.2f, colliderCenter.y * 2, 0.2f);
 
         OverheadCollider.transform.position = playerHead.transform.position + Vector3.up * OverheadColliderHeight;
+        RunningColliderTop.transform.position = playerHead.transform.position + Vector3.up * RunningColliderTopHeight;
+        RunningColliderBottom.transform.position = playerHead.transform.position + Vector3.up * RunningColliderBottomHeight;
 
         //update display cube for testing purposes
         displayCube.transform.localPosition = colliderCenter;
