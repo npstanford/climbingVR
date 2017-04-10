@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour {
+    public bool RunInPlace = false;
     public ControllerState lController;
     public ControllerState rController;
     public Rigidbody Body; //note this should more accurately be understood as Room and not body
@@ -43,13 +44,15 @@ public class InputManager : MonoBehaviour {
             return;
         }
 
-        //walking
-        //CheckWalking(rController, ref rTouchpadPressTime);
-        //CheckWalking(lController, ref lTouchpadPressTime);
+        if (RunInPlace)
+        {
+            CheckRunning(lController);
+        } else
+        {
+            CheckWalking(rController, ref rTouchpadPressTime);
+            CheckWalking(lController, ref lTouchpadPressTime);
+        }
 
-        //running
-        CheckRunning(lController);
-        //CheckRunning(rController);
 
         //shoooting
         CheckShooting(rController);
@@ -133,6 +136,8 @@ public class InputManager : MonoBehaviour {
                 glide.StartGliding(rController);
             } else 
             */
+
+        /*
             
             if (CheckOverheadHand(lController) && lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
             {
@@ -142,7 +147,16 @@ public class InputManager : MonoBehaviour {
                 glide.StopGliding();
             }
 
+        */
 
+        if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+        {
+            glide.StartGliding(lController);
+        }
+        else if (lController.device.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
+        {
+            glide.StopGliding();
+        }
 
     }
 
@@ -157,18 +171,7 @@ public class InputManager : MonoBehaviour {
         {
             run.Stop();
         }
-        /*
-        if (Time.time - controller.RunBottomTime < 0.1f || Time.time - controller.RunTopTime < 0.1f)
-        {
-            //maybe have a counter so that you don't run on your first arm pump but it takes two to get started...
-            if (Mathf.Abs(controller.RunBottomTime - controller.RunTopTime) < run.ArmSpeed)
-            {
-                //just run at constant speed now. add variable speed later
-                //will also factor out into run later... I can and probably should reuse Walk code
-                run.Step(lController, rController);
-            }
-        }
-        */
+
     }
 
 

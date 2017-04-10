@@ -5,7 +5,7 @@ public class ScriptedMovement : MonoBehaviour {
 
     public Transform TargetA;
     public Transform TargetB;
-    public Rigidbody MovingObject;
+    public GameObject MovingObject;
     public float ObjectSpeed;
     public float ObjectPause;
 
@@ -55,11 +55,11 @@ public class ScriptedMovement : MonoBehaviour {
 
             if (MovingTowardA)
             {
-                MovingObject.MovePosition(MovingObject.position + (TargetA.position - MovingObject.position).normalized * Time.deltaTime * effectiveSpeed);
+                MovingObject.transform.position = (MovingObject.transform.position + (TargetA.position - MovingObject.transform.position).normalized * Time.deltaTime * effectiveSpeed);
             }
             else
             {
-                MovingObject.MovePosition(MovingObject.position + (TargetB.position - MovingObject.position).normalized * Time.deltaTime * effectiveSpeed);
+                MovingObject.transform.position = (MovingObject.transform.position + (TargetB.position - MovingObject.transform.position).normalized * Time.deltaTime * effectiveSpeed);
             }
 
 

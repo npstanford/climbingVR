@@ -4,22 +4,29 @@ using UnityEngine;
 
 public class Run : MonoBehaviour {
 
-    public float ArmSpeed;
+    public enum DirectionMethod { Gaze, Controller};
 
-    public float StepSize = 1.0f;
-    private bool Stepped = false;
-    public float StepTime = 0.1f;
-    public bool UseTrigStep = true;
-    public bool IsRunning = true;
+
+    //public float ArmSpeed;
+
+    //public float StepSize = 1.0f;
+   // private bool Stepped = false;
+   // public float StepTime = 0.1f;
+    //public bool UseTrigStep = true;
+    //public bool IsRunning = true;
     private GameController gc;
-    public GameObject AvgMarker;
+    //public GameObject AvgMarker;
     //public bool CoroutineIsRunning = false;
     public float HeadVerticalVelocity; //this value is always set to the average of the values in velocity array
     public GameObject PlayerHead;
     public int HeadVelocityArraySize;
     public int MoveDirectionArraySize;
     public float WalkThreshold;
-    public float WalkScaleFactor;
+    public float WalkVelocity = 2.0f;
+    public float JogVelocity = 5.0f;
+    public float sprintVelocity = 10.0f;
+    public DirectionMethod DM = DirectionMethod.Gaze;
+ 
     
     
 
@@ -37,7 +44,7 @@ public class Run : MonoBehaviour {
 
     void Start()
     {
-        Stepped = false;
+        //Stepped = false;
         GameObject go = GameObject.FindGameObjectWithTag("GameController");
         gc = go.GetComponent<GameController>();
         _oldHeadPosition = PlayerHead.transform.position.y;
@@ -74,7 +81,7 @@ public class Run : MonoBehaviour {
   
         if (i % 100 == 0)
         {
-            Debug.Log("HeadVelocity: " + HeadVerticalVelocity);
+            //Debug.Log("HeadVelocity: " + HeadVerticalVelocity);
 
 
         }
@@ -125,7 +132,7 @@ public class Run : MonoBehaviour {
 
             if (Mathf.Abs(HeadVerticalVelocity) > WalkThreshold)
             {
-                Room.transform.position += moveDirection * WalkScaleFactor * Mathf.Abs(HeadVerticalVelocity);
+                Room.transform.position += moveDirection * GetMoveVelocity(HeadVerticalVelocity) * Time.deltaTime;
             }
             
             
@@ -237,4 +244,21 @@ public class Run : MonoBehaviour {
 
     }
     */
+
+
+    public float GetMoveVelocity(float HeadVerticalVelocity)
+    {
+        if (HeadVerticalVelocity <0.01f)
+        {
+            return 0.0f;
+        }
+        else if (HeadVerticalVelocity < .05f)
+        {
+            return WalkVelocity;
+        } else
+        {
+            return JogVelocity;
+        }
+    }
+
 }

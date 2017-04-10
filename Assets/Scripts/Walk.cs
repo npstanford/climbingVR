@@ -10,9 +10,10 @@ public class Walk : MonoBehaviour {
     private bool Stepped = false;
     public float StepTime = 0.1f;
     public bool UseTrigStep = true;
-    public bool IsRunning = true;
-    private GameController gc;    
-    
+    //public bool IsRunning = true;
+    private GameController gc;
+    public VignetteAndChromaticAberration Vignette;
+    public float MaxVignette;  
 
 
     public GameObject Player;
@@ -30,15 +31,16 @@ public class Walk : MonoBehaviour {
 
             Vector3 walkDirection;
 
+            /*
             if (IsRunning)
             {
                 walkDirection = new Vector3(controller.transform.up.x, 0, controller.transform.up.z).normalized;
                 walkDirection = -walkDirection;
             } else
-            {
+            { */
                 walkDirection = new Vector3(controller.transform.forward.x, 0, controller.transform.forward.z).normalized;
 
-            }
+            //}
 
 
             float walkDistance;
@@ -64,7 +66,7 @@ public class Walk : MonoBehaviour {
 
             }
 
-            StartCoroutine(WalkAndBlur(Room.transform.position + walkDirection * walkDistance));
+            StartCoroutine(WalkAndBlur(Room.transform.localPosition + walkDirection * walkDistance));
 
         }
 
@@ -91,8 +93,8 @@ public class Walk : MonoBehaviour {
         float elapsedTime = 0;
     
 
-        Vector3 startPosition = Room.transform.position;
-
+        Vector3 startPosition = Room.transform.localPosition;
+    
         Vector3 walkingDirection = (finalPosition - startPosition).normalized;
 
 
@@ -102,6 +104,9 @@ public class Walk : MonoBehaviour {
         {
             elapsedTime += Time.deltaTime;
 
+            //the robust way to do this might be to calculate a global position BASED on an update to local position
+            // err or set the players global position to be a specific (global) spot calculated in local space
+
             if (UseTrigStep) { 
                 //use trig functions Sin(0) -> Sin (pi)
                 // some bearing vector normalized times a small step size 
@@ -109,7 +114,8 @@ public class Walk : MonoBehaviour {
 
                 //TODO: this has the problem that you'll walk super slowly towards a wall... but I can fix that later. Solution is to make StepTime a function of walking distance
                 Vector3 newPosition = Vector3.Lerp(startPosition, finalPosition, (Mathf.Tan(x) / 2 + 0.5f));
-                Room.transform.position = newPosition;
+                Room.transform.localPosition = newPosition;
+                Vignette.intensity = Mathf.Lerp(0, MaxVignette, Mathf.Sin(elapsedTime / StepTime * Mathf.PI));
 
                 //Room.transform.position += walkingDirection * Mathf.Sin((elapsedTime / StepTime) * Mathf.PI);
 

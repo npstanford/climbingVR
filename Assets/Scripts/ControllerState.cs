@@ -25,6 +25,7 @@ public class ControllerState : MonoBehaviour
 
 
     public bool canGrip;
+    public GameObject GripObject;
 
 
     // Use this for initialization
@@ -52,7 +53,7 @@ public class ControllerState : MonoBehaviour
             if (ia.CanClimb)
             {
                 canGrip = true;
-
+                GripObject = other.gameObject;
             }
         }
         
@@ -68,7 +69,7 @@ public class ControllerState : MonoBehaviour
             if (ia.CanClimb)
             {
                 canGrip = false;
-
+                GripObject = null;
             }
         }
     }

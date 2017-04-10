@@ -19,19 +19,20 @@ public class GrappleCollider : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        Debug.Log("Grapple Position: " + this.transform.position);
 	}
 
     void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("Collision Grapple Position: " +  this.transform.position);
+
         InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
         if (ia != null)
         {
             if (ia.CanHookshot)
-
             {
-                Grappled = true;
 
+                Grappled = true;
                 IEnumerator coroutineReelInPlayer;
                 coroutineReelInPlayer = ReelInPlayer(controller);
                 StartCoroutine(coroutineReelInPlayer);
@@ -73,8 +74,8 @@ public class GrappleCollider : MonoBehaviour {
 
         while (elapsedTime < totalTime)
         {
-   
 
+           // Debug.Log("Shooting Grapple Position: " + this.transform.position);
             this.transform.position = Vector3.Lerp(grappleStart, grappleTarget.transform.position, elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
             lr.SetPosition(1, this.transform.position);
@@ -89,6 +90,8 @@ public class GrappleCollider : MonoBehaviour {
 
         while (elapsedTime < totalTime)
         {
+           // Debug.Log("Retracting Grapple Position: " + this.transform.position);
+
             this.transform.position = Vector3.Lerp(grappleTarget.transform.position, controller.controller.transform.position, elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
             lr.SetPosition(1, this.transform.position);

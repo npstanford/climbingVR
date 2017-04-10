@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 public class BlurVisionInWalls : MonoBehaviour {
-    /*
+
 
     public Image HeadBlur;
     public Color flashColor = new Color(0f, 0f, 0f, 1f);
@@ -39,12 +39,20 @@ public class BlurVisionInWalls : MonoBehaviour {
         //it doesn't work... I think it is because probuilder uses fancy colliders that don't count the inside 
         if (other.bounds.Intersects(this.GetComponent<Collider>().bounds))
         {
-            BlurVision();
+            InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
+            if (ia != null)
+            {
+                if (!ia.IsPartOfBody)
+                {
+                    BlurVision();
+                }
+            }
+
         }
     }
     void OnTriggerExit()
     {
         UnBlurVision();
     }
-    */
+
 }

@@ -16,7 +16,7 @@ public class Climb : MonoBehaviour {
 		
 	}
 
-    public void Grab(ControllerState controller, Rigidbody Body)
+    public void Grab(ControllerState controller, Rigidbody Room)
     {
 
         if (controller.canGrip)
@@ -38,37 +38,59 @@ public class Climb : MonoBehaviour {
         }
         */
 
-
+        /* old functuioning code
         if (controller.canGrip && controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
         {
-            Cling(Body);
+            Cling(Room);
 
-            Body.transform.position += (controller.prevPos - controller.controller.transform.localPosition);
+            Room.transform.position += (controller.prevPos - controller.controller.transform.localPosition);
 
 
         }
 
         else if (controller.canGrip && controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
-            Drop(Body);
+            Drop(Room);
 
-            Body.velocity = (controller.prevPos - controller.controller.transform.localPosition) / Time.deltaTime / JumpDampFactor;
+            Room.velocity = (controller.prevPos - controller.controller.transform.localPosition) / Time.deltaTime / JumpDampFactor;
+        }
+
+        controller.prevPos = controller.transform.localPosition;
+
+        */
+
+
+        if (controller.canGrip && controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            Room.transform.parent = controller.GripObject.transform.parent;
+            Cling(Room);
+
+            Room.transform.localPosition += (controller.prevPos - controller.controller.transform.localPosition);
+
+
+        }
+
+        else if (controller.canGrip && controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            Drop(Room);
+            Room.transform.parent = null;
+            Room.velocity = (controller.prevPos - controller.controller.transform.localPosition) / Time.deltaTime / JumpDampFactor;
         }
 
         controller.prevPos = controller.transform.localPosition;
 
     }
 
-    public void Drop(Rigidbody Body)
+    public void Drop(Rigidbody Room)
     {
-        Body.useGravity = true;
-        Body.isKinematic = false;
+        Room.useGravity = true;
+        Room.isKinematic = false;
     }
 
-    public void Cling(Rigidbody Body)
+    public void Cling(Rigidbody Room)
     {
-        Body.useGravity = false;
-        Body.isKinematic = true;
+        Room.useGravity = false;
+        Room.isKinematic = true;
     }
 
 

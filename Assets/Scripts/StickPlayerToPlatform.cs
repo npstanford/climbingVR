@@ -16,11 +16,11 @@ public class StickPlayerToPlatform : MonoBehaviour {
 	}
 
     //will make top level box collider progammatically size and shape of moving platform and make it move with it
-    void OnTriggerEnter(Collider collider)
+    void OnTriggerStay(Collider collider)
     {
         if (collider.gameObject.CompareTag("Player"))
-
         {
+            Debug.Log("Player is touching the moving platform");
             /*
             Body.transform.parent = transform;
             Body.useGravity = false;
@@ -28,13 +28,12 @@ public class StickPlayerToPlatform : MonoBehaviour {
             Body.constraints = RigidbodyConstraints.FreezePosition |
                 RigidbodyConstraints.FreezeRotation;
 */
-            collider.gameObject.transform.parent = transform;
+            collider.gameObject.transform.parent = transform.parent;
             Rigidbody rb = collider.gameObject.GetComponent<Rigidbody>();
             rb.useGravity = false;
             rb.isKinematic = true;
-            rb.constraints = RigidbodyConstraints.FreezePosition |
-                RigidbodyConstraints.FreezeRotation;
-
+          //  rb.constraints = RigidbodyConstraints.FreezePosition |
+                //RigidbodyConstraints.FreezeRotation;
         }
 
 
@@ -44,13 +43,16 @@ public class StickPlayerToPlatform : MonoBehaviour {
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            Debug.Log("Player off paltform");
+
             collider.gameObject.transform.parent = null;
             Rigidbody rb = collider.gameObject.GetComponent<Rigidbody>();
             rb.useGravity = true;
             rb.isKinematic = false;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-
+           // rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
+
+
     }
 
 }

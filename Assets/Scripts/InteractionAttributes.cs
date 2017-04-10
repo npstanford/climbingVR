@@ -6,6 +6,8 @@ public class InteractionAttributes : MonoBehaviour {
 
     public bool CanClimb;
     public bool CanHookshot;
+    public bool IsGround;
+    public bool IsPartOfBody;
 
 	// Use this for initialization
 	void Start () {

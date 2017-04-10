@@ -14,6 +14,7 @@ public class ColliderManager : MonoBehaviour {
     public GameObject RunningColliderTop;
     public GameObject RunningColliderBottom;
     public GameObject playerHead;
+    public Vector3 WindVelocity;
     public float OverheadColliderHeight;
     public float RunningColliderTopHeight;
     public float RunningColliderBottomHeight;
@@ -50,6 +51,29 @@ public class ColliderManager : MonoBehaviour {
         displayCube.transform.localPosition = colliderCenter;
         displayCube.transform.localScale = playerCollider.size;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Wind wind = other.GetComponent<Wind>();
+
+
+        if (wind != null)
+        {
+            WindVelocity = wind.WindVelocity;
+        } 
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Wind wind = other.GetComponent<Wind>();
+
+
+        if (wind != null)
+        {
+            WindVelocity = Vector3.zero;
+        }
+    }
+
 
     void OnCollisionStay (Collision other)
     {
