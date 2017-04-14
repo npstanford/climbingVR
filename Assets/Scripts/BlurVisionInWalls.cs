@@ -34,7 +34,6 @@ public class BlurVisionInWalls : MonoBehaviour {
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("Head entered: " + other.gameObject.name);
         //inefficent hacky call just to see if thsi works.
         //it doesn't work... I think it is because probuilder uses fancy colliders that don't count the inside 
         if (other.bounds.Intersects(this.GetComponent<Collider>().bounds))

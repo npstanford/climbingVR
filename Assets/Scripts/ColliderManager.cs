@@ -18,15 +18,18 @@ public class ColliderManager : MonoBehaviour {
     public float OverheadColliderHeight;
     public float RunningColliderTopHeight;
     public float RunningColliderBottomHeight;
+    public bool PlayerIsTouchingGround;
 
     public GameObject displayCube;
     public GameController gc;
 
-    public Teleporter teleporter; 
+    public Teleporter teleporter;
+
+    public Transform Room; // add this as an attempt to rewrite sticking to platforms
 
 	// Use this for initialization
 	void Start () {
-	
+        //Room = playerCollider.gameObject.transform;
 	}
 	
 	// Update is called once per frame
@@ -60,7 +63,22 @@ public class ColliderManager : MonoBehaviour {
         if (wind != null)
         {
             WindVelocity = wind.WindVelocity;
-        } 
+        }
+
+        if (other.gameObject.GetComponent<InteractionAttributes>().IsGround) // <--- HACKY... 
+        {
+
+
+
+            PlayerIsTouchingGround = true;
+            /*
+            TeleportLocation tl = other.collider.GetComponent<TeleportLocation>();
+            if (tl != null)
+            {
+                teleporter.LastTeleportLocation = tl;
+            }
+            */
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -72,28 +90,46 @@ public class ColliderManager : MonoBehaviour {
         {
             WindVelocity = Vector3.zero;
         }
+
+        if (other.gameObject.GetComponent<InteractionAttributes>().IsGround) // <--- HACKY
+        {
+ 
+
+            PlayerIsTouchingGround = false;
+
+        }
     }
 
 
     void OnCollisionStay (Collision other)
     {
-        //if (other.CompareTag("Ground"))
+        if (other.gameObject.GetComponent<InteractionAttributes>().IsGround)
         {
-            gc.PlayerIsTouchingGround = true;
+
+
+
+            PlayerIsTouchingGround = true;
+            /*
             TeleportLocation tl = other.collider.GetComponent<TeleportLocation>();
             if (tl != null)
             {
                 teleporter.LastTeleportLocation = tl;
             }
+            */
         }
     }
 
     void OnCollisionExit (Collision other)
     {
-        //if (other.CompareTag("Ground"))
+        if (other.gameObject.GetComponent<InteractionAttributes>().IsGround)
         {
-            gc.PlayerIsTouchingGround = false;
+            Debug.Log("Player left ground: " + other.gameObject);
+
+            PlayerIsTouchingGround = false;
+
         }
     }
+
+
 
 }

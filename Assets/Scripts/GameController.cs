@@ -199,15 +199,16 @@ public class GameController : MonoBehaviour {
 
     private void EnterFallingState()
     {
-        FallingActionCoroutine = StartCoroutine(FallingAction());
+        //FallingActionCoroutine = StartCoroutine(FallingAction());
     }
 
     private void ExitFallingState()
     {
-        StopCoroutine(FallingActionCoroutine);
-        FallingFilter.enabled = false;
+        //StopCoroutine(FallingActionCoroutine);
+        //FallingFilter.enabled = false;
     }
 
+    /*
     IEnumerator FallingAction()
     {
 
@@ -230,6 +231,6 @@ public class GameController : MonoBehaviour {
 
 
     }
-
+    */
 
 }

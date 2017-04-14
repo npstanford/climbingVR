@@ -6,6 +6,7 @@ public class InteractionAttributes : MonoBehaviour {
 
     public bool CanClimb;
     public bool CanHookshot;
+    public bool RespondsToHookshot;
     public bool IsGround;
     public bool IsPartOfBody;
 

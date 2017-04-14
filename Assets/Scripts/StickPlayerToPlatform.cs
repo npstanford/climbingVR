@@ -3,11 +3,15 @@ using System.Collections;
 
 public class StickPlayerToPlatform : MonoBehaviour {
 
+    public GameObject StickyObject;
+    public Rigidbody rb;
 
+    public bool OnPlatform;
+    public GameObject ObjectToStick;
 
 	// Use this for initialization
 	void Start () {
-	
+        OnPlatform = false;
 	}
 	
 	// Update is called once per frame
@@ -15,26 +19,67 @@ public class StickPlayerToPlatform : MonoBehaviour {
 	
 	}
 
-    //will make top level box collider progammatically size and shape of moving platform and make it move with it
+    private void FixedUpdate()
+    {
+        if (OnPlatform)
+        {
+
+        }
+    }
+
+
     void OnTriggerStay(Collider collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("Player is touching the moving platform");
-            /*
-            Body.transform.parent = transform;
-            Body.useGravity = false;
-            Body.isKinematic = true;
-            Body.constraints = RigidbodyConstraints.FreezePosition |
-                RigidbodyConstraints.FreezeRotation;
-*/
-            collider.gameObject.transform.parent = transform.parent;
-            Rigidbody rb = collider.gameObject.GetComponent<Rigidbody>();
-            rb.useGravity = false;
-            rb.isKinematic = true;
-          //  rb.constraints = RigidbodyConstraints.FreezePosition |
-                //RigidbodyConstraints.FreezeRotation;
+    if (collider.gameObject.CompareTag("Player"))
+    {
+        OnPlatform = true;
+        ObjectToStick = collider.gameObject;
+
+            if (rb != null)
+            {
+                if (!rb.gameObject.Equals(ObjectToStick))
+                {
+                    rb = ObjectToStick.GetComponent<Rigidbody>();
+                }
+            }
+            else
+            {
+                rb = ObjectToStick.gameObject.GetComponent<Rigidbody>();
+            }
+
+
+
+
+            if (StickyObject != null)
+            {
+                if (ObjectToStick.gameObject.transform.parent != StickyObject.transform)
+                {
+                    ObjectToStick.gameObject.transform.parent = StickyObject.transform;
+
+                }
+            }
+            else
+            {
+                if (ObjectToStick.gameObject.transform.parent != transform)
+                {
+                    ObjectToStick.gameObject.transform.parent = transform;
+
+
+                }
+
+            }
+
+
+
+            if (rb.useGravity || !rb.isKinematic )
+            {
+                Debug.Log("sticky platform turned off gravity");
+                rb.useGravity = false;
+                rb.isKinematic = true;
+            }
         }
+    
+
 
 
     }
@@ -43,16 +88,21 @@ public class StickPlayerToPlatform : MonoBehaviour {
     {
         if (collider.gameObject.CompareTag("Player"))
         {
+            OnPlatform = false;
+
+
             Debug.Log("Player off paltform");
 
             collider.gameObject.transform.parent = null;
-            Rigidbody rb = collider.gameObject.GetComponent<Rigidbody>();
+ 
+
             rb.useGravity = true;
             rb.isKinematic = false;
-           // rb.constraints = RigidbodyConstraints.FreezeRotation;
+
         }
 
 
     }
+
 
 }

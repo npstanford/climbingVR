@@ -10,6 +10,8 @@ public class InputManager : MonoBehaviour {
     public BoxCollider OverheadCollider;
     public BoxCollider RunningColliderTop;
     public BoxCollider RunningColliderBottom;
+    public GripTool GripToolLeft;
+    public GripTool GripToolRight;
 
     //private OverheadCollider ohc;
 
@@ -21,9 +23,14 @@ public class InputManager : MonoBehaviour {
     private Hookshot hookshot;
     private Glide glide;
     private Run run;
+    private GripMeter gm;
+    private ColliderManager cm;
 
     private float lTouchpadPressTime;
     private float rTouchpadPressTime;
+
+    private bool PlayerIsTouchingGround;
+
 
 
     // Use this for initialization
@@ -33,11 +40,50 @@ public class InputManager : MonoBehaviour {
         hookshot = GetComponent<Hookshot>();
         glide = GetComponent<Glide>();
         run = GetComponent<Run>();
+        gm = GetComponent<GripMeter>();
+        cm = Body.GetComponent<ColliderManager>();
 
 	}
 
     // Update is called once per frame
     void Update() {
+
+        PlayerIsTouchingGround = cm.PlayerIsTouchingGround;
+
+        //GripManager
+        if (climb.IsClimbing)
+        {
+            gm.DepleteGrip(climb.GripDepletion);
+        }
+        else if (glide.IsGliding)
+        {
+            gm.DepleteGrip(glide.GripDepletion);
+        } else if (PlayerIsTouchingGround)
+        {
+            //TODO make this contingent on the player being on the ground
+            gm.RestoreGrip();
+        }
+
+        if (gm.RemainingGrip > 0.0f)
+        {
+            //shoooting
+            CheckShooting(rController);
+            //CheckShooting(lController, ref lTouchpadPressTime);
+
+            //climbing
+            CheckClimbing(rController);
+            CheckClimbing(lController);
+
+            //gliding
+            CheckGliding(lController);
+        }
+        else {
+            climb.Drop(Body);
+            glide.StopGliding();
+        }
+
+
+
 
         if (lController.device == null || rController.device == null) {
             Debug.Log("Device is null");
@@ -54,23 +100,35 @@ public class InputManager : MonoBehaviour {
         }
 
 
-        //shoooting
-        CheckShooting(rController);
-        //CheckShooting(lController, ref lTouchpadPressTime);
 
-        //climbing
-        CheckClimbing(rController);
-        CheckClimbing(lController);
-
-        //gliding
-        CheckGliding(lController);
 
         
 
         //HACK -- problem is users could slip out of gripping blocks without letting up on the trigger
-        if (!rController.canGrip && !lController.canGrip)
+
+        if ((!rController.canGrip && !lController.canGrip) && climb.IsClimbing)
         {
-            climb.Drop(Body);
+
+
+                Debug.Log("Player was dropped becausethey aren't gripping and aren't touching ground");
+                climb.Drop(Body);
+
+        }
+
+        if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+        {
+            GripToolLeft.HideHook();
+        } else
+        {
+            GripToolLeft.ShowHook();
+        }
+
+        if (hookshot.Grapple.HookshotFired)
+        {
+            GripToolRight.HideHook();
+        } else
+        {
+            GripToolRight.ShowHook();
         }
 
 
@@ -85,7 +143,7 @@ public class InputManager : MonoBehaviour {
             touchpadPressTime = Time.time; //aht he bug here is that I am pulling from Time.time and not taking the diff. I shoudl take the diff here
         }
 
-        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && PlayerIsTouchingGround)
         {
             
             // if the touch was quick enough, take a step
@@ -127,31 +185,11 @@ public class InputManager : MonoBehaviour {
 
     void CheckGliding(ControllerState lController)
     {
-        //TODO change logic so that we are only doing this for left controller
 
-
-        /*
-            if (CheckOverheadHand(rController) && rController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
-            {
-                glide.StartGliding(rController);
-            } else 
-            */
-
-        /*
-            
-            if (CheckOverheadHand(lController) && lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
-            {
-                glide.StartGliding(lController);
-            } else
-            {
-                glide.StopGliding();
-            }
-
-        */
 
         if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
         {
-            glide.StartGliding(lController);
+            glide.StartGliding(lController, PlayerIsTouchingGround);
         }
         else if (lController.device.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
         {

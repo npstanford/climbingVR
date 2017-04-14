@@ -13,6 +13,8 @@ public class Glide : MonoBehaviour
     public float GlideSpeed;
     public float GlideFallSpeed;
     public Vector3 GliderOffset;
+    public bool IsGliding;
+    public float GripDepletion;
 
 
    // private MeshRenderer _gliderRenderer;
@@ -25,6 +27,7 @@ public class Glide : MonoBehaviour
         //_gliderRenderer = GliderModel.GetComponent<MeshRenderer>();
         //_gliderRenderer.enabled = false;
         GliderModel.SetActive(false);
+        IsGliding = false;
         GameObject go = GameObject.FindGameObjectWithTag("GameController");
         gc = go.GetComponent<GameController>();
         Body = Room.GetComponent<ColliderManager>();
@@ -36,7 +39,7 @@ public class Glide : MonoBehaviour
 
     }
 
-    public void StartGliding(ControllerState controller)
+    public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround)
     {
         GliderModel.SetActive(true);
         //_gliderRenderer.enabled = true;
@@ -70,10 +73,10 @@ public class Glide : MonoBehaviour
 
         */
 
-        if ((!gc.PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && CheckOverheadHand(controller) )
+        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && CheckOverheadHand(controller) )
         {
-            gc.FallingState = GameController.FallingStates.Gliding;
-
+            //gc.FallingState = GameController.FallingStates.Gliding;
+            IsGliding = true;
 
             Vector3 glideVector = controller.transform.right;
             //glideVector.y = 0.0f;
@@ -143,7 +146,8 @@ public class Glide : MonoBehaviour
         GliderModel.SetActive(false);
         Room.useGravity = true;
         Room.velocity = new Vector3(Room.velocity.x*0.2f, Mathf.Min(Room.velocity.y, 0), Room.velocity.z*0.2f);
-        gc.FallingState = GameController.FallingStates.Falling;
+        //gc.FallingState = GameController.FallingStates.Falling;
+        IsGliding = false;
     }
 
     bool CheckOverheadHand(ControllerState controller)

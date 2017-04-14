@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GrappleCollider : MonoBehaviour {
 
-    public bool Grappled = false;
+    public bool Grappled = false; //pretty sure this isn't used adn can be removed
     public bool HookshotFired = false;
     public Rigidbody Body;
     int i = 0;
@@ -19,20 +19,18 @@ public class GrappleCollider : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log("Grapple Position: " + this.transform.position);
 	}
 
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Collision Grapple Position: " +  this.transform.position);
 
         InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
         if (ia != null)
         {
             if (ia.CanHookshot)
             {
-
-                Grappled = true;
+                this.transform.parent = other.gameObject.transform;
+                Grappled = true; //pretty sure this isn't used adn can be removed
                 IEnumerator coroutineReelInPlayer;
                 coroutineReelInPlayer = ReelInPlayer(controller);
                 StartCoroutine(coroutineReelInPlayer);
@@ -46,7 +44,7 @@ public class GrappleCollider : MonoBehaviour {
     public void Shoot(GameObject grappleTarget, ControllerState controller, float GrappleLength, float GrappleSpeed)
     {
         HookshotFired = true;
-        this.GetComponent<MeshRenderer>().enabled = true;
+        UnHideGrapple();
 
 
         coroutineShoot = ShootGrapple(grappleTarget, controller, GrappleLength, GrappleSpeed);
@@ -75,7 +73,6 @@ public class GrappleCollider : MonoBehaviour {
         while (elapsedTime < totalTime)
         {
 
-           // Debug.Log("Shooting Grapple Position: " + this.transform.position);
             this.transform.position = Vector3.Lerp(grappleStart, grappleTarget.transform.position, elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
             lr.SetPosition(1, this.transform.position);
@@ -90,7 +87,6 @@ public class GrappleCollider : MonoBehaviour {
 
         while (elapsedTime < totalTime)
         {
-           // Debug.Log("Retracting Grapple Position: " + this.transform.position);
 
             this.transform.position = Vector3.Lerp(grappleTarget.transform.position, controller.controller.transform.position, elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
@@ -101,7 +97,7 @@ public class GrappleCollider : MonoBehaviour {
         HideGrapple();
         lr.enabled = false; //fyi, should refactor this into Hide Grapple
 
-        Destroy(grappleTarget);
+        //Destroy(grappleTarget);
         HookshotFired = false; 
     }
 
@@ -114,23 +110,55 @@ public class GrappleCollider : MonoBehaviour {
         float timeElapsed = 0;
 
 
-        while ((Body.transform.position - (this.transform.position - handToBody)).magnitude > .001)
+        while ((Body.transform.position - (this.transform.position - controller.controller.transform.position + Body.transform.position)).magnitude > .005) //if there is anything brittle, it is this logic
         {
-            Body.transform.position = Vector3.Lerp(bodyStartPosition, this.transform.position - handToBody, timeElapsed / timeToComplete );
+            Body.transform.position = Vector3.Lerp(bodyStartPosition, this.transform.position - controller.controller.transform.position + Body.transform.position, timeElapsed / timeToComplete); //when hookshotting moving objects, is something happening while this coroutine runs to move collider back to orign?
+
+
+
             timeElapsed += Time.deltaTime;
             lr.SetPosition(0, controller.controller.transform.position);
             yield return null;
         }
-        Grappled = false;
+
+
+        /*
+        while ((Body.transform.position - (this.transform.position - handToBody)).magnitude > .001) //if there is anything brittle, it is this logic
+        {
+            Body.transform.position = Vector3.Lerp(bodyStartPosition, this.transform.position - handToBody, timeElapsed / timeToComplete ); //when hookshotting moving objects, is something happening while this coroutine runs to move collider back to orign?
+
+
+            Debug.Log("Time: " + timeElapsed + " | Target Position: " + this.transform.position);
+
+            timeElapsed += Time.deltaTime;
+            lr.SetPosition(0, controller.controller.transform.position);
+            yield return null;
+        }
+        */
+        Grappled = false; //pretty sure this isn't used and can be removed
         HookshotFired = false; // this needs to be refactored into some code common with the case where it doesn't hit anything
         HideGrapple();
         lr.enabled = false;
+        this.transform.parent = null;
+        this.transform.position = Vector3.zero;
+        this.transform.rotation = Quaternion.identity;
+        this.transform.localScale = new Vector3(.05f, .001f, .02f);
+
+    }
+    
+
+    void UnHideGrapple()
+    {
+        this.GetComponent<MeshRenderer>().enabled = true;
+        this.GetComponent<SphereCollider>().enabled = true;
     }
 
     void HideGrapple()
     {
+
         this.GetComponent<MeshRenderer>().enabled = false;
-        this.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //this is a hack to see if the reason we can detach ourselves from blcoks is the continued presence of the grapple
+        this.GetComponent<SphereCollider>().enabled = false;
+        //this.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //this is a hack to see if the reason we can detach ourselves from blcoks is the continued presence of the grapple
     }
 
 }

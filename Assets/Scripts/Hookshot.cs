@@ -11,7 +11,7 @@ public class Hookshot : MonoBehaviour
 
     public float GrappleSpeed = 1.0f;
     public float GrappleLength = 15.0f;
-
+    private GameObject grappleTarget;
 
     // Use this for initialization
     void Start()
@@ -23,6 +23,9 @@ public class Hookshot : MonoBehaviour
         _grappleOrigin.transform.localPosition = Vector3.zero;
 
         LaserSight.GetComponent<MeshRenderer>().enabled = false;
+
+         grappleTarget = new GameObject("GrappleTarget");
+
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class Hookshot : MonoBehaviour
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
         layerMask += (1 << 2); //ignore raycast layer 
         layerMask += (1 << 9); //ignore the player's body
+        layerMask += (1 << 8); //ignore the controllers
         layerMask = ~layerMask;
         RaycastHit hit;
         if (Physics.Raycast(controller.controller.transform.position, controller.controller.transform.forward, out hit, GrappleLength, layerMask))
@@ -68,12 +72,7 @@ public class Hookshot : MonoBehaviour
             _grappleOrigin.transform.Rotate(Vector3.right * ShootingAngle);
             _grappleOrigin.transform.localPosition += GrappleOffset.transform.position;
 
-            //TODO substantiate this in Start() but hide it until firing
-            /*
-            GameObject grapple = GameObject.Instantiate(GrapplePrototype,
-                _grappleOrigin.transform.position,
-                _grappleOrigin.transform.rotation) as GameObject;
-                */
+
 
             Grapple.transform.position = _grappleOrigin.transform.position;
             Grapple.transform.rotation = _grappleOrigin.transform.rotation;
@@ -82,7 +81,7 @@ public class Hookshot : MonoBehaviour
 
             //if lasertarget is on something, use that as target else use the other way
 
-            GameObject grappleTarget = new GameObject("GrappleTarget");
+            //GameObject grappleTarget = new GameObject("GrappleTarget");
 
             if (LaserSight.GetComponent<MeshRenderer>().enabled)
             {
