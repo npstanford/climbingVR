@@ -1,0 +1,16 @@
+
+Painterly Terrain Textures by Whimsy Lab
+Hello, and thank you for buying my terrain textures.  I really hope they'll bring your game or project beautiful depth and detail.  I invested a lot of love and attention to them, and so  I'd  like to just share a little bit of information on how to best use them in your Unity projects.
+
+Unity's Terrain Engine
+These images are for use with Unity's Terrain System, so it's super-important that you know how it works.  You probably already know how to use terrain textures, but just in case you're new to it, you use these terrain textures, or splat maps, to create the colors and texture on your terrain. There's some pretty good documentation on Unity terrain in the manual, which you can find online right here:
+http://docs.unity3d.com/Documentation/Manual/Terrains.html
+In particular, please have a good look at the section which provides information on applying terrain textures to your terrains, here:
+http://docs.unity3d.com/Documentation/Components/terrain-Textures.html
+Also you can find some video tutorials online right here: 
+https://www.youtube.com/results?search_query=unity3d+terrain+textures
+
+Blending Terrain Textures
+To get beautiful, subtle effects, it pays big dividends to carefully layer the textures one over another on the terrain... experiment by doing things like painting a base layer of rock, then a gentle wash of clover above it, with the opacity turned down. Or rich umber earth, with a light wash of autumnal leaves, rocks, and then a scratchy layer of grasses.
+ We recommend you take advantage of Unity's splattery and scratchy terrain brushes, and just dot-dot-dot the terrain lightly with the textures on your terrain.    
+Experiment with layers, brush types, and changing opacity and you will find a whole world of rich terrain possibilities.
