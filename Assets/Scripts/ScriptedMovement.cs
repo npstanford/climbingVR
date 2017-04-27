@@ -54,7 +54,6 @@ public class ScriptedMovement : MonoBehaviour {
 
     IEnumerator MoveObject()
     {
-        Debug.Log("moveobject coroutine started");
         while (true) {
             while (EnableMovement)
             {

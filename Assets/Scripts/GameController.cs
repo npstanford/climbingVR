@@ -48,8 +48,8 @@ public class GameController : MonoBehaviour {
         GameState = GameStates.NotStarted;
         PlayerState = PlayerStates.Normal;
 
-        GameOverScreen.alpha = 0.0f;
-        GameWinScreen.alpha = 0.0f;
+        //GameOverScreen.alpha = 0.0f;
+        //GameWinScreen.alpha = 0.0f;
     }
 
     // Update is called once per frame

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Run : MonoBehaviour {
-
+    /*
     public enum DirectionMethod { Gaze, Controller};
 
 
@@ -14,7 +14,6 @@ public class Run : MonoBehaviour {
    // public float StepTime = 0.1f;
     //public bool UseTrigStep = true;
     //public bool IsRunning = true;
-    private GameController gc;
     //public GameObject AvgMarker;
     //public bool CoroutineIsRunning = false;
     public float HeadVerticalVelocity; //this value is always set to the average of the values in velocity array
@@ -45,8 +44,7 @@ public class Run : MonoBehaviour {
     void Start()
     {
         //Stepped = false;
-        GameObject go = GameObject.FindGameObjectWithTag("GameController");
-        gc = go.GetComponent<GameController>();
+
         _oldHeadPosition = PlayerHead.transform.position.y;
         _newHeadPosition = PlayerHead.transform.position.y;
         _headVerticalVelocities = new float[HeadVelocityArraySize];
@@ -101,7 +99,7 @@ public class Run : MonoBehaviour {
     }
 
     public void Step(ControllerState lController)
-    {
+    {/*
         if (gc.PlayerIsTouchingGround)
         {
 
@@ -188,13 +186,12 @@ public class Run : MonoBehaviour {
                 StartCoroutine(WalkAndBlur(Room.transform.position + walkDirection * walkDistance));
             }
 
-    */
         }
  
+        */
 
 
-
-    }
+    //}
 
     /*
     IEnumerator WalkAndBlur(Vector3 finalPosition)
@@ -245,7 +242,7 @@ public class Run : MonoBehaviour {
     }
     */
 
-
+        /*
     public float GetMoveVelocity(float HeadVerticalVelocity)
     {
         if (HeadVerticalVelocity <0.01f)
@@ -260,5 +257,5 @@ public class Run : MonoBehaviour {
             return JogVelocity;
         }
     }
-
+    */
 }

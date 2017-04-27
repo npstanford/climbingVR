@@ -3,15 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour {
-    public bool RunInPlace = false;
+    public enum Capabilities { Climb, Hookshot, Glide};
+
+    public bool EnableAllComponents = true;
+    //public bool RunInPlace = false;
     public ControllerState lController;
     public ControllerState rController;
     public Rigidbody Body; //note this should more accurately be understood as Room and not body
-    public BoxCollider OverheadCollider;
-    public BoxCollider RunningColliderTop;
-    public BoxCollider RunningColliderBottom;
+    //public BoxCollider OverheadCollider;
     public GripTool GripToolLeft;
     public GripTool GripToolRight;
+    public GameObject PlayerHead;
+
+
+    //booleans for capabilities
+    private bool ClimbingEnabled = false;
+    private bool HookshotEnabled= false;
+    private bool GlidingEnabled = false;
+
+    //stunning
+    private bool PlayerIsStunned = false;
 
     //private OverheadCollider ohc;
 
@@ -22,9 +33,10 @@ public class InputManager : MonoBehaviour {
     private Climb climb;
     private Hookshot hookshot;
     private Glide glide;
-    private Run run;
+    //private Run run;
     private GripMeter gm;
     private ColliderManager cm;
+    private PickUp pu;
 
     private float lTouchpadPressTime;
     private float rTouchpadPressTime;
@@ -39,16 +51,33 @@ public class InputManager : MonoBehaviour {
         climb = GetComponent<Climb>();
         hookshot = GetComponent<Hookshot>();
         glide = GetComponent<Glide>();
-        run = GetComponent<Run>();
+        //run = GetComponent<Run>();
         gm = GetComponent<GripMeter>();
         cm = Body.GetComponent<ColliderManager>();
+        pu = GetComponent<PickUp>();
 
-	}
+        if (!EnableAllComponents)
+        {
+
+            GripToolLeft.HideHook();
+            GripToolRight.HideHook();
+        }
+
+    }
 
     // Update is called once per frame
     void Update() {
 
+        if (EnableAllComponents)
+        {
+            EnableCapability(Capabilities.Climb);
+            EnableCapability(Capabilities.Hookshot);
+            EnableCapability(Capabilities.Glide);
+            EnableAllComponents = false;
+        }
+
         PlayerIsTouchingGround = cm.PlayerIsTouchingGround;
+        PlayerIsStunned = cm.PlayerIsStunned;
 
         //GripManager
         if (climb.IsClimbing)
@@ -58,24 +87,26 @@ public class InputManager : MonoBehaviour {
         else if (glide.IsGliding)
         {
             gm.DepleteGrip(glide.GripDepletion);
-        } else if (PlayerIsTouchingGround)
+        } else if (PlayerIsTouchingGround && !PlayerIsStunned)
         {
             //TODO make this contingent on the player being on the ground
             gm.RestoreGrip();
         }
 
-        if (gm.RemainingGrip > 0.0f)
+        if (gm.RemainingGrip > 0.0f && !PlayerIsStunned)
         {
             //shoooting
-            CheckShooting(rController);
-            //CheckShooting(lController, ref lTouchpadPressTime);
+            if (HookshotEnabled) { CheckShooting(rController); }
+
 
             //climbing
-            CheckClimbing(rController);
-            CheckClimbing(lController);
-
+            if (ClimbingEnabled)
+            {
+                CheckClimbing(rController);
+                CheckClimbing(lController);
+            }
             //gliding
-            CheckGliding(lController);
+            if (GlidingEnabled) { CheckGliding(lController); }
         }
         else {
             climb.Drop(Body);
@@ -90,17 +121,18 @@ public class InputManager : MonoBehaviour {
             return;
         }
 
+        /*
         if (RunInPlace)
         {
             CheckRunning(lController);
         } else
-        {
+        { */
             CheckWalking(rController, ref rTouchpadPressTime);
             CheckWalking(lController, ref lTouchpadPressTime);
-        }
+        //}
 
-
-
+        CheckPickUp(rController);
+        CheckPickUp(lController);
 
         
 
@@ -110,15 +142,14 @@ public class InputManager : MonoBehaviour {
         {
 
 
-                Debug.Log("Player was dropped becausethey aren't gripping and aren't touching ground");
                 climb.Drop(Body);
 
         }
 
-        if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+        if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip) && GlidingEnabled)
         {
             GripToolLeft.HideHook();
-        } else
+        } else if (ClimbingEnabled)
         {
             GripToolLeft.ShowHook();
         }
@@ -126,7 +157,7 @@ public class InputManager : MonoBehaviour {
         if (hookshot.Grapple.HookshotFired)
         {
             GripToolRight.HideHook();
-        } else
+        } else if (ClimbingEnabled)
         {
             GripToolRight.ShowHook();
         }
@@ -165,6 +196,16 @@ public class InputManager : MonoBehaviour {
         }
     }
 
+    void CheckPickUp(ControllerState controller)
+    {
+        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)
+    || controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            pu.Grab(controller);
+        }
+    } 
+
+
     void CheckShooting(ControllerState controller)
     {
         if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
@@ -189,7 +230,7 @@ public class InputManager : MonoBehaviour {
 
         if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
         {
-            glide.StartGliding(lController, PlayerIsTouchingGround);
+            glide.StartGliding(lController, PlayerIsTouchingGround, CheckOverheadHand(lController));
         }
         else if (lController.device.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
         {
@@ -198,6 +239,7 @@ public class InputManager : MonoBehaviour {
 
     }
 
+    /*
     void CheckRunning(ControllerState controller)
     {
         if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
@@ -211,31 +253,42 @@ public class InputManager : MonoBehaviour {
         }
 
     }
-
+    */
 
     bool CheckOverheadHand(ControllerState controller)
     {
-        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
-        return controllerCollider.bounds.Intersects(OverheadCollider.bounds);
+        //BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
+        //return controllerCollider.bounds.Intersects(OverheadCollider.bounds);
+
+        return (controller.transform.position.y > PlayerHead.transform.position.y);
 
     }
 
-    /*
 
-    bool CheckRunningTop(ControllerState controller)
+    public void EnableCapability(Capabilities cap)
     {
-        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
-        return controllerCollider.bounds.Intersects(RunningColliderTop.bounds);
+        if (cap == Capabilities.Climb)
+        {
+            ClimbingEnabled = true;
+            GripToolLeft.DisplayClimbingComponents();
+            GripToolRight.DisplayClimbingComponents();
+        }
+
+        if (cap == Capabilities.Hookshot)
+        {
+            HookshotEnabled = true;
+            GripToolRight.DisplayHookshotComponents();
+        }
+
+        if (cap == Capabilities.Glide)
+        {
+            GlidingEnabled = true;
+            GripToolLeft.DisplayGliderComponents();
+        }
 
     }
 
 
-    bool CheckRunningBottom(ControllerState controller)
-    {
-        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
-        return controllerCollider.bounds.Intersects(RunningColliderBottom.bounds);
 
-    }
 
-    */
 }

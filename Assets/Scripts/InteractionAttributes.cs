@@ -9,14 +9,11 @@ public class InteractionAttributes : MonoBehaviour {
     public bool RespondsToHookshot;
     public bool IsGround;
     public bool IsPartOfBody;
+    public bool HurtsPlayer;
+    public bool AffectedByWind;
+    public bool CanPickUp;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public Rigidbody ObjectToPickUp;
+
+
 }

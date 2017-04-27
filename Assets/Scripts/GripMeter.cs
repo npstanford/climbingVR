@@ -33,6 +33,7 @@ public class GripMeter : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+
         LWristDisplay.color = WristColor;
         RWristDisplay.color = WristColor;
 

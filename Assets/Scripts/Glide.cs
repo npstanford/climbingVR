@@ -6,8 +6,7 @@ public class Glide : MonoBehaviour
 {
 
     public GameObject GliderModel;
-    public BoxCollider OverheadCollider;
-    private GameController gc;
+    //public BoxCollider OverheadCollider;
     //public GameObject OverheadCollider; // the invisible box collider over the players head
     public Rigidbody Room;
     public float GlideSpeed;
@@ -28,8 +27,6 @@ public class Glide : MonoBehaviour
         //_gliderRenderer.enabled = false;
         GliderModel.SetActive(false);
         IsGliding = false;
-        GameObject go = GameObject.FindGameObjectWithTag("GameController");
-        gc = go.GetComponent<GameController>();
         Body = Room.GetComponent<ColliderManager>();
     }
 
@@ -39,7 +36,7 @@ public class Glide : MonoBehaviour
 
     }
 
-    public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround)
+    public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
     {
         GliderModel.SetActive(true);
         //_gliderRenderer.enabled = true;
@@ -73,9 +70,8 @@ public class Glide : MonoBehaviour
 
         */
 
-        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && CheckOverheadHand(controller) )
+        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead )
         {
-            //gc.FallingState = GameController.FallingStates.Gliding;
             IsGliding = true;
 
             Vector3 glideVector = controller.transform.right;
@@ -146,16 +142,10 @@ public class Glide : MonoBehaviour
         GliderModel.SetActive(false);
         Room.useGravity = true;
         Room.velocity = new Vector3(Room.velocity.x*0.2f, Mathf.Min(Room.velocity.y, 0), Room.velocity.z*0.2f);
-        //gc.FallingState = GameController.FallingStates.Falling;
         IsGliding = false;
     }
 
-    bool CheckOverheadHand(ControllerState controller)
-    {
-        BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
-        return controllerCollider.bounds.Intersects(OverheadCollider.bounds);
 
-    }
 
 
 }

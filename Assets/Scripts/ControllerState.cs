@@ -13,6 +13,8 @@ public class ControllerState : MonoBehaviour
     public Material GripMaterial;
     public Material ShootMaterial;
     public SteamVR_Controller.Device device;
+    public Rigidbody PickUpObject; 
+
 
 
 
@@ -25,6 +27,7 @@ public class ControllerState : MonoBehaviour
 
 
     public bool canGrip;
+    public bool canPickUp;
     public GameObject GripObject;
 
 
@@ -54,6 +57,10 @@ public class ControllerState : MonoBehaviour
             {
                 canGrip = true;
                 GripObject = other.gameObject;
+            } else if (ia.CanPickUp)
+            {
+                canPickUp = true;
+                PickUpObject = ia.ObjectToPickUp;
             }
         }
         
@@ -70,6 +77,11 @@ public class ControllerState : MonoBehaviour
             {
                 canGrip = false;
                 GripObject = null;
+            }
+            else if (ia.CanPickUp)
+            {
+                canPickUp = false;
+                PickUpObject = null;
             }
         }
     }

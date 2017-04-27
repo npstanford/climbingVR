@@ -8,7 +8,7 @@ public class BlurVisionInWalls : MonoBehaviour {
 
 
     public Image HeadBlur;
-    public Color flashColor = new Color(0f, 0f, 0f, 1f);
+    public Color flashColor = new Color(0f, 0f, 0f, .5f);
 
 
     // Use this for initialization
@@ -23,12 +23,18 @@ public class BlurVisionInWalls : MonoBehaviour {
 
     void BlurVision()
     {
-        HeadBlur.color = flashColor;
+        if (HeadBlur != null)
+        {
+            HeadBlur.color = flashColor;
+        }
     }
 
     void UnBlurVision()
     {
-        HeadBlur.color = Color.clear;
+        if (HeadBlur != null)
+        {
+            HeadBlur.color = Color.clear;
+        }
     }
 
 
@@ -41,7 +47,7 @@ public class BlurVisionInWalls : MonoBehaviour {
             InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
             if (ia != null)
             {
-                if (!ia.IsPartOfBody)
+                if (!ia.IsPartOfBody && !ia.HurtsPlayer)
                 {
                     BlurVision();
                 }

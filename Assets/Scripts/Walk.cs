@@ -11,7 +11,6 @@ public class Walk : MonoBehaviour {
     public float StepTime = 0.1f;
     public bool UseTrigStep = true;
     //public bool IsRunning = true;
-    private GameController gc;
     public VignetteAndChromaticAberration Vignette;
     public float MaxVignette;  
 
@@ -21,8 +20,6 @@ public class Walk : MonoBehaviour {
 
     void Start () {
         Stepped = false;
-        GameObject go = GameObject.FindGameObjectWithTag("GameController");
-        gc = go.GetComponent<GameController>();
     }
 
     public void Step(SteamVR_TrackedObject controller) {
@@ -88,8 +85,8 @@ public class Walk : MonoBehaviour {
 
         //StartCoroutine(WalkAndBlur(Room.transform.position + WalkDelta ));
 
-        StartCoroutine(WalkAndBlur2(finalPositionLocal, finalPositionWorld));
-
+        //StartCoroutine(WalkAndBlur2(finalPositionLocal, finalPositionWorld));
+        StartCoroutine(WalkAndBlur3(walkDirection));
 
 
     }
@@ -103,6 +100,63 @@ public class Walk : MonoBehaviour {
     void Update () {
 
     }
+
+
+
+    IEnumerator WalkAndBlur3(Vector3 walkDirectionWorld)
+    {
+
+        //FallingFilter.enabled = true;
+
+        float elapsedTime = 0;
+        float x = 0;
+        float EffectiveStepSize = StepSize * (1 / StepTime);
+
+        while (elapsedTime < StepTime)
+        {
+            elapsedTime += Time.deltaTime;
+            
+
+            RaycastHit hit; 
+            if (Physics.Raycast(Player.transform.position, walkDirectionWorld, out hit, .1f))
+            {
+                Vignette.intensity = 0.0f;
+                yield break;
+
+            }
+            else
+            {
+                x = (elapsedTime / StepTime) * Mathf.PI * 2f; // x goes from 0 to 2pi
+
+                Vector3 newLocation = Room.transform.position + walkDirectionWorld * EffectiveStepSize * Time.deltaTime;// * (Mathf.Cos(x) + 1);
+
+                /* TODO , this is the start of the code to let you walk on inclines... it's trickier than I thought
+                //perform raycast to get height you're walking on
+                RaycastHit hit2;
+                if (Physics.Raycast(new Vector3(newLocation.x, newLocation.y + 1, newLocation.x), Vector3.down, out hit2, 2f))
+                {
+                    newLocation = new Vector3(newLocation.x, hit2.point.y + , newLocation.z);
+                }
+                */
+
+                Room.transform.position = newLocation;
+                Vignette.intensity = Mathf.Lerp(0, MaxVignette, Mathf.Sin(elapsedTime / StepTime * Mathf.PI));
+
+            }
+
+
+
+
+        
+                yield return null;
+          }
+
+
+
+     }
+
+
+
 
 
     IEnumerator WalkAndBlur2(Vector3 finalPositionLocal, Vector3 finalPositionWorld)
