@@ -14,6 +14,7 @@ public class Glide : MonoBehaviour
     public Vector3 GliderOffset;
     public bool IsGliding;
     public float GripDepletion;
+    public ColliderManager cm;
 
 
    // private MeshRenderer _gliderRenderer;
@@ -35,64 +36,74 @@ public class Glide : MonoBehaviour
     {
 
     }
-
+    /*
     public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
     {
         GliderModel.SetActive(true);
-        //_gliderRenderer.enabled = true;
 
 
-
-        /* this is all the logic on where to put the glider model. I don't need while it is limited to just one hand. 
-        bool usingRightController = false;
-        if (controller.device.index == SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Rightmost))
+        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
         {
-            usingRightController = true;
+            IsGliding = true;
+
+            Vector3 glideVector = controller.transform.right;
+            glideVector = glideVector.normalized; // glideVector is not yaw. It is the direction of the nose
+
+            int forwardOrBackward = 1; //1 represents forward
+            if (controller.transform.right.y > 0)
+            {
+                forwardOrBackward = -1;
+            }
+
+            //this is the idea to basically smooth the transition from forward to backward
+            glideVector.y = Mathf.Pow(glideVector.y, 2);
+
+            if(glideVector.y < .1f)
+            {
+                glideVector = Vector3.zero;
+            }
+
+            glideVector = glideVector.normalized;
+
+            //float rollAngle = Vector3.Angle(new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z) , controller.transform.forward);
+            Vector3 rollDirection = new Vector3(0.0f, 0.0f, controller.transform.up.z).normalized;
+            //rollDirection.z = Mathf.Pow(rollDirection.z, 2);
+            rollDirection = rollDirection.normalized;
+
+
+            glideVector = -rollDirection + (glideVector * forwardOrBackward);
+            //glideVector = glideVector * forwardOrBackward;
+            glideVector = glideVector.normalized;
+
+
+            Vector3 glideVelocity = glideVector * GlideSpeed + Room.transform.up * (-1.0f) * GlideFallSpeed;
+
+            glideVelocity.y = Mathf.Min(GlideFallSpeed * -0.6f, glideVelocity.y);
+
+            glideVelocity += Body.WindVelocity;
+
+
+            Room.position += glideVelocity * Time.deltaTime;
         }
+    }
+    */
+    
+    public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
+    {
+        GliderModel.SetActive(true);
 
-
-        if (usingRightController) 
-        {
-            GliderModel.transform.localRotation = Quaternion.Euler(0.0f, 225.0f, 0.0f);
-            GliderModel.transform.localPosition = new Vector3(GliderOffset.x * -1.0f, GliderOffset.y, GliderOffset.z * -1.0f);
-
-
-        }
-        else
-        { 
-            GliderModel.transform.localRotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
-            GliderModel.transform.localPosition = GliderOffset;
-
-        }
-
-
-        GliderModel.transform.parent = controller.transform; //todo this may need to happen earlier
-
-        */
 
         if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead )
         {
             IsGliding = true;
 
             Vector3 glideVector = controller.transform.right;
-            //glideVector.y = 0.0f;
             glideVector = glideVector.normalized; // glideVector is not yaw. It is the direction of the nose
 
-            /*
-            if (usingRightController)
-            {
-                glideVector = glideVector * -1.0f;
-            }
-            */
-
-            Room.useGravity = false;
-
-            //this is the part where we figure out how the tilt affects the bearing vector
 
             float rollAngle = Vector3.Angle(new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z)
                 , controller.transform.forward);
 
-            //Debug.Log("roll: " + roll);
 
             int upOrDownRoll = 1;
 
@@ -101,29 +112,9 @@ public class Glide : MonoBehaviour
                 upOrDownRoll = -1;
             }
 
-            /*
-            //this code is figure out if we should be going fast or slow by how much we tilt the glider up and down
-            float pitch = Vector3.Angle(new Vector3(controller.transform.right.x, 0.0f, controller.transform.right.z), controller.transform.right);
 
-            Debug.Log("pitch: " + pitch);
-
-            int upOrDownPitch = 1;
-
-            if (controller.transform.right.y > 0) { 
-            
-                upOrDownPitch = -1;
-            }
-            */
-
-            /*
-            if (usingRightController)
-            {
-                glideVector = Quaternion.AngleAxis(-tiltAngle * upOrDown, Vector3.up) * glideVector;
-            } else */
-            {
                 glideVector = Quaternion.AngleAxis(rollAngle* upOrDownRoll, Vector3.up) * glideVector;
 
-            }
 
 
             Vector3 glideVelocity = glideVector * GlideSpeed + Room.transform.up * (-1.0f) * GlideFallSpeed;
@@ -132,15 +123,32 @@ public class Glide : MonoBehaviour
 
             glideVelocity += Body.WindVelocity;
 
-            Room.velocity = glideVelocity;
+            RaycastHit hit;
+            if(Physics.Raycast(cm.displayCube.transform.position, glideVelocity, out hit, .2f))
+            {
+                InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
+                if (ia!=null)
+                {
+                    if(ia.CanClimb || ia.IsGround)
+                    {
+                        glideVelocity = Vector3.down * GlideFallSpeed;
+                    }
                 }
+            }
+
+            Room.position += glideVelocity * Time.deltaTime;
+           } else // note this is hacky... should probably refactor so there is a "show glider" method that input manager calls when buttons pressed, and a start gliding method
+        {
+            IsGliding = false;
+        }
     }
+  
 
     public void StopGliding()
     {
         //_gliderRenderer.enabled = false;
         GliderModel.SetActive(false);
-        Room.useGravity = true;
+        //Room.useGravity = true;
         Room.velocity = new Vector3(Room.velocity.x*0.2f, Mathf.Min(Room.velocity.y, 0), Room.velocity.z*0.2f);
         IsGliding = false;
     }

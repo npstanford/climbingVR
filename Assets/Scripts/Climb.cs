@@ -31,8 +31,8 @@ public class Climb : MonoBehaviour {
             }
             Cling(Room);
 
-            Room.transform.localPosition += (controller.prevPos - controller.controller.transform.localPosition);
-
+            //Room.transform.localPosition += (controller.prevPos - controller.controller.transform.localPosition);
+            Room.transform.localPosition += (controller.prevPos - controller.curPos);
 
         }
 
@@ -42,7 +42,7 @@ public class Climb : MonoBehaviour {
             Room.velocity = (controller.prevPos - controller.controller.transform.localPosition) / Time.deltaTime / JumpDampFactor;
         }
 
-        controller.prevPos = controller.transform.localPosition;
+        //controller.prevPos = controller.transform.localPosition;
 
     }
 
@@ -50,15 +50,15 @@ public class Climb : MonoBehaviour {
     {
         Room.transform.parent = null;
         IsClimbing = false;
-        Room.useGravity = true;
-        Room.isKinematic = false;
+        //Room.useGravity = true;
+       // Room.isKinematic = false;
     }
 
     public void Cling(Rigidbody Room)
     {
         IsClimbing = true;
-        Room.useGravity = false;
-        Room.isKinematic = true;
+        //Room.useGravity = false;
+       // Room.isKinematic = true;
     }
 
 

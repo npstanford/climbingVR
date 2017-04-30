@@ -4,6 +4,7 @@ using System.Collections;
 
 public class AutoTile : MonoBehaviour
 {
+    /*
     public float scaleToTiles;
 
     public Dir dir;
@@ -34,6 +35,7 @@ public class AutoTile : MonoBehaviour
                 new Vector2(scaleX * scaleToTiles, scaleY * scaleToTiles));
         //}
     }
+    */
 }
 
 public enum Dir { XY, ZY, XZ }

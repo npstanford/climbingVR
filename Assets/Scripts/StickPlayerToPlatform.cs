@@ -74,8 +74,8 @@ public class StickPlayerToPlatform : MonoBehaviour {
             if (rb.useGravity || !rb.isKinematic )
             {
                 Debug.Log("sticky platform turned off gravity");
-                rb.useGravity = false;
-                rb.isKinematic = true;
+                //rb.useGravity = false;
+               // rb.isKinematic = true;
             }
         }
     
@@ -96,8 +96,8 @@ public class StickPlayerToPlatform : MonoBehaviour {
             collider.gameObject.transform.parent = null;
  
 
-            rb.useGravity = true;
-            rb.isKinematic = false;
+            //rb.useGravity = true;
+            //rb.isKinematic = false;
 
         }
 

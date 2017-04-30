@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 33271605130633778}
   - component: {fileID: 135632610269293222}
   - component: {fileID: 23701658744866716}
-  - component: {fileID: 54971799117463220}
   - component: {fileID: 114611816976190514}
   - component: {fileID: 114070699052635278}
+  - component: {fileID: 54826560214493218}
   m_Layer: 0
   m_Name: BulletPrefab
   m_TagString: Untagged
@@ -83,7 +83,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1634046656776412}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &54971799117463220
+--- !u!54 &54826560214493218
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -116,6 +116,8 @@ MonoBehaviour:
   IsPartOfBody: 0
   HurtsPlayer: 1
   AffectedByWind: 0
+  CanPickUp: 0
+  ObjectToPickUp: {fileID: 0}
 --- !u!114 &114611816976190514
 MonoBehaviour:
   m_ObjectHideFlags: 1

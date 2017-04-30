@@ -13,7 +13,8 @@ public class ControllerState : MonoBehaviour
     public Material GripMaterial;
     public Material ShootMaterial;
     public SteamVR_Controller.Device device;
-    public Rigidbody PickUpObject; 
+    public Rigidbody ObjectToPickUp;
+    public Rigidbody Holding;
 
 
 
@@ -22,6 +23,8 @@ public class ControllerState : MonoBehaviour
 
     [HideInInspector]
     public Vector3 prevPos;
+    [HideInInspector]
+    public Vector3 curPos;
     [HideInInspector]
     public SteamVR_TrackedObject controller;
 
@@ -36,6 +39,7 @@ public class ControllerState : MonoBehaviour
     {
         controller = GetComponent<SteamVR_TrackedObject>();
         prevPos = controller.transform.localPosition;
+        curPos = controller.transform.localPosition;
         controllerState = States.Grip;
         device = SteamVR_Controller.Input((int)controller.index);
     }
@@ -43,7 +47,9 @@ public class ControllerState : MonoBehaviour
     void Update()
     {
         device = SteamVR_Controller.Input((int)controller.index);
-        prevPos = controller.transform.localPosition;
+        //prevPos = controller.transform.localPosition;
+        prevPos = curPos;
+        curPos = controller.transform.localPosition;
     }
 
 
@@ -60,7 +66,7 @@ public class ControllerState : MonoBehaviour
             } else if (ia.CanPickUp)
             {
                 canPickUp = true;
-                PickUpObject = ia.ObjectToPickUp;
+                ObjectToPickUp = ia.ObjectToPickUp; //TODO if this is null, then assignt PickUpObject as other
             }
         }
         
@@ -81,7 +87,7 @@ public class ControllerState : MonoBehaviour
             else if (ia.CanPickUp)
             {
                 canPickUp = false;
-                PickUpObject = null;
+                ObjectToPickUp = null;
             }
         }
     }

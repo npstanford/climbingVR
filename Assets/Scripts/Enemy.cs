@@ -26,12 +26,16 @@ public class Enemy : MonoBehaviour {
     private InteractionAttributes[] ias;
     private Vector3 oldPlayerLocation;
     private Vector3 newPlayerLocation;
-
+    private bool reset; //this is used to trigger special Update code to reorient the enemy after whatever the fuck the player did to him
+    private Quaternion targetRot;
+    private bool trackPlayerIsRunning = false;
 
     // Use this for initialization
     void Start() {
         IEnumerator shoot = Shoot();
+        IEnumerator trackPlayer= TrackPlayer();
         StartCoroutine(shoot);
+        StartCoroutine(trackPlayer);
         startPosition = EnemyBody.transform.localPosition;
         mrs = GetComponentsInChildren<MeshRenderer>();
         ias = GetComponentsInChildren<InteractionAttributes>();
@@ -42,7 +46,7 @@ public class Enemy : MonoBehaviour {
         }
         newPlayerLocation = Player.transform.position;
         oldPlayerLocation = newPlayerLocation;
-
+        targetRot = Quaternion.identity;
     }
 
     // Update is called once per frame
@@ -52,20 +56,17 @@ public class Enemy : MonoBehaviour {
         attack = (playerDist < AttackRadius);
         oldPlayerLocation = newPlayerLocation;
         newPlayerLocation = Player.transform.position;
-
+        
 
         if (attack && !IsStunned)
         {
-            // the three lines below attempts to guess where the player will be in the future and aim there
-            Vector3 playerVelocity = (newPlayerLocation - oldPlayerLocation) / Time.deltaTime;
-            float t = (newPlayerLocation - transform.position).magnitude / BulletVelocity;
-            Vector3 aimDirection = (playerVelocity * t + newPlayerLocation - transform.position) / (t * BulletVelocity);
-
-            Quaternion rot = Quaternion.LookRotation(aimDirection);
-            //Quaternion rot = Quaternion.LookRotation(playerDirection);
+            trackPlayerIsRunning = true;
+            
             float step = rotateSpeed * Time.deltaTime;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, step);
-            //transform.LookAt(Player.transform);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
+        } else
+        {
+            trackPlayerIsRunning = false;
         }
 
         //bob up and down
@@ -74,6 +75,17 @@ public class Enemy : MonoBehaviour {
             EnemyBody.transform.localPosition = new Vector3(startPosition.x, startPosition.y + Mathf.Sin(Time.time * bobVelocity) * bobHeight,
                 startPosition.z);
         }
+
+        if (reset)
+        {
+            reset = false;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            //startPosition.y += 1.0f; //this fucks up aiming for some reason. 
+
+        }
+
     }
 
     /*
@@ -95,6 +107,7 @@ public class Enemy : MonoBehaviour {
             {
                 Rigidbody bullet = Instantiate(MisslePrefab, MissleOrigin.transform.position, Quaternion.identity) as Rigidbody;
                 bullet.velocity = transform.forward * BulletVelocity;
+
             }
             float timeToNextShot = Random.value;
             timeToNextShot = timeToNextShot * FireRate + FireRate * 0.5f;
@@ -111,6 +124,27 @@ public class Enemy : MonoBehaviour {
         StartCoroutine("StunCoroutine");
     }
 
+    private IEnumerator TrackPlayer()
+    {
+        while (true) { 
+            if (trackPlayerIsRunning)
+                {
+                    UpdateTarget();
+                    //Quaternion rot = Quaternion.LookRotation(playerDirection);
+                }
+            yield return new WaitForSeconds(.2f);
+        }
+    }
+
+    private void UpdateTarget()
+    {
+        Vector3 playerVelocity = (newPlayerLocation - oldPlayerLocation) / Time.deltaTime;
+        float t = (newPlayerLocation - transform.position).magnitude / BulletVelocity;
+        Vector3 aimDirection = (playerVelocity * t + newPlayerLocation - transform.position) / (t * BulletVelocity);
+
+        targetRot = Quaternion.LookRotation(aimDirection);
+    }
+
 
     private IEnumerator StunCoroutine()
     {
@@ -119,6 +153,7 @@ public class Enemy : MonoBehaviour {
         GetComponentInChildren<RotatingPlatform>().RotationEnabled = false;
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.useGravity = true;
+        rb.isKinematic = false;
         foreach (MeshRenderer mr in mrs)
         {
             mr.material = stunnedMaterial;
@@ -173,7 +208,41 @@ public class Enemy : MonoBehaviour {
 
         GetComponentInChildren<RotatingPlatform>().RotationEnabled = true;
         rb.useGravity = false;
+        rb.isKinematic = true;
         rb.velocity = Vector3.zero;
         IsStunned = false;
+        reset = true;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("collided with: " + other.gameObject.name);
+        InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
+        if (ia!=null)
+        {
+            if(ia.CanPickUp)
+            {
+                StopCoroutine("Battered");
+                StartCoroutine("Battered");
+            }
+        }
+    }
+
+    private IEnumerator Battered()
+    {
+        Debug.Log("Battered coroutine started");
+        float batteredTime = 2.0f;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        IsStunned = true;
+
+        yield return new WaitForSeconds(batteredTime);
+
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        IsStunned = false;
+
+    } 
 }

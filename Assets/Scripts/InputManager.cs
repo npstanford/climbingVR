@@ -15,6 +15,8 @@ public class InputManager : MonoBehaviour {
     public GripTool GripToolRight;
     public GameObject PlayerHead;
 
+    public float FallAcceleration;
+    private float FallVelocity;
 
     //booleans for capabilities
     private bool ClimbingEnabled = false;
@@ -113,7 +115,11 @@ public class InputManager : MonoBehaviour {
             glide.StopGliding();
         }
 
-
+        if (PlayerIsStunned)
+        {
+            pu.Drop(lController);
+            pu.Drop(rController);
+        }
 
 
         if (lController.device == null || rController.device == null) {
@@ -162,8 +168,22 @@ public class InputManager : MonoBehaviour {
             GripToolRight.ShowHook();
         }
 
+        if (!PlayerIsTouchingGround && !climb.IsClimbing && !glide.IsGliding)
+        {
+     
+            Fall();
+        } else
+        {
+            FallVelocity = 0;
+        }
 
     }
+
+    private void FixedUpdate()
+    {
+ 
+    }
+
 
     void CheckWalking(ControllerState controller, ref float touchpadPressTime)
     {
@@ -288,7 +308,11 @@ public class InputManager : MonoBehaviour {
 
     }
 
-
+    public void Fall()
+    {
+        FallVelocity += FallAcceleration * Time.deltaTime;
+        Body.transform.position += Vector3.down * FallVelocity * Time.deltaTime;
+    }
 
 
 }
