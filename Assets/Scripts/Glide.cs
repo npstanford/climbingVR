@@ -153,7 +153,69 @@ public class Glide : MonoBehaviour
         IsGliding = false;
     }
 
+	/*
+	 * Get the glider 'roll' from the y-component of the HTC Vive 'forward' vector.
+	 * 
+	 * roll < 0.0 is to the right.
+	 * roll = 0.0 is flat.
+	 * roll > 0.0 is to the left.
+	 *
+	 * Returns a value in the range [-1.0 to 1.0].
+	 */
+	public static float rollFromForwardVector (Vector3 forward)
+	{
+		Vector3 forwardNormalized = forward.normalized;
+		return forwardNormalized.y;
+	}
 
+	/*
+	 * Get the glider 'pitch' from the y-component of the HTC Vive 'right' vector.
+	 * 
+	 * pitch < 0.0 is down.
+	 * pitch = 0.0 is flat.
+	 * pitch > 0.0 is up.
+	 * 
+	 * Returns a value in the range [-1.0 to 1.0].
+	 */
+	public static float pitchFromRightVector (Vector3 right)
+	{
+		Vector3 rightNormalized = right.normalized;
+		return rightNormalized.y;
+	}
 
+	/*
+	 * Get rotation force from pitch and roll.
+	 *
+	 * rotation < 0.0 is to the left.
+	 * rotation = 0 is no rotation.
+	 * rotation > 0.0 is to the right.
+	 *
+	 * Returns a value in the range [-1.0 to 1.0].
+	 */
+	public static float rotationFromPitchAndRoll (float pitch, float roll)
+	{
+		return pitch * roll;
+	}
+
+	/*
+	 * Get the force from the HTC Vive 'right' vector.
+	 */
+	public static Vector3 forceFromRightVector (Vector3 right) 
+	{
+		// Initialize force with the direction the kite is pointing.
+		Vector3 force = right.normalized;
+
+		// No verical force.
+		force.y = 0.0f;
+
+		// If pitch is negative (down) then we want to go forward.
+		// If pitch is positive (up) then we want to reverse direction.
+		float pitch = pitchFromRightVector(right);
+		if (pitch > 0.0f) {
+			force = -force;
+		}
+
+		return force;
+	}
 
 }
