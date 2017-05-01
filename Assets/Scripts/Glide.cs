@@ -9,12 +9,15 @@ public class Glide : MonoBehaviour
     //public BoxCollider OverheadCollider;
     //public GameObject OverheadCollider; // the invisible box collider over the players head
     public Rigidbody Room;
+    public float MaxGlideSpeed;
+    public float BankSpeed;
     public float GlideSpeed;
     public float GlideFallSpeed;
     public Vector3 GliderOffset;
     public bool IsGliding;
     public float GripDepletion;
     public ColliderManager cm;
+    public float DragCoefficient;
     private Vector3 GlideVelocity;
 
    // private MeshRenderer _gliderRenderer;
@@ -35,15 +38,17 @@ public class Glide : MonoBehaviour
         GliderModel.SetActive(true);
 
 
-        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead )
+        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
         {
             IsGliding = true;
 
-			float magnitude = GlideSpeed;
-			float mass = 3.0f;
-			Vector3 glideAcceleration = magnitude * forceFromRightVector (controller.transform.right) / mass;
-			GlideVelocity += glideAcceleration * Time.deltaTime;
+            float magnitude = GlideSpeed;
+            Vector3 glideAcceleration = magnitude * forceFromRightVector(controller.transform.right);
+            glideAcceleration.y = 0.0f;
+            GlideVelocity += glideAcceleration * Time.deltaTime;
+            Debug.DrawRay(controller.transform.position, glideAcceleration, Color.black, .1f);
 
+            /*
 			// Stop velocity if we hit something.
             RaycastHit hit;
 			if(Physics.Raycast(cm.displayCube.transform.position, GlideVelocity, out hit, .2f))
@@ -57,14 +62,41 @@ public class Glide : MonoBehaviour
                     }
                 }
             }
+            */
 
-			// Wind does not add momentum, so we add wind velocity separately.
-			Vector3 totalVelocity = GlideVelocity + Body.WindVelocity;
 
-			Room.position += totalVelocity * Time.deltaTime;
+            Vector3 kiteDrag = controller.transform.up.normalized;
+            float drag = Vector3.Dot(GlideVelocity.normalized, kiteDrag);
+            if (drag > 0.5f)
+            {
+                Debug.Log("drag: " + drag);
+                float dragPercent = DragCoefficient * drag;
+                GlideVelocity -= GlideVelocity * dragPercent * Time.deltaTime;
+            } else
+            {
+                
+            }
+
+
+            float roll = rotationFromPitchAndRoll(pitchFromRightVector(controller.transform.right), rollFromForwardVector(controller.transform.forward));
+            Vector3 rollDirection = new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z);
+            GlideVelocity = GlideVelocity + roll * BankSpeed * rollDirection *Time.deltaTime;
+
+            if (GlideVelocity.magnitude > MaxGlideSpeed)
+            {
+                GlideVelocity = GlideVelocity.normalized * MaxGlideSpeed;
+            }
+
+
+            // Wind does not add momentum, so we add wind velocity separately.
+            Vector3 totalVelocity = GlideVelocity + Body.WindVelocity;
+            Room.position += totalVelocity * Time.deltaTime;
+
+
         } else // note this is hacky... should probably refactor so there is a "show glider" method that input manager calls when buttons pressed, and a start gliding method
         {
             IsGliding = false;
+            GlideVelocity = Vector3.zero;
         }
     }
   
@@ -76,6 +108,7 @@ public class Glide : MonoBehaviour
         //Room.useGravity = true;
         Room.velocity = new Vector3(Room.velocity.x*0.2f, Mathf.Min(Room.velocity.y, 0), Room.velocity.z*0.2f);
         IsGliding = false;
+        GlideVelocity = Vector3.zero;
     }
 
 	/*

@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine.TestTools;
+//using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 
 public class GlideTests
 {
+    /*
 	private Vector3 forwardVectorRollNone = new Vector3 (0.0f, 0.0f, 0.0f);
 	private Vector3 forwardVectorRollRight = new Vector3 (0.0f, -0.5f, 0.0f);
 	private Vector3 forwardVectorRollLeft = new Vector3 (0.0f, 0.5f, 0.0f);
@@ -64,5 +65,5 @@ public class GlideTests
 		float rotateRightBackward = Glide.rotationFromPitchAndRoll (pitchUp, rollLeft);
 		Assert.Greater (rotateRightBackward, 0.0f);
 	}
-
+    */
 }
