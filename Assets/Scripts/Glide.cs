@@ -15,11 +15,10 @@ public class Glide : MonoBehaviour
     public bool IsGliding;
     public float GripDepletion;
     public ColliderManager cm;
-
+    private Vector3 GlideVelocity;
 
    // private MeshRenderer _gliderRenderer;
     private ColliderManager Body;
-
 
     // Use this for initialization
     void Start()
@@ -31,63 +30,6 @@ public class Glide : MonoBehaviour
         Body = Room.GetComponent<ColliderManager>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    /*
-    public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
-    {
-        GliderModel.SetActive(true);
-
-
-        if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
-        {
-            IsGliding = true;
-
-            Vector3 glideVector = controller.transform.right;
-            glideVector = glideVector.normalized; // glideVector is not yaw. It is the direction of the nose
-
-            int forwardOrBackward = 1; //1 represents forward
-            if (controller.transform.right.y > 0)
-            {
-                forwardOrBackward = -1;
-            }
-
-            //this is the idea to basically smooth the transition from forward to backward
-            glideVector.y = Mathf.Pow(glideVector.y, 2);
-
-            if(glideVector.y < .1f)
-            {
-                glideVector = Vector3.zero;
-            }
-
-            glideVector = glideVector.normalized;
-
-            //float rollAngle = Vector3.Angle(new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z) , controller.transform.forward);
-            Vector3 rollDirection = new Vector3(0.0f, 0.0f, controller.transform.up.z).normalized;
-            //rollDirection.z = Mathf.Pow(rollDirection.z, 2);
-            rollDirection = rollDirection.normalized;
-
-
-            glideVector = -rollDirection + (glideVector * forwardOrBackward);
-            //glideVector = glideVector * forwardOrBackward;
-            glideVector = glideVector.normalized;
-
-
-            Vector3 glideVelocity = glideVector * GlideSpeed + Room.transform.up * (-1.0f) * GlideFallSpeed;
-
-            glideVelocity.y = Mathf.Min(GlideFallSpeed * -0.6f, glideVelocity.y);
-
-            glideVelocity += Body.WindVelocity;
-
-
-            Room.position += glideVelocity * Time.deltaTime;
-        }
-    }
-    */
-    
     public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
     {
         GliderModel.SetActive(true);
@@ -97,47 +39,30 @@ public class Glide : MonoBehaviour
         {
             IsGliding = true;
 
-            Vector3 glideVector = controller.transform.right;
-            glideVector = glideVector.normalized; // glideVector is not yaw. It is the direction of the nose
+			float magnitude = GlideSpeed;
+			float mass = 3.0f;
+			Vector3 glideAcceleration = magnitude * forceFromRightVector (controller.transform.right) / mass;
+			GlideVelocity += glideAcceleration * Time.deltaTime;
 
-
-            float rollAngle = Vector3.Angle(new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z)
-                , controller.transform.forward);
-
-
-            int upOrDownRoll = 1;
-
-            if (controller.transform.forward.y > 0)
-            {
-                upOrDownRoll = -1;
-            }
-
-
-                glideVector = Quaternion.AngleAxis(rollAngle* upOrDownRoll, Vector3.up) * glideVector;
-
-
-
-            Vector3 glideVelocity = glideVector * GlideSpeed + Room.transform.up * (-1.0f) * GlideFallSpeed;
-
-            glideVelocity.y = Mathf.Min(GlideFallSpeed*-0.6f, glideVelocity.y);
-
-            glideVelocity += Body.WindVelocity;
-
+			// Stop velocity if we hit something.
             RaycastHit hit;
-            if(Physics.Raycast(cm.displayCube.transform.position, glideVelocity, out hit, .2f))
+			if(Physics.Raycast(cm.displayCube.transform.position, GlideVelocity, out hit, .2f))
             {
                 InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
                 if (ia!=null)
                 {
                     if(ia.CanClimb || ia.IsGround)
                     {
-                        glideVelocity = Vector3.down * GlideFallSpeed;
+						GlideVelocity = Vector3.down * GlideFallSpeed;
                     }
                 }
             }
 
-            Room.position += glideVelocity * Time.deltaTime;
-           } else // note this is hacky... should probably refactor so there is a "show glider" method that input manager calls when buttons pressed, and a start gliding method
+			// Wind does not add momentum, so we add wind velocity separately.
+			Vector3 totalVelocity = GlideVelocity + Body.WindVelocity;
+
+			Room.position += totalVelocity * Time.deltaTime;
+        } else // note this is hacky... should probably refactor so there is a "show glider" method that input manager calls when buttons pressed, and a start gliding method
         {
             IsGliding = false;
         }
@@ -204,9 +129,6 @@ public class Glide : MonoBehaviour
 	{
 		// Initialize force with the direction the kite is pointing.
 		Vector3 force = right.normalized;
-
-		// No verical force.
-		force.y = 0.0f;
 
 		// If pitch is negative (down) then we want to go forward.
 		// If pitch is positive (up) then we want to reverse direction.
