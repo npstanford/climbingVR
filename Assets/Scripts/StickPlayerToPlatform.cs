@@ -73,7 +73,6 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
             if (rb.useGravity || !rb.isKinematic )
             {
-                Debug.Log("sticky platform turned off gravity");
                 //rb.useGravity = false;
                // rb.isKinematic = true;
             }

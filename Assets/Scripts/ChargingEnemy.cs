@@ -5,6 +5,7 @@ using UnityEngine;
 public class ChargingEnemy : MonoBehaviour {
 
     public float chargingVelocity;
+    private Vector3 ChargingDirection;
     public float rotateSpeed;
     public float AttackRadius;
 
@@ -46,11 +47,11 @@ public class ChargingEnemy : MonoBehaviour {
     IEnumerator Charge(Vector3 playerDirection)
     {
         yield return new WaitForSeconds(1f);
-        Debug.Log("CHARGING!");
+        //Debug.Log("CHARGING!");
         IsCharging = true;
  
 
-        Vector3 ChargingDirection = new Vector3(playerDirection.x, 0, playerDirection.z);
+        ChargingDirection = new Vector3(playerDirection.x, 0, playerDirection.z);
         ChargingDirection = ChargingDirection.normalized;
 
         //Rigidbody rb = GetComponent<Rigidbody>();
@@ -94,4 +95,30 @@ public class ChargingEnemy : MonoBehaviour {
 
         
     }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Player"))
+        {
+            //Debug.Log("GT hit: " + other.gameObject.name);
+            ///other.transform.position += chargingVelocity * ChargingDirection * Time.deltaTime;
+            Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
+
+
+            IEnumerator StunPlayerCoroutine = StunPlayer(rb);
+
+            StartCoroutine(StunPlayerCoroutine);
+        }
+    }
+
+    IEnumerator StunPlayer(Rigidbody rb)
+    {
+        rb.isKinematic = false;
+        yield return new WaitForSeconds(2.0f);
+        rb.isKinematic = true;
+    }
+
+
 }
