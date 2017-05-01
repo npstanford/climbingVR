@@ -43,7 +43,9 @@ public class Glide : MonoBehaviour
             IsGliding = true;
 
             float magnitude = GlideSpeed;
-            Vector3 glideAcceleration = magnitude * forceFromRightVector(controller.transform.right);
+	    Vector3 force = forceFromRightVector(controller.transform.right);
+	    force += forceFromUpVector(controller.transform.up);
+            Vector3 glideAcceleration = magnitude * force;
             glideAcceleration.y = 0.0f;
             GlideVelocity += glideAcceleration * Time.deltaTime;
             Debug.DrawRay(controller.transform.position, glideAcceleration, Color.black, .1f);
@@ -170,6 +172,17 @@ public class Glide : MonoBehaviour
 			force = -force;
 		}
 
+		return force;
+	}
+
+	/*
+	 * Get the force from the HTC Vive 'up' vector.
+	 *
+	 * This provides lift to the side when the kite rolls.
+	 */
+	public static Vector3 forceFromUpVector (Vector3 up) 
+	{
+		Vector3 force = -up.normalized;
 		return force;
 	}
 
