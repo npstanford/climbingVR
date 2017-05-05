@@ -216,7 +216,6 @@ public class Enemy : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("collided with: " + other.gameObject.name);
         InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
         if (ia!=null)
         {

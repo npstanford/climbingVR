@@ -44,6 +44,7 @@ public class ColliderManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
         RaycastHit hit; //err I could and should pull this out of FixedUpdate and put it in start()
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
         layerMask += (1 << 2); //ignore raycast layer 

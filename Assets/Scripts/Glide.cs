@@ -87,7 +87,7 @@ public class Glide : MonoBehaviour
         }
     }
     */
-    
+
     public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
     {
         GliderModel.SetActive(true);
@@ -141,8 +141,9 @@ public class Glide : MonoBehaviour
         {
             IsGliding = false;
         }
+        
     }
-  
+
 
     public void StopGliding()
     {

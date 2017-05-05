@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class SwitchControl : MonoBehaviour {
 
-    public enum SwitchType {OneHit, OnAndOff, MultiHit };
+    public enum SwitchType {OneHit, OnAndOff, MultiHit};
 
     public SwitchType st;
 
 
     public int hits;
     public bool activated;
-
+    public float TimerLength;
     public Color OffColor;
     public Color OnColor;
 
     private Material SwitchSurface;
 
+
 	// Use this for initialization
 	void Start () {
+
         hits = 0;
         SwitchSurface = this.GetComponent<MeshRenderer>().material;
         SwitchSurface.color = OffColor;
@@ -53,7 +55,7 @@ public class SwitchControl : MonoBehaviour {
             else if (st == SwitchType.OnAndOff)
             {
                 activated = !activated;
-            }
+            } 
 
             if (st != SwitchType.MultiHit)
             {
@@ -79,11 +81,14 @@ public class SwitchControl : MonoBehaviour {
 
     IEnumerator Animate()
     {
+        activated = true;
         //maybe should have a "Flash" color to indicate it has been hit again.
         SwitchSurface.color = OnColor;
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(TimerLength);
         SwitchSurface.color = OffColor;
+        activated = false;
 
     }
+
 
 }
