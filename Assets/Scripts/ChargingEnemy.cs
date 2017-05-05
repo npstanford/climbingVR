@@ -81,7 +81,7 @@ public class ChargingEnemy : MonoBehaviour {
     IEnumerator Charge(Vector3 playerDirection)
     {
         yield return new WaitForSeconds(1f);
-        Debug.Log("CHARGING!");
+        //Debug.Log("CHARGING!");
         IsCharging = true;
  
 
@@ -132,6 +132,7 @@ public class ChargingEnemy : MonoBehaviour {
 
         
     }
+<<<<<<< HEAD
     private IEnumerator TrackPlayer()
     {
         while (true)
@@ -218,4 +219,32 @@ public class ChargingEnemy : MonoBehaviour {
 
     }
 
+=======
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.gameObject.CompareTag("Player"))
+        {
+            //Debug.Log("GT hit: " + other.gameObject.name);
+            ///other.transform.position += chargingVelocity * ChargingDirection * Time.deltaTime;
+            Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
+
+
+            IEnumerator StunPlayerCoroutine = StunPlayer(rb);
+
+            StartCoroutine(StunPlayerCoroutine);
+        }
+    }
+
+    IEnumerator StunPlayer(Rigidbody rb)
+    {
+        rb.isKinematic = false;
+        yield return new WaitForSeconds(2.0f);
+        rb.isKinematic = true;
+    }
+
+
+>>>>>>> refs/remotes/origin/master
 }
