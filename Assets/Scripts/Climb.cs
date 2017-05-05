@@ -25,9 +25,12 @@ public class Climb : MonoBehaviour {
 
         if (controller.canGrip && controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
         {
-            if (controller.GripObject.GetComponent<StickPlayerToPlatform>())
+            StickPlayerToPlatform sptp = controller.GripObject.GetComponent<StickPlayerToPlatform>();
+            if (sptp != null)
             {
-                Room.transform.parent = controller.GripObject.transform.parent;
+                //Room.transform.parent = controller.GripObject.transform.parent;
+                Debug.Log("Attempting to stick player while climbing");
+                Room.transform.parent = sptp.StickyObject.transform;
             }
             Cling(Room);
 

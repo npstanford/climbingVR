@@ -9,26 +9,10 @@ public class StickPlayerToPlatform : MonoBehaviour {
     public bool OnPlatform;
     public GameObject ObjectToStick;
 
-	// Use this for initialization
-	void Start () {
-        OnPlatform = false;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    private void FixedUpdate()
-    {
-        if (OnPlatform)
-        {
-
-        }
-    }
 
 
-    void OnTriggerStay(Collider collider)
+    /*
+    void OnTriggerEnter(Collider collider)
     {
     if (collider.gameObject.CompareTag("Player"))
     {
@@ -83,7 +67,7 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
     }
 
-    void OnTriggerExit(Collider collider)
+    void OnCollisionExit(Collider collider)
     {
         if (collider.gameObject.CompareTag("Player"))
         {
@@ -103,5 +87,5 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
     }
 
-
+    */
 }

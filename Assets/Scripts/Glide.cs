@@ -80,9 +80,38 @@ public class Glide : MonoBehaviour
             }
 
 
+<<<<<<< HEAD
+            //float rollAngle = Vector3.Angle(new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z) , controller.transform.forward);
+            Vector3 rollDirection = new Vector3(0.0f, 0.0f, controller.transform.up.z).normalized;
+            //rollDirection.z = Mathf.Pow(rollDirection.z, 2);
+            rollDirection = rollDirection.normalized;
+
+
+            glideVector = -rollDirection + (glideVector * forwardOrBackward);
+            //glideVector = glideVector * forwardOrBackward;
+            glideVector = glideVector.normalized;
+
+
+            Vector3 glideVelocity = glideVector * GlideSpeed + Room.transform.up * (-1.0f) * GlideFallSpeed;
+
+            glideVelocity.y = Mathf.Min(GlideFallSpeed * -0.6f, glideVelocity.y);
+
+            glideVelocity += Body.WindVelocity;
+
+
+            Room.position += glideVelocity * Time.deltaTime;
+        }
+    }
+    */
+
+    public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
+    {
+        GliderModel.SetActive(true);
+=======
             float roll = rotationFromPitchAndRoll(pitchFromRightVector(controller.transform.right), rollFromForwardVector(controller.transform.forward));
             Vector3 rollDirection = new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z);
             GlideVelocity = GlideVelocity + roll * BankSpeed * rollDirection *Time.deltaTime;
+>>>>>>> refs/remotes/origin/master
 
             if (GlideVelocity.magnitude > MaxGlideSpeed)
             {
@@ -100,8 +129,9 @@ public class Glide : MonoBehaviour
             IsGliding = false;
             GlideVelocity = Vector3.zero;
         }
+        
     }
-  
+
 
     public void StopGliding()
     {

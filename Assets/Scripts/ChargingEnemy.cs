@@ -7,41 +7,75 @@ public class ChargingEnemy : MonoBehaviour {
     public float chargingVelocity;
     private Vector3 ChargingDirection;
     public float rotateSpeed;
-    public float AttackRadius;
 
     public bool IsStunned;
     public bool IsCharging;
     public bool attack;
     public GameObject Player;
     public GameObject LaserFinder;
+    public AreaListener DetectPlayer;
+    public SwitchControl WeakPoint;
+    private Quaternion targetRot;
+    private bool trackPlayerIsRunning = false;
+    private Vector3 oldPlayerLocation;
+    private Vector3 newPlayerLocation;
+    private Vector3 PlayerDirection;
+    private MeshRenderer[] mrs;
+    private Material[] mats;
+    private InteractionAttributes[] ias;
+    public Quaternion rot;
+    public Material stunnedMaterial;
+    public float StunLength;
+    public int hits = 0;
+    IEnumerator StunCoroutine;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    // Use this for initialization
+    void Start () {
+        IEnumerator trackPlayer = TrackPlayer();
+        StunCoroutine = Stun();
+        StartCoroutine(trackPlayer);
+        mrs = GetComponentsInChildren<MeshRenderer>();
+        ias = GetComponentsInChildren<InteractionAttributes>();
+        mats = new Material[mrs.Length];
+        for (int i = 0; i < mrs.Length; i++)
+        {
+            mats[i] = mrs[i].material;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 playerDirection = (Player.transform.position - this.transform.position);
-        float playerDist = playerDirection.magnitude;
-        attack = (playerDist < AttackRadius);
+        attack = DetectPlayer.Activated;
+        if (hits < WeakPoint.hits)
+        {
+            Debug.Log("fewer hits");
+            hits = WeakPoint.hits;
+            StopCoroutine("Stun");
+            StartCoroutine("Stun");
+        }
+
         if (attack && !IsStunned && !IsCharging)
         {
+            trackPlayerIsRunning = true;
 
-            Quaternion rot = Quaternion.LookRotation(playerDirection);
+
             float step = rotateSpeed * Time.deltaTime;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, step);
-            transform.eulerAngles = new Vector3(Mathf.Clamp(transform.rotation.eulerAngles.x, -10f, 10f), 
-                transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-   
-
+            transform.eulerAngles = new Vector3(Mathf.Clamp(transform.rotation.eulerAngles.x, 0f, 0f),
+                transform.rotation.eulerAngles.y, Mathf.Clamp(transform.rotation.eulerAngles.z, 0f, 0f));
             // if playerDirection and forward are ever within delta, then charge
-            if(Vector3.Angle(transform.forward, playerDirection) < 5f)
+            //Debug.Log(Vector3.Angle(transform.forward, PlayerDirection));
+            if (Vector3.Angle(transform.forward, PlayerDirection) < 5f)
             {
-                IEnumerator ChargeCoroutine = Charge(playerDirection);
+                IEnumerator ChargeCoroutine = Charge(PlayerDirection);
                 StartCoroutine(ChargeCoroutine);
             }
+        } else
+        {
+            trackPlayerIsRunning = false;
         }
+
+
     }
 
     IEnumerator Charge(Vector3 playerDirection)
@@ -73,6 +107,7 @@ public class ChargingEnemy : MonoBehaviour {
                 {
                     if (!ia.IsGround)
                     {
+                        Debug.Log("Laser finder hit something otherthan ground: " + hit.collider.name);
                         IsCharging = false;
                         //rb.velocity = Vector3.zero;
                         yield break;
@@ -82,6 +117,8 @@ public class ChargingEnemy : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Laser finder hit nothing");
+
                 IsCharging = false;
                // rb.velocity = Vector3.zero;
                 yield break;
@@ -95,6 +132,94 @@ public class ChargingEnemy : MonoBehaviour {
 
         
     }
+<<<<<<< HEAD
+    private IEnumerator TrackPlayer()
+    {
+        while (true)
+        {
+            if (trackPlayerIsRunning)
+            {
+                UpdateTarget();
+                //Quaternion rot = Quaternion.LookRotation(playerDirection);
+            }
+            yield return new WaitForSeconds(.2f);
+        }
+    }
+
+    private void UpdateTarget()
+    {
+        PlayerDirection = (Player.transform.position - this.transform.position);
+
+        PlayerDirection.y = 0;
+
+        rot = Quaternion.LookRotation(PlayerDirection);
+
+    }
+
+    private IEnumerator Stun()
+    {
+        Debug.Log("Stun coroutine started");
+        StopCoroutine("Charge");
+        float stunnedStart = Time.time;
+        IsStunned = true;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        foreach (MeshRenderer mr in mrs)
+        {
+            mr.material = stunnedMaterial;
+        }
+
+        bool[] hurtsPlayer = new bool[ias.Length];
+
+        for (int i=0; i< ias.Length; i++)
+        {
+  
+            if (ias[i] != null)
+            {
+                hurtsPlayer[i] = ias[i].HurtsPlayer;
+                ias[i].HurtsPlayer = false;
+                
+            }
+        }
+
+        yield return new WaitForSeconds(Mathf.Max(0, StunLength - 2));
+
+        //flicker the enemy the last few seconds before it is unstunned
+        while ((Time.time - stunnedStart) < StunLength)
+        {
+            for (int i = 0; i < mrs.Length; i++)
+            {
+                mrs[i].material = mats[i];
+            }
+            yield return new WaitForSeconds(0.1f);
+            for (int i = 0; i < mrs.Length; i++)
+            {
+                mrs[i].material = stunnedMaterial;
+            }
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        for (int i = 0; i < mrs.Length; i++)
+        {
+            mrs[i].material = mats[i];
+        }
+
+
+        for (int i = 0; i < ias.Length; i++)
+        {
+            if (ias[i] != null)
+            {
+                ias[i].HurtsPlayer = hurtsPlayer[i];
+            }
+        }
+
+
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        IsStunned = false;
+
+    }
+
+=======
 
 
     private void OnTriggerEnter(Collider other)
@@ -121,4 +246,5 @@ public class ChargingEnemy : MonoBehaviour {
     }
 
 
+>>>>>>> refs/remotes/origin/master
 }
