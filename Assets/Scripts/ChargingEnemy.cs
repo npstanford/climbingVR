@@ -132,7 +132,7 @@ public class ChargingEnemy : MonoBehaviour {
 
         
     }
-<<<<<<< HEAD
+
     private IEnumerator TrackPlayer()
     {
         while (true)
@@ -219,7 +219,6 @@ public class ChargingEnemy : MonoBehaviour {
 
     }
 
-=======
 
 
     private void OnTriggerEnter(Collider other)
@@ -246,5 +245,5 @@ public class ChargingEnemy : MonoBehaviour {
     }
 
 
->>>>>>> refs/remotes/origin/master
+
 }
