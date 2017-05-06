@@ -28,6 +28,9 @@ public class ChargingEnemy : MonoBehaviour {
     public float StunLength;
     public int hits = 0;
     IEnumerator StunCoroutine;
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+    private bool HeadingBackToStart = false;
 
     // Use this for initialization
     void Start () {
@@ -41,6 +44,8 @@ public class ChargingEnemy : MonoBehaviour {
         {
             mats[i] = mrs[i].material;
         }
+        startPosition = transform.position;
+        startRotation = transform.rotation;
     }
 	
 	// Update is called once per frame
@@ -73,6 +78,18 @@ public class ChargingEnemy : MonoBehaviour {
         } else
         {
             trackPlayerIsRunning = false;
+
+        }
+
+        //after knocking player off, return back to starting position
+        //note: I should rotate first, and then once rotated, start transltaing
+        //i.e I should refactor so that I can track things other than the player
+        if (!attack && !IsStunned && (transform.position - startPosition).magnitude > 1)
+        {
+            if (!HeadingBackToStart)
+            {
+                StartCoroutine("HeadBackToStart");
+            }
         }
 
 
@@ -143,6 +160,35 @@ public class ChargingEnemy : MonoBehaviour {
             }
             yield return new WaitForSeconds(.2f);
         }
+    }
+
+    private IEnumerator HeadBackToStart()
+    {
+        HeadingBackToStart = true;
+        Vector3 DirectionToStart = startPosition - transform.position;
+
+        Quaternion rotStart = Quaternion.LookRotation(DirectionToStart);
+        Debug.Log("Direction to start: " + DirectionToStart);
+        Debug.Log("Angle back to start: " + Vector3.Angle(transform.forward, DirectionToStart));
+        while (!attack && Vector3.Angle(transform.forward, DirectionToStart) > 1f)
+        {
+
+            Debug.Log("rotating back to start angle: " + Vector3.Angle(transform.forward, DirectionToStart));
+
+            float step = rotateSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotStart, step);
+            transform.eulerAngles = new Vector3(Mathf.Clamp(transform.rotation.eulerAngles.x, 0f, 0f),
+                transform.rotation.eulerAngles.y, Mathf.Clamp(transform.rotation.eulerAngles.z, 0f, 0f));
+            yield return null;
+        }
+
+        while(!attack && (transform.position - startPosition).magnitude > 1)
+        {
+            Debug.Log("translating back to start");
+            transform.position += transform.forward * 5.0f * Time.deltaTime;
+            yield return null;
+        }
+        HeadingBackToStart = false;
     }
 
     private void UpdateTarget()

@@ -56,6 +56,7 @@ public class Wind : MonoBehaviour {
             {
                 Debug.Log("Wind is blowing: " + other.gameObject.name);
                 //other.transform.position += WindVelocity * Time.deltaTime;
+                rb.isKinematic = false;
                 rb.AddForce(WindVelocity, ForceMode.Impulse);
             }
 
@@ -70,6 +71,7 @@ public class Wind : MonoBehaviour {
         {
             if (ia.AffectedByWind)
             {
+                rb.isKinematic = true;
                 //other.transform.position += WindVelocity * Time.deltaTime;
                 rb.velocity = Vector3.zero;
             }

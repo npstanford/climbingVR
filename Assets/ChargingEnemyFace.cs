@@ -14,6 +14,7 @@ public class ChargingEnemyFace : MonoBehaviour
     public GameObject Player;
     private Quaternion rot;
 
+
     public void Start()
     {
         IEnumerator trackPlayer = TrackPlayer();
@@ -29,7 +30,8 @@ public class ChargingEnemyFace : MonoBehaviour
             float step = faceRotateSpeed * Time.deltaTime;
             pivot.transform.localRotation = Quaternion.RotateTowards(pivot.transform.localRotation, rot, step);
             //pivot.transform.eulerAngles = new Vector3(pivot.transform.rotation.eulerAngles.x,
-                //pivot.transform.rotation.eulerAngles.y, pivot.transform.rotation.eulerAngles.z);
+            //pivot.transform.rotation.eulerAngles.y, pivot.transform.rotation.eulerAngles.z);
+
             pivot.transform.localEulerAngles = new Vector3(Mathf.Clamp(pivot.transform.localRotation.eulerAngles.x, -15, 15),
             Mathf.Clamp(pivot.transform.localRotation.eulerAngles.y, -15, 15), Mathf.Clamp(pivot.transform.localRotation.eulerAngles.z, -15, 15));
         }
@@ -52,7 +54,7 @@ public class ChargingEnemyFace : MonoBehaviour
 
             IEnumerator StunPlayerCoroutine = StunPlayer(rb);
 
-            StartCoroutine(StunPlayerCoroutine);
+            //StartCoroutine(StunPlayerCoroutine);
         }
     }
 

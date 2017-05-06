@@ -12,6 +12,7 @@ public class InteractionAttributes : MonoBehaviour {
     public bool HurtsPlayer;
     public bool AffectedByWind;
     public bool CanPickUp;
+    public bool PushesPlayer;
 
     public Rigidbody ObjectToPickUp;
 

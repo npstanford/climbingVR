@@ -36,10 +36,12 @@ public class ColliderManager : MonoBehaviour {
     public Teleporter teleporter;
 
     public Transform Room; // add this as an attempt to rewrite sticking to platforms
+    private Rigidbody rb;
 
 	// Use this for initialization
 	void Start () {
         //Room = playerCollider.gameObject.transform;
+        rb = Room.GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -124,21 +126,7 @@ public class ColliderManager : MonoBehaviour {
         InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
         if (ia != null)
         {
-            if (ia.IsGround) // <--- HACKY... 
-            {
-
-
-
-                //PlayerIsTouchingGround = true;
-                /*
-                TeleportLocation tl = other.collider.GetComponent<TeleportLocation>();
-                if (tl != null)
-                {
-                    teleporter.LastTeleportLocation = tl;
-                }
-                */
-            }
-            else if (ia.HurtsPlayer)
+            if (ia.HurtsPlayer)
             {
                 Vector3 playerLocation = Room.transform.TransformPoint(playerCollider.center);
                 Vector3 hitDirection = (playerLocation) - other.transform.position;
@@ -159,6 +147,10 @@ public class ColliderManager : MonoBehaviour {
                 StartCoroutine(StunCoroutine);
 
             }
+            else if (ia.PushesPlayer)
+            {
+                rb.isKinematic = false;
+            }
         }
     }
 
@@ -175,9 +167,9 @@ public class ColliderManager : MonoBehaviour {
         InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
         if (ia != null)
         {
-            if (ia.IsGround) // <--- HACKY
+            if (ia.PushesPlayer) // <--- HACKY
             {
-
+                rb.isKinematic = true;
 
                // PlayerIsTouchingGround = false;
 
