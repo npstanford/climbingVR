@@ -49,15 +49,20 @@ public class Wind : MonoBehaviour {
     public void OnTriggerEnter(Collider other)
     {
         //Debug.Log("Wind blowing on: " + other.gameObject.name);
-       InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
-        Rigidbody rb = other.GetComponent<Rigidbody>();
-        if (ia != null && rb!=null) {
-            if (ia.AffectedByWind)
+        Rigidbody rb = other.GetComponentInParent<Rigidbody>();
+
+
+        if ( rb!=null) {
+            InteractionAttributes ia = rb.GetComponent<InteractionAttributes>();
+            if (ia != null)
             {
-                Debug.Log("Wind is blowing: " + other.gameObject.name);
-                //other.transform.position += WindVelocity * Time.deltaTime;
-                rb.isKinematic = false;
-                rb.AddForce(WindVelocity, ForceMode.Impulse);
+                if (ia.AffectedByWind)
+                {
+                    Debug.Log("Wind is blowing: " + other.gameObject.name);
+                    //other.transform.position += WindVelocity * Time.deltaTime;
+                    rb.isKinematic = false;
+                    rb.AddForce(WindVelocity, ForceMode.Impulse);
+                }
             }
 
        } 

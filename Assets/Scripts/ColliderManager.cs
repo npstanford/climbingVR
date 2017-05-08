@@ -14,6 +14,7 @@ public class ColliderManager : MonoBehaviour {
     //public GameObject OverheadCollider;
     public GameObject GroundedCollider;
     public float RealPlayerHeight;
+    public float MaxSlope;
     public float CurrentPlayerHeight;
     public GameObject playerHead;
     public Vector3 WindVelocity;
@@ -63,7 +64,8 @@ public class ColliderManager : MonoBehaviour {
                 if (ia.IsGround && !ia.CanPickUp)
                 {
                     PlayerIsTouchingGround = true;
-                    if (CurrentPlayerHeight - hit.distance > .01)
+                    float AmountPlayerUnderGround = CurrentPlayerHeight - hit.distance;
+                    if (AmountPlayerUnderGround > .01 && AmountPlayerUnderGround < MaxSlope)
                     {
                         float HeightAdjustment = Room.transform.position.y + (CurrentPlayerHeight - hit.distance);
 
