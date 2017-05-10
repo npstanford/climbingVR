@@ -120,9 +120,12 @@ public class ColliderManager : MonoBehaviour {
         Wind wind = other.GetComponent<Wind>();
 
 
-        if (wind != null)
+        if (wind != null && !other.transform.IsChildOf(transform)) // so wind blocks can't push you while gliding.
         {
             WindVelocity = wind.WindVelocity;
+        } else
+        {
+            WindVelocity = Vector3.zero;
         }
 
         InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();

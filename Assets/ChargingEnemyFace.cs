@@ -27,6 +27,7 @@ public class ChargingEnemyFace : MonoBehaviour
         if (ce.attack && !ce.IsStunned)
         {
             trackPlayerIsRunning = true;
+            /*
             float step = faceRotateSpeed * Time.deltaTime;
             pivot.transform.localRotation = Quaternion.RotateTowards(pivot.transform.localRotation, rot, step);
             //pivot.transform.eulerAngles = new Vector3(pivot.transform.rotation.eulerAngles.x,
@@ -34,6 +35,7 @@ public class ChargingEnemyFace : MonoBehaviour
 
             pivot.transform.localEulerAngles = new Vector3(Mathf.Clamp(pivot.transform.localRotation.eulerAngles.x, -15, 15),
             Mathf.Clamp(pivot.transform.localRotation.eulerAngles.y, -15, 15), Mathf.Clamp(pivot.transform.localRotation.eulerAngles.z, -15, 15));
+            */
         }
         else
         {
@@ -75,15 +77,35 @@ public class ChargingEnemyFace : MonoBehaviour
                 UpdateTarget();
                 //Quaternion rot = Quaternion.LookRotation(playerDirection);
             }
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.1f);
         }
     }
 
     private void UpdateTarget()
     {
-        PlayerDirection = (pivot.transform.InverseTransformDirection(Player.transform.position) - pivot.transform.position);
 
-        rot = Quaternion.LookRotation(PlayerDirection);
+        //PlayerDirection = (pivot.transform.InverseTransformDirection(Player.transform.position) - pivot.transform.position);
+
+        //rot = Quaternion.LookRotation(PlayerDirection);
+
+        pivot.transform.LookAt(Player.transform);
+
+        float newY;
+        newY = pivot.transform.localEulerAngles.y;
+        //convert this into something from -180 to 180;
+        if (Mathf.Abs(newY)>180)
+        {
+            newY = -newY - 180;
+        }
+
+        newY = Mathf.Clamp(newY, -15f, 15f);
+
+        //newY = (newY < 0 || newY > 180) ? Mathf.Clamp(newY , -15, 0) : Mathf.Clamp(newY, 0, 15);
+
+
+
+        pivot.transform.localEulerAngles = new Vector3(Mathf.Clamp(pivot.transform.localRotation.eulerAngles.x, -15, 15),
+            newY, 0);
 
     }
 
