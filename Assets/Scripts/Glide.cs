@@ -161,46 +161,32 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
 
             float magnitude = GlideSpeed;
             Vector3 force = forceFromRightVector(controller.transform.right);
-            force += forceFromUpVector(controller.transform.up);
+            Vector3 forceup = forceFromUpVector(controller.transform.up);
+            force += forceup;
+            if (Mathf.Abs(forceup.y) > .8f)
+            {
+                force = Vector3.zero;
+            }
+
+
+            float rollAngle = Vector3.Angle(new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z)
+    , controller.transform.forward);
+            rollAngle = rollAngle < .1 ? 0 : rollAngle;
+
+
+            int upOrDownRoll = 1;
+
+            if (controller.transform.forward.y > 0)
+            {
+                upOrDownRoll = -1;
+            }
+
+
+            Quaternion rollRotation = Quaternion.AngleAxis(rollAngle * upOrDownRoll, Vector3.up);
+
             Vector3 glideAcceleration = magnitude * force;
             glideAcceleration.y = 0.0f;
-            GlideVelocity += glideAcceleration * Time.deltaTime;
-            Debug.DrawRay(controller.transform.position, glideAcceleration, Color.black, .1f);
-
-            /*
-			// Stop velocity if we hit something.
-            RaycastHit hit;
-			if(Physics.Raycast(cm.displayCube.transform.position, GlideVelocity, out hit, .2f))
-            {
-                InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
-                if (ia!=null)
-                {
-                    if(ia.CanClimb || ia.IsGround)
-                    {
-						GlideVelocity = Vector3.down * GlideFallSpeed;
-                    }
-                }
-            }
-            */
-
-
-            Vector3 kiteDrag = controller.transform.up.normalized;
-            float drag = Vector3.Dot(GlideVelocity.normalized, kiteDrag);
-            if (drag > 0.5f)
-            {
-                Debug.Log("drag: " + drag);
-                float dragPercent = DragCoefficient * drag;
-                GlideVelocity -= GlideVelocity * dragPercent * Time.deltaTime;
-            }
-            else
-            {
-
-            }
-
-
-            float roll = rotationFromPitchAndRoll(pitchFromRightVector(controller.transform.right), rollFromForwardVector(controller.transform.forward));
-            Vector3 rollDirection = new Vector3(controller.transform.forward.x, 0.0f, controller.transform.forward.z);
-            GlideVelocity = GlideVelocity + roll * BankSpeed * rollDirection * Time.deltaTime;
+            GlideVelocity += rollRotation*glideAcceleration * Time.deltaTime;
 
             if (GlideVelocity.magnitude > MaxGlideSpeed)
             {
@@ -208,8 +194,46 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
             }
 
 
+
+            Vector3 kiteDrag = controller.transform.up.normalized;
+            float drag = Vector3.Dot(GlideVelocity.normalized, kiteDrag);
+            //if (drag > 0.5f)
+            //{
+            drag = Mathf.Max(drag, 0.2f);
+            float dragPercent = DragCoefficient * drag;
+                GlideVelocity -= GlideVelocity * dragPercent * Time.deltaTime;
+            //}
+
+            
+
+
+
+
+            //gravity should be greatest when the glider surface is perpendicular to ground (100%) and least when it is parallel to ground (10%)
+            Vector3 up = forceFromUpVector(controller.transform.up);
+
+            Vector3 EffectiveFallVelocity = -Vector3.up * (Mathf.Max(0f, (1 - up.y)) * .9f + .1f) * GlideFallSpeed;
+
+
             // Wind does not add momentum, so we add wind velocity separately.
-            Vector3 totalVelocity = GlideVelocity + Body.WindVelocity;
+            Vector3 totalVelocity = GlideVelocity + Body.WindVelocity + EffectiveFallVelocity;
+
+            // Stop velocity if we hit something.
+            RaycastHit hit;
+            if (Physics.Raycast(cm.displayCube.transform.position, totalVelocity.normalized, out hit, .2f))
+            {
+                InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
+                if (ia != null)
+                {
+                    if (ia.CanClimb || ia.IsGround)
+                    {
+                        GlideVelocity = Vector3.down * GlideFallSpeed;
+                    }
+                }
+            }
+
+
+
             Room.position += totalVelocity * Time.deltaTime;
 
 

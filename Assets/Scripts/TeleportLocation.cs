@@ -3,15 +3,22 @@ using System.Collections;
 
 public class TeleportLocation : MonoBehaviour {
 
-    public GameObject TeleportObject;
+    private Teleporter teleporter;
 
 	// Use this for initialization
 	void Start () {
-        TeleportObject.GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<MeshRenderer>().enabled = false;
+        GameObject go = GameObject.FindGameObjectWithTag("Teleporter");
+        teleporter = go.GetComponent<Teleporter>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            teleporter.LastTeleportLocation = this;
+        }
+    }
+
+
 }
