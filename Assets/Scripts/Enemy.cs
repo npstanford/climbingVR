@@ -212,6 +212,7 @@ public class Enemy : MonoBehaviour {
         rb.velocity = Vector3.zero;
         IsStunned = false;
         reset = true;
+        transform.parent = null; // to stop corner cases where the enemy on coming unstunned is still childed to the controller
     }
 
     private void OnTriggerEnter(Collider other)
@@ -221,6 +222,21 @@ public class Enemy : MonoBehaviour {
         {
             if(ia.CanPickUp)
             {
+                Debug.Log("battered");
+                StopCoroutine("Battered");
+                StartCoroutine("Battered");
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        InteractionAttributes ia = collision.collider.gameObject.GetComponent<InteractionAttributes>();
+        if (ia != null)
+        {
+            if (ia.CanPickUp)
+            {
+                Debug.Log("battered");
                 StopCoroutine("Battered");
                 StartCoroutine("Battered");
             }

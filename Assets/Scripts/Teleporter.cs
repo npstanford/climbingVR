@@ -23,6 +23,7 @@ public class Teleporter : MonoBehaviour
     {
         if (LastTeleportLocation != null)
         {
+            Debug.Log("player was teleported");
             Player.transform.position = LastTeleportLocation.transform.position;
         }
     }
@@ -31,6 +32,7 @@ public class Teleporter : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            Debug.Log("this object is calling teleport: " + this.name);
             Teleport();
         }
     }

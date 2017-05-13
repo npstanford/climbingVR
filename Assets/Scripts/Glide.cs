@@ -163,7 +163,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
             Vector3 force = forceFromRightVector(controller.transform.right);
             Vector3 forceup = forceFromUpVector(controller.transform.up);
             force += forceup;
-            if (Mathf.Abs(forceup.y) > .8f)
+            if (Mathf.Abs(forceup.y) > .92f)
             {
                 force = Vector3.zero;
             }
@@ -220,6 +220,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
 
             // Stop velocity if we hit something.
             RaycastHit hit;
+            Debug.DrawRay(cm.displayCube.transform.position, totalVelocity.normalized);
             if (Physics.Raycast(cm.displayCube.transform.position, totalVelocity.normalized, out hit, .2f))
             {
                 InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
@@ -227,7 +228,8 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
                 {
                     if (ia.CanClimb || ia.IsGround)
                     {
-                        GlideVelocity = Vector3.down * GlideFallSpeed;
+
+                        totalVelocity = Vector3.down * EffectiveFallVelocity.magnitude;
                     }
                 }
             }

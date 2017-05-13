@@ -24,6 +24,8 @@ public class ColliderManager : MonoBehaviour {
     public bool PlayerIsJumping;
     public float StunLength;
     public Image InjuredMask;
+    private Vector3 prevRoomPosition;
+    private Vector3 curRoomPosition;
 
     private IEnumerator StunCoroutine;
 
@@ -43,10 +45,16 @@ public class ColliderManager : MonoBehaviour {
 	void Start () {
         //Room = playerCollider.gameObject.transform;
         rb = Room.GetComponent<Rigidbody>();
-	}
+        prevRoomPosition = Room.transform.position;
+        curRoomPosition = Room.transform.position;
+        RealPlayerHeight = playerHead.transform.position.y;
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        prevRoomPosition = curRoomPosition;
+        curRoomPosition = Room.transform.position;
+
 
         RaycastHit hit; //err I could and should pull this out of FixedUpdate and put it in start()
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
@@ -61,20 +69,30 @@ public class ColliderManager : MonoBehaviour {
 
             if (ia != null)
             {
-                if (ia.IsGround && !ia.CanPickUp)
+                if (ia.IsGround && !(ia.CanPickUp && hit.collider.transform.IsChildOf(transform)))
                 {
                     PlayerIsTouchingGround = true;
                     float AmountPlayerUnderGround = CurrentPlayerHeight - hit.distance;
-                    if (AmountPlayerUnderGround > .01 && AmountPlayerUnderGround < MaxSlope)
+                    if (AmountPlayerUnderGround > .01) 
                     {
-                        float HeightAdjustment = Room.transform.position.y + (CurrentPlayerHeight - hit.distance);
+                        // instead of not doing anything if below max slope... just raise only by max slope
+                        /*
+                         * new idea: if we exceed the max slope, then push the player back to where they had been
+                         * a horrible hackish idea is 
+                         */ 
+       
+                            float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
 
-                        Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
+                            Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
                     }
                 }
             }
 
         }
+
+
+
+
     }
 
     void FixedUpdate ()
@@ -120,12 +138,18 @@ public class ColliderManager : MonoBehaviour {
         Wind wind = other.GetComponent<Wind>();
 
 
-        if (wind != null && !other.transform.IsChildOf(transform)) // so wind blocks can't push you while gliding.
+        if (wind != null)
         {
-            WindVelocity = wind.WindVelocity;
-        } else
-        {
-            WindVelocity = Vector3.zero;
+            if (!other.transform.IsChildOf(transform))
+            {
+                // so wind blocks can't push you while gliding.
+
+                WindVelocity = wind.WindVelocity;
+            }
+            else
+            {
+                WindVelocity = Vector3.zero;
+            }
         }
 
         InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();

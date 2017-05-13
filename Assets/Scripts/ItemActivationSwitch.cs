@@ -33,7 +33,16 @@ public class ItemActivationSwitch : MonoBehaviour {
         if (other.gameObject.CompareTag("Controller"))
         {
             im.EnableCapability(ActivateWhat);
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
+            Transform[] ts = this.GetComponentsInChildren<Transform>();
+            foreach (Transform t in ts)
+            {
+                if (!t.gameObject.Equals(this.gameObject))
+                {
+                    t.gameObject.SetActive(false);
+                }
+
+            }
 
         }
     }

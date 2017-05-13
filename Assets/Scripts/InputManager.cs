@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.ImageEffects;
 
 public class InputManager : MonoBehaviour {
     public enum Capabilities { Climb, Hookshot, Glide};
@@ -14,6 +15,8 @@ public class InputManager : MonoBehaviour {
     public GripTool GripToolLeft;
     public GripTool GripToolRight;
     public GameObject PlayerHead;
+    public BlurOptimized bo;
+
 
     public float FallAcceleration;
     private float FallVelocity;
@@ -175,6 +178,7 @@ public class InputManager : MonoBehaviour {
         } else
         {
             FallVelocity = 0;
+            bo.blurSize = 0;
         }
 
     }
@@ -311,6 +315,8 @@ public class InputManager : MonoBehaviour {
     public void Fall()
     {
         FallVelocity += FallAcceleration * Time.deltaTime;
+        FallVelocity = Mathf.Min(FallVelocity, 30);
+        bo.blurSize = FallVelocity / 3; // blursize ranges from 0 to 10. Fall Velocity from 0 to 20. So this scales linearly.
         Body.transform.position += Vector3.down * FallVelocity * Time.deltaTime;
     }
 

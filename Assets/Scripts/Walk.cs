@@ -12,7 +12,8 @@ public class Walk : MonoBehaviour {
     public bool UseTrigStep = true;
     //public bool IsRunning = true;
     public VignetteAndChromaticAberration Vignette;
-    public float MaxVignette;  
+    public float MaxVignette;
+    public BlurOptimized bo;
 
 
     public GameObject Player;
@@ -141,7 +142,7 @@ public class Walk : MonoBehaviour {
 
                 Room.transform.position = newLocation;
                 Vignette.intensity = Mathf.Lerp(0, MaxVignette, Mathf.Sin(elapsedTime / StepTime * Mathf.PI));
-
+                //bo.blurSize = Mathf.Lerp(0, 1, Mathf.Sin(elapsedTime / StepTime * Mathf.PI));
             }
 
 
