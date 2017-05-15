@@ -7,7 +7,7 @@ public class InputManager : MonoBehaviour {
     public enum Capabilities { Climb, Hookshot, Glide};
 
     public bool EnableAllComponents = true;
-    //public bool RunInPlace = false;
+    public bool RunInPlace = false;
     public ControllerState lController;
     public ControllerState rController;
     public Rigidbody Body; //note this should more accurately be understood as Room and not body
@@ -38,15 +38,18 @@ public class InputManager : MonoBehaviour {
     private Climb climb;
     private Hookshot hookshot;
     private Glide glide;
-    //private Run run;
+    private Run run;
     private GripMeter gm;
-    private ColliderManager cm;
     private PickUp pu;
+
+    //inputs
+    private ColliderManager cm;
+    private BodyMovementCollector bmc; 
 
     private float lTouchpadPressTime;
     private float rTouchpadPressTime;
 
-    private bool PlayerIsTouchingGround;
+    public bool PlayerIsTouchingGround;
 
 
 
@@ -56,10 +59,11 @@ public class InputManager : MonoBehaviour {
         climb = GetComponent<Climb>();
         hookshot = GetComponent<Hookshot>();
         glide = GetComponent<Glide>();
-        //run = GetComponent<Run>();
+        run = GetComponent<Run>();
         gm = GetComponent<GripMeter>();
         cm = Body.GetComponent<ColliderManager>();
         pu = GetComponent<PickUp>();
+        bmc = FindObjectOfType<BodyMovementCollector>();
 
         if (!EnableAllComponents)
         {
@@ -130,15 +134,15 @@ public class InputManager : MonoBehaviour {
             return;
         }
 
-        /*
+
         if (RunInPlace)
         {
-            CheckRunning(lController);
+            CheckRunning();
         } else
-        { */
+        {
             CheckWalking(rController, ref rTouchpadPressTime);
             CheckWalking(lController, ref lTouchpadPressTime);
-        //}
+        }
 
         CheckPickUp(rController);
         CheckPickUp(lController);
@@ -263,21 +267,23 @@ public class InputManager : MonoBehaviour {
 
     }
 
-    /*
-    void CheckRunning(ControllerState controller)
-    {
-        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
-        {
-            run.Step(controller);
-        }
 
-        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+    void CheckRunning()
+    {
+        if (bmc.Head.speed > run.minHeadSpeedToRun && PlayerIsTouchingGround)
+        {
+            Vector3 avgDirection = (bmc.Head.direction + bmc.RightArm.direction + bmc.LeftArm.direction) / 3;
+            avgDirection = avgDirection.normalized;
+
+            float avgSpeed = .5f * bmc.Head.speed + .25f *bmc.RightArm.speed + .25f * bmc.LeftArm.speed;
+
+            run.Step(avgDirection, avgSpeed);
+        } else
         {
             run.Stop();
         }
 
     }
-    */
 
     bool CheckOverheadHand(ControllerState controller)
     {

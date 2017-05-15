@@ -47,7 +47,7 @@ public class ColliderManager : MonoBehaviour {
         rb = Room.GetComponent<Rigidbody>();
         prevRoomPosition = Room.transform.position;
         curRoomPosition = Room.transform.position;
-        RealPlayerHeight = playerHead.transform.position.y;
+        //RealPlayerHeight = playerHead.transform.position.y;
     }
 	
 	// Update is called once per frame
@@ -104,7 +104,8 @@ public class ColliderManager : MonoBehaviour {
         if (playerHead.transform.localPosition.y > RealPlayerHeight)
         {
             CurrentPlayerHeight = RealPlayerHeight;
-            colliderCenter.y = (colliderCenter.y + (playerHead.transform.localPosition.y / RealPlayerHeight)) / 2.0f;
+            //colliderCenter.y = (colliderCenter.y + (playerHead.transform.localPosition.y / RealPlayerHeight)) / 2.0f;
+            colliderCenter.y = playerHead.transform.localPosition.y - (RealPlayerHeight / 2.0f);
             PlayerIsJumping = true;
         } else
         {

@@ -214,13 +214,21 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
 
             Vector3 EffectiveFallVelocity = -Vector3.up * (Mathf.Max(0f, (1 - up.y)) * .9f + .1f) * GlideFallSpeed;
 
-
+            Vector3 totalVelocity;
             // Wind does not add momentum, so we add wind velocity separately.
-            Vector3 totalVelocity = GlideVelocity + Body.WindVelocity + EffectiveFallVelocity;
+            if (Body.WindVelocity.magnitude > 0)
+            {
+                totalVelocity = .2f * GlideVelocity + Body.WindVelocity + EffectiveFallVelocity;
+
+            }
+            else
+            {
+                totalVelocity = GlideVelocity + Body.WindVelocity + EffectiveFallVelocity;
+
+            }
 
             // Stop velocity if we hit something.
             RaycastHit hit;
-            Debug.DrawRay(cm.displayCube.transform.position, totalVelocity.normalized);
             if (Physics.Raycast(cm.displayCube.transform.position, totalVelocity.normalized, out hit, .2f))
             {
                 InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
