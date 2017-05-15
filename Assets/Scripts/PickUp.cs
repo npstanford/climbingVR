@@ -49,7 +49,6 @@ public class PickUp : MonoBehaviour {
             IsPickingUp = false;
             Vector3 force = (controller.controller.transform.localPosition - controller.prevPos) / Time.deltaTime;
             rb.AddForce(force / rb.mass, ForceMode.VelocityChange);
-            Debug.Log("Force: " + force);
         }
     }
 

@@ -63,7 +63,8 @@ public class ColliderManager : MonoBehaviour {
         layerMask += (1 << 8); //ignore the controllers
         layerMask = ~layerMask;
         PlayerIsTouchingGround = false; //so that if we don't hit on the raycast, it will remain false
-        if (Physics.Raycast(playerHead.transform.position, Vector3.down, out hit, CurrentPlayerHeight, layerMask))
+        Debug.DrawRay(playerHead.transform.position, Vector3.down * (CurrentPlayerHeight + .05f), Color.cyan);
+        if (Physics.Raycast(playerHead.transform.position, Vector3.down, out hit, CurrentPlayerHeight + .1f, layerMask))
         {
             InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
 
@@ -84,6 +85,11 @@ public class ColliderManager : MonoBehaviour {
                             float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
 
                             Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
+                    } else if (AmountPlayerUnderGround < 0) // i.e. player is slightly in the air
+                    {
+                        float HeightAdjustment = Room.transform.position.y + AmountPlayerUnderGround;
+
+                        Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
                     }
                 }
             }

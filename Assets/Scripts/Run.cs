@@ -40,7 +40,7 @@ public class Run : MonoBehaviour {
             }
         }
 
-        Room.transform.position += flatDirection * scaledSpeed * Time.deltaTime;
+        Room.transform.localPosition += flatDirection * scaledSpeed * Time.deltaTime;
         Spedometer.text = scaledSpeed.ToString("F2");
         EyeBlur.intensity = BlurAmount * (scaledSpeed / MaxSpeed);
     }

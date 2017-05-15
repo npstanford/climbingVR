@@ -16,6 +16,7 @@ public class InputManager : MonoBehaviour {
     public GripTool GripToolRight;
     public GameObject PlayerHead;
     public BlurOptimized bo;
+    public int NotTouchingGroundCount; //for smoothing otu not touching ground during running
 
 
     public float FallAcceleration;
@@ -270,7 +271,19 @@ public class InputManager : MonoBehaviour {
 
     void CheckRunning()
     {
-        if (bmc.Head.speed > run.minHeadSpeedToRun && PlayerIsTouchingGround)
+        if (!PlayerIsTouchingGround)
+        {
+            NotTouchingGroundCount += 1;
+            if (NotTouchingGroundCount > 20)
+            {
+                Debug.Log("not touching the ground too long");
+                return;
+            }
+        } else
+        {
+            NotTouchingGroundCount = 0;
+        }
+        if (bmc.Head.speed > run.minHeadSpeedToRun)
         {
             Vector3 avgDirection = (bmc.Head.direction + bmc.RightArm.direction + bmc.LeftArm.direction) / 3;
             avgDirection = avgDirection.normalized;
