@@ -36,9 +36,9 @@ public class InputManager : MonoBehaviour {
 
     //capabilities
     private Walk walk;
-    private Climb climb;
-    private Hookshot hookshot;
-    private Glide glide;
+    public Climb climb;
+    public Hookshot hookshot;
+    public Glide glide;
     private Run run;
     private GripMeter gm;
     private PickUp pu;
@@ -271,19 +271,22 @@ public class InputManager : MonoBehaviour {
 
     void CheckRunning()
     {
+        /* I dont think this code does anything useful so I commented it out to see if anything breaks
         if (!PlayerIsTouchingGround)
         {
             NotTouchingGroundCount += 1;
             if (NotTouchingGroundCount > 20)
             {
-                Debug.Log("not touching the ground too long");
                 return;
             }
         } else
         {
             NotTouchingGroundCount = 0;
         }
-        if (bmc.Head.speed > run.minHeadSpeedToRun)
+        */
+
+
+        if (bmc.Head.speed > run.minHeadSpeedToRun && !bmc.NonRunningHeadMovement)
         {
             Vector3 avgDirection = (bmc.Head.direction + bmc.RightArm.direction + bmc.LeftArm.direction) / 3;
             avgDirection = avgDirection.normalized;

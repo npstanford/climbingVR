@@ -13,6 +13,8 @@ public class BodyMovementCollector : MonoBehaviour {
     public bool ShowDirectioNRays = false;
     public ColliderManager cm;
     public Transform Room;
+    public bool NonRunningHeadMovement = false;
+
 
     public BodyTrackingTimeSeries RightArm;
     public BodyTrackingTimeSeries LeftArm;
@@ -93,17 +95,36 @@ public class BodyMovementCollector : MonoBehaviour {
             LeftLR.SetPosition(1, LeftLR.transform.position + lDirection.normalized);
         }
 
+        Vector3 TopOfHeadInRoomLocalSpace = Room.InverseTransformPoint(TopOfHead.transform.position);
+
         RightArm.Update(RightController.transform.localPosition, rDirection.normalized, cm.PlayerIsTouchingGround);
         LeftArm.Update(LeftController.transform.localPosition, lDirection.normalized, cm.PlayerIsTouchingGround);
-        Head.Update(Room.InverseTransformPoint(TopOfHead.transform.position), TopOfHead.transform.forward, cm.PlayerIsTouchingGround);
+        Head.Update(TopOfHeadInRoomLocalSpace, TopOfHead.transform.forward, cm.PlayerIsTouchingGround);
 
+        /*
+        if (TopOfHeadInRoomLocalSpace.y < .95 * cm.RealPlayerHeight) {
+            NonRunningHeadMovement = true;
+        } else
+        {
+            if (NonRunningHeadMovement == true)
+            {
+                //if we're standing up quickly, we need to clear out all the time series
+                RightArm.Clear();
+                LeftArm.Clear();
+                Head.Clear();
+            }
+            NonRunningHeadMovement = false;
+        }
+        */
+
+        NonRunningHeadMovement = Head.CheckForDucking();
 
         RightArmSpeed = RightArm.speed;
         RightArmDirection = RightArm.direction;
         HeadSpeed = Head.speed;
         HeadDirection = Head.direction;
 
-        //Debug.Log("Head speed: " + HeadSpeed);
+
 
 	}
 
@@ -117,7 +138,6 @@ public class BodyMovementCollector : MonoBehaviour {
 
         private int i;
         private int size;
-        private int NotTouchingTheGroundCount;
 
 
 
@@ -130,7 +150,7 @@ public class BodyMovementCollector : MonoBehaviour {
             speed = 0.0f;
             i = 0;
             this.size = size;
-            NotTouchingTheGroundCount = 0;
+
 
             for (int j = 0; j < size; j++)
             {
@@ -146,25 +166,7 @@ public class BodyMovementCollector : MonoBehaviour {
          */
         public void Update(Vector3 position, Vector3 forward, bool PlayerIsTouchingGround)
         {
-            //If player is not touching the ground, don't fill in data
-            /*
-            if (!PlayerIsTouchingGround)
-            {
-                NotTouchingTheGroundCount += 1;
-                if (NotTouchingTheGroundCount >= 100)
-                {
-                    Debug.Log("Player not touching the ground +100");
-                    positions[i] = Vector3.zero;
-                    speeds[i] = 0f;
-                    directions[i] = Vector3.zero;
-                    i = Mod(i + 1, size);
-                    return;
-                } 
-            } else
-            {
-                NotTouchingTheGroundCount = 0;
-            }
-            */
+
 
             positions[i] = position;
             if (positions[Mod(i - 1, size)] != Vector3.zero)
@@ -194,15 +196,6 @@ public class BodyMovementCollector : MonoBehaviour {
 
             speed = (avgS / size);
 
-            /*
-            //this is to catch the case that when you drop, your current position is calculated against the origin to find your speed
-            //note this might not be an issue when everything is in local coordintes
-            if (positions[Mod(i - 1, size)] == Vector3.zero) {
-                Debug.Log("writing speed as zero due to zero position");
-                direction = Vector3.zero;
-                speed = 0.0f;
-            }
-            */
             i = Mod(i + 1, size);
         }
 
@@ -210,6 +203,38 @@ public class BodyMovementCollector : MonoBehaviour {
         {
             return (a % b + b) % b;
         }
+
+        public bool CheckForDucking()
+        {
+            //looks to see if all of changes in position.y are the same across positions
+            int j = i;
+
+            bool GoingDown = (positions[j].y - positions[Mod(j + 1, size)].y > 0);
+            for (int k = 0; k<size-1; k++)
+            {
+                //basically, go a full loop through the buffer and check the sign of the change of position at each point
+                // if it ever differs from the first one, return false
+               if( GoingDown!=(positions[Mod(j+k, size)].y - positions[Mod(j+k+1, size)].y > 0))
+                {
+                    
+                    return false;
+                }
+            }
+            return true; // i.e. all the changes in position are the same sign (meaning player is ducking or standing)
+        }
+
+        public void Clear()
+        {
+            i = 0;
+            
+            for (int j=0; j<size; j++)
+            {
+                positions[j] = Vector3.zero;
+                speeds[j] = 0f;
+                directions[j] = Vector3.zero;
+            }
+        }
+
     }
 
 

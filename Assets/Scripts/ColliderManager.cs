@@ -26,6 +26,8 @@ public class ColliderManager : MonoBehaviour {
     public Image InjuredMask;
     private Vector3 prevRoomPosition;
     private Vector3 curRoomPosition;
+    public InputManager im;
+
 
     private IEnumerator StunCoroutine;
 
@@ -85,7 +87,9 @@ public class ColliderManager : MonoBehaviour {
                             float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
 
                             Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
-                    } else if (AmountPlayerUnderGround < 0) // i.e. player is slightly in the air
+                    } else if (AmountPlayerUnderGround < 0 && (!im.climb.IsClimbing && !im.glide.IsGliding && im.hookshot.Grapple.Grappled)) 
+                        // i.e. player is slightly in the air
+                        //also horrible code -- I hate that I am pulling in data from input manager here...
                     {
                         float HeightAdjustment = Room.transform.position.y + AmountPlayerUnderGround;
 
