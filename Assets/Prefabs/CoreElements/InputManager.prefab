@@ -1,0 +1,200 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1706143276072270}
+  m_IsPrefabParent: 1
+--- !u!1 &1706143276072270
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4200639026033784}
+  - component: {fileID: 114595266659447320}
+  - component: {fileID: 114316895331177924}
+  - component: {fileID: 114770430810188156}
+  - component: {fileID: 114719300045488916}
+  - component: {fileID: 114901286647537154}
+  - component: {fileID: 114891654224223862}
+  - component: {fileID: 114052535997613206}
+  - component: {fileID: 114338639756213362}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4200639026033784
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114052535997613206
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0230507d050542547bd653e48676c21b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxGrip: 20
+  RemainingGrip: 0
+  GripRecoverRate: 5
+  GripDepletedPenalty: 5
+  FlashRate: 0.4
+  LWristDisplay: {fileID: 0}
+  RWristDisplay: {fileID: 0}
+--- !u!114 &114316895331177924
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a6976434db754944a9675d760b752ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StepSize: 1
+  StepTime: 0.2
+  UseTrigStep: 1
+  Vignette: {fileID: 0}
+  MaxVignette: 0.5
+  bo: {fileID: 0}
+  Player: {fileID: 0}
+  Room: {fileID: 0}
+--- !u!114 &114338639756213362
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847b1127576be7246ac1261dec2ea90c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsPickingUp: 0
+--- !u!114 &114595266659447320
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85f281ad1496fe141b3d2485184ddbfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnableAllComponents: 1
+  RunInPlace: 1
+  lController: {fileID: 114039258177899680, guid: cbac9373d06b4d9478afad0187c7d97e,
+    type: 2}
+  rController: {fileID: 114839692160357010, guid: cbac9373d06b4d9478afad0187c7d97e,
+    type: 2}
+  Body: {fileID: 54532805182200154, guid: cbac9373d06b4d9478afad0187c7d97e, type: 2}
+  GripToolLeft: {fileID: 0}
+  GripToolRight: {fileID: 0}
+  PlayerHead: {fileID: 0}
+  FallingBlur: {fileID: 0}
+  NotTouchingGroundCount: 0
+  FallAcceleration: 9
+  walkHookDiff: 0.2
+  climb: {fileID: 0}
+  hookshot: {fileID: 0}
+  glide: {fileID: 0}
+  PlayerIsTouchingGround: 0
+--- !u!114 &114719300045488916
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0852d76c94513d24aaa388bc39523d59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Grapple: {fileID: 0}
+  GrappleOffset: {fileID: 0}
+  LaserSight: {fileID: 0}
+  ShootingAngle: 40
+  GrappleSpeed: 120
+  GrappleLength: 15
+--- !u!114 &114770430810188156
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3130eddaa53e3499070a75fe9daf10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  JumpDampFactor: 2
+  IsClimbing: 0
+  GripDepletion: 2
+--- !u!114 &114891654224223862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27fc1e65e31812c449956a844b7afeb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Room: {fileID: 0}
+  Player: {fileID: 0}
+  SpeedFactor: 1.2
+  SpeedPower: 2.8
+  MaxSpeed: 10
+  Spedometer: {fileID: 0}
+  EyeBlur: {fileID: 0}
+  BlurAmount: 0.7
+  minHeadSpeedToRun: 0.3
+--- !u!114 &114901286647537154
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1706143276072270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237a72578a099f046a6972611e0b0161, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GliderModel: {fileID: 0}
+  Room: {fileID: 0}
+  MaxGlideSpeed: 8
+  BankSpeed: 5
+  GlideSpeed: 8
+  GlideFallSpeed: 9
+  GliderOffset: {x: -0.3, y: -0.1, z: -0.3}
+  IsGliding: 0
+  GripDepletion: 1
+  cm: {fileID: 0}
+  DragCoefficient: 2

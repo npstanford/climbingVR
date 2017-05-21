@@ -8,6 +8,8 @@ public class BlurVisionInWalls : MonoBehaviour {
 
 
     public Image HeadBlur;
+    [HideInInspector]
+    public bool HeadInWall = false;
     public Color flashColor = new Color(0f, 0f, 0f, .5f);
 
 
@@ -50,6 +52,8 @@ public class BlurVisionInWalls : MonoBehaviour {
                 if (!ia.IsPartOfBody && !ia.HurtsPlayer)
                 {
                     BlurVision();
+                    HeadInWall = true;
+
                 }
             }
 
@@ -58,6 +62,7 @@ public class BlurVisionInWalls : MonoBehaviour {
     void OnTriggerExit()
     {
         UnBlurVision();
+        HeadInWall = false;
     }
 
 }

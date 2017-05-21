@@ -27,6 +27,8 @@ public class ColliderManager : MonoBehaviour {
     private Vector3 prevRoomPosition;
     private Vector3 curRoomPosition;
     public InputManager im;
+    public BlurVisionInWalls Head;
+
 
 
     private IEnumerator StunCoroutine;
@@ -36,8 +38,6 @@ public class ColliderManager : MonoBehaviour {
     public float ImpactDistance;
 
     public GameObject displayCube;
-    public GameController gc;
-
     public Teleporter teleporter;
 
     public Transform Room; // add this as an attempt to rewrite sticking to platforms
@@ -56,7 +56,11 @@ public class ColliderManager : MonoBehaviour {
 	void Update () {
         prevRoomPosition = curRoomPosition;
         curRoomPosition = Room.transform.position;
-
+        /*
+        Debug.Log("imclimbing:" + im.climb.IsClimbing);
+        Debug.Log("imgliding:" + im.glide.IsGliding);
+        Debug.Log("hookshot:" + im.hookshot.Grapple.Grappled);
+        */
 
         RaycastHit hit; //err I could and should pull this out of FixedUpdate and put it in start()
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
@@ -76,17 +80,25 @@ public class ColliderManager : MonoBehaviour {
                 {
                     PlayerIsTouchingGround = true;
                     float AmountPlayerUnderGround = CurrentPlayerHeight - hit.distance;
-                    if (AmountPlayerUnderGround > .01) 
+                    if (AmountPlayerUnderGround > .01)
                     {
                         // instead of not doing anything if below max slope... just raise only by max slope
                         /*
                          * new idea: if we exceed the max slope, then push the player back to where they had been
                          * a horrible hackish idea is 
-                         */ 
-       
-                            float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
+                         */
 
+                        float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
+    
+                        if (AmountPlayerUnderGround > MaxSlope && !im.climb.IsClimbing)
+                        {
+                            Room.transform.position = prevRoomPosition;
+                            curRoomPosition = prevRoomPosition;
+                        }
+                        else if (!Head.HeadInWall)
+                        {
                             Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
+                        }
                     } else if (AmountPlayerUnderGround < 0 && (!im.climb.IsClimbing && !im.glide.IsGliding && im.hookshot.Grapple.Grappled)) 
                         // i.e. player is slightly in the air
                         //also horrible code -- I hate that I am pulling in data from input manager here...

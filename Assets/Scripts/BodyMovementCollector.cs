@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using MathNet.Numerics;
 
-public class BodyMovementCollector : MonoBehaviour {
+public class BodyMovementCollector : MonoBehaviour
+{
     public ControllerState LeftController;
     public ControllerState RightController;
     public LineRenderer RightLR;
@@ -24,7 +25,7 @@ public class BodyMovementCollector : MonoBehaviour {
     public Vector3 HeadDirection;
     public float RightArmSpeed;
     public Vector3 RightArmDirection;
-    
+
 
     /*
      * Arms... imagine they are moving in a vertical plane. We record the xz vectors and average over them. We then combine left
@@ -45,8 +46,9 @@ public class BodyMovementCollector : MonoBehaviour {
      */
 
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         RightArm = new BodyTrackingTimeSeries(size);
         LeftArm = new BodyTrackingTimeSeries(size);
         Head = new BodyTrackingTimeSeries(size);
@@ -56,9 +58,10 @@ public class BodyMovementCollector : MonoBehaviour {
             LeftLR.enabled = true;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         //for the controllers, I want the vector that is in the same plane as the plane perpendicular to the ground and the forward vector
         // but has no y component
 
@@ -74,15 +77,17 @@ public class BodyMovementCollector : MonoBehaviour {
         if (RightController.transform.forward.y > .5)
         {
             rDirection = new Vector3(-RightController.transform.up.x, 0.0f, -RightController.transform.up.z);
-        } else
+        }
+        else
         {
             rDirection = new Vector3(RightController.transform.forward.x, 0.0f, RightController.transform.forward.z);
         }
 
-        if(LeftController.transform.forward.y > .5)
+        if (LeftController.transform.forward.y > .5)
         {
             lDirection = new Vector3(-LeftController.transform.up.x, 0.0f, -LeftController.transform.up.z);
-        } else
+        }
+        else
         {
             lDirection = new Vector3(LeftController.transform.forward.x, 0.0f, LeftController.transform.forward.z);
         }
@@ -126,7 +131,7 @@ public class BodyMovementCollector : MonoBehaviour {
 
 
 
-	}
+    }
 
     public class BodyTrackingTimeSeries
     {
@@ -172,7 +177,8 @@ public class BodyMovementCollector : MonoBehaviour {
             if (positions[Mod(i - 1, size)] != Vector3.zero)
             {
                 speeds[i] = (positions[i].y - positions[Mod(i - 1, size)].y) / Time.deltaTime;
-            } else
+            }
+            else
             {
                 speeds[i] = 0.0f;
             }
@@ -210,13 +216,13 @@ public class BodyMovementCollector : MonoBehaviour {
             int j = i;
 
             bool GoingDown = (positions[j].y - positions[Mod(j + 1, size)].y > 0);
-            for (int k = 0; k<size-1; k++)
+            for (int k = 0; k < size - 1; k++)
             {
                 //basically, go a full loop through the buffer and check the sign of the change of position at each point
                 // if it ever differs from the first one, return false
-               if( GoingDown!=(positions[Mod(j+k, size)].y - positions[Mod(j+k+1, size)].y > 0))
+                if (GoingDown != (positions[Mod(j + k, size)].y - positions[Mod(j + k + 1, size)].y > 0))
                 {
-                    
+
                     return false;
                 }
             }
@@ -226,8 +232,8 @@ public class BodyMovementCollector : MonoBehaviour {
         public void Clear()
         {
             i = 0;
-            
-            for (int j=0; j<size; j++)
+
+            for (int j = 0; j < size; j++)
             {
                 positions[j] = Vector3.zero;
                 speeds[j] = 0f;

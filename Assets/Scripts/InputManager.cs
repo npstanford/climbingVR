@@ -7,7 +7,7 @@ public class InputManager : MonoBehaviour {
     public enum Capabilities { Climb, Hookshot, Glide};
 
     public bool EnableAllComponents = true;
-    public bool RunInPlace = false;
+    //public bool RunInPlace = false;
     public ControllerState lController;
     public ControllerState rController;
     public Rigidbody Body; //note this should more accurately be understood as Room and not body
@@ -135,15 +135,15 @@ public class InputManager : MonoBehaviour {
             return;
         }
 
-
-        if (RunInPlace)
-        {
+        //I think this should allow players to either run in place or click button to step
+        //if (RunInPlace)
+        //{
             CheckRunning();
-        } else
-        {
+        //} else
+        //{
             CheckWalking(rController, ref rTouchpadPressTime);
             CheckWalking(lController, ref lTouchpadPressTime);
-        }
+        //}
 
         CheckPickUp(rController);
         CheckPickUp(lController);

@@ -120,6 +120,7 @@ public class Enemy : MonoBehaviour {
 
     public void Stun()
     {
+        StopCoroutine("Battered"); //not sure if this line works..
         StopCoroutine("StunCoroutine");
         StartCoroutine("StunCoroutine");
     }
@@ -222,9 +223,11 @@ public class Enemy : MonoBehaviour {
         {
             if(ia.CanPickUp)
             {
-                Debug.Log("battered");
-                StopCoroutine("Battered");
-                StartCoroutine("Battered");
+                if (!IsStunned)
+                {
+                    StopCoroutine("Battered");
+                    StartCoroutine("Battered");
+                }
             }
         }
     }
@@ -236,16 +239,17 @@ public class Enemy : MonoBehaviour {
         {
             if (ia.CanPickUp)
             {
-                Debug.Log("battered");
-                StopCoroutine("Battered");
-                StartCoroutine("Battered");
+                if (!IsStunned)
+                {
+                    StopCoroutine("Battered");
+                    StartCoroutine("Battered");
+                }
             }
         }
     }
 
     private IEnumerator Battered()
     {
-        Debug.Log("Battered coroutine started");
         float batteredTime = 2.0f;
 
         Rigidbody rb = GetComponent<Rigidbody>();

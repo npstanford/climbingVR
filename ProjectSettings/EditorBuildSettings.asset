@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_Scenes/Canyon.unity
     guid: 68e94136b60295741974fe3d9c7c3785
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/Tutorial.unity
     guid: 1e71dc44b17012449b9bad48aabc77b8
+  - enabled: 1
+    path: Assets/_Scenes/DemoAtPalaceOfFineArts.unity
+    guid: bd76ad0ca837aef4abc9451774001080
