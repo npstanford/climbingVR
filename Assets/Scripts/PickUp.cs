@@ -14,19 +14,25 @@ public class PickUp : MonoBehaviour {
     public void Grab(ControllerState controller)
     {
 
-
-        if (controller.canPickUp && controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
+            if (controller.canPickUp)
+            {
 
-            Rigidbody rb = controller.ObjectToPickUp;
+                Rigidbody rb = controller.ObjectToPickUp;
 
-            rb.transform.parent = controller.transform;
-            controller.Holding = rb;
-            rb.useGravity = false;
-            rb.isKinematic = true;
-            //FixedJoint j = controller.gameObject.AddComponent<FixedJoint>();
-            // j.connectedBody = rb;
-            IsPickingUp = true;
+                rb.transform.parent = controller.transform;
+                controller.Holding = rb;
+                rb.useGravity = false;
+                rb.isKinematic = true;
+                //FixedJoint j = controller.gameObject.AddComponent<FixedJoint>();
+                // j.connectedBody = rb;
+                IsPickingUp = true;
+            }
+            else
+            {
+                //todo
+            }
         }
 
         else if (controller.canPickUp && controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
@@ -35,7 +41,7 @@ public class PickUp : MonoBehaviour {
         }
     }
 
-        public void Drop(ControllerState controller)
+    public void Drop(ControllerState controller)
     {
         Rigidbody rb = controller.Holding;
 

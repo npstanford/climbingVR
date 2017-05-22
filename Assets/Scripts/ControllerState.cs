@@ -84,7 +84,7 @@ public class ControllerState : MonoBehaviour
                 canGrip = false;
                 GripObject = null;
             }
-            else if (ia.CanPickUp)
+            else if (ia.CanPickUp) // THIS IS THE PROBLEM! THIS IS A HUGE BUG. Some objects switch from pickup==true to pickup==false on their own
             {
                 canPickUp = false;
                 ObjectToPickUp = null;

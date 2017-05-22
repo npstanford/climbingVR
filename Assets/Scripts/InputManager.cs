@@ -125,8 +125,7 @@ public class InputManager : MonoBehaviour {
 
         if (PlayerIsStunned)
         {
-            pu.Drop(lController);
-            pu.Drop(rController);
+            DropEverything();
         }
 
 
@@ -306,7 +305,7 @@ public class InputManager : MonoBehaviour {
         //BoxCollider controllerCollider = controller.controller.GetComponent<BoxCollider>();
         //return controllerCollider.bounds.Intersects(OverheadCollider.bounds);
 
-        return (controller.transform.position.y > PlayerHead.transform.position.y);
+        return (controller.transform.position.y > PlayerHead.transform.position.y - .4);
 
     }
 
@@ -342,5 +341,10 @@ public class InputManager : MonoBehaviour {
         Body.transform.position += Vector3.down * FallVelocity * Time.deltaTime;
     }
 
-
+    //I don't like this. I had to write this though so that I can grab the golden spheres out of the players hands
+    public void DropEverything()
+    {
+        pu.Drop(lController);
+        pu.Drop(rController);
+    }
 }
