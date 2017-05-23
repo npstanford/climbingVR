@@ -106,21 +106,21 @@ public class InputManager : MonoBehaviour {
         if (gm.RemainingGrip > 0.0f && !PlayerIsStunned)
         {
             //shoooting
-            if (HookshotEnabled) { CheckShooting(rController); }
+            if (HookshotEnabled && rController.Holding == null) { CheckShooting(rController); }
 
 
             //climbing
             if (ClimbingEnabled)
             {
-                CheckClimbing(rController);
-                CheckClimbing(lController);
+                if (rController.Holding == null) { CheckClimbing(rController); };
+                if (lController.Holding == null) { CheckClimbing(lController); };
             }
             //gliding
-            if (GlidingEnabled) { CheckGliding(lController); }
+            if (GlidingEnabled && lController.Holding == null) { CheckGliding(lController); }
         }
         else {
             climb.Drop(Body);
-            glide.StopGliding();
+            glide.StopGliding(PlayerIsStunned);
         }
 
         if (PlayerIsStunned)
@@ -164,15 +164,15 @@ public class InputManager : MonoBehaviour {
             GripToolLeft.HideHook();
         } else if (ClimbingEnabled)
         {
-            GripToolLeft.ShowHook();
+            //GripToolLeft.ShowHook();
         }
 
         if (hookshot.Grapple.HookshotFired)
         {
-            GripToolRight.HideHook();
+            //GripToolRight.HideHook();
         } else if (ClimbingEnabled)
         {
-            GripToolRight.ShowHook();
+            //GripToolRight.ShowHook();
         }
 
         if (!PlayerIsTouchingGround && !climb.IsClimbing && !glide.IsGliding)

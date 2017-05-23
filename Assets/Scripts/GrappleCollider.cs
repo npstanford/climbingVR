@@ -7,6 +7,7 @@ public class GrappleCollider : MonoBehaviour {
     public bool Grappled = false; //pretty sure this isn't used adn can be removed
     public bool HookshotFired = false;
     public Rigidbody Body;
+    public GripTool _GripTool;
     int i = 0;
     private ControllerState controller;
     private float GrappleSpeed;
@@ -44,6 +45,7 @@ public class GrappleCollider : MonoBehaviour {
     public void Shoot(GameObject grappleTarget, ControllerState controller, float GrappleLength, float GrappleSpeed)
     {
         HookshotFired = true;
+        _GripTool.HideHook();
         UnHideGrapple();
 
 
@@ -98,7 +100,9 @@ public class GrappleCollider : MonoBehaviour {
         lr.enabled = false; //fyi, should refactor this into Hide Grapple
 
         //Destroy(grappleTarget);
-        HookshotFired = false; 
+        HookshotFired = false;
+        _GripTool.ShowHook();
+
     }
 
     IEnumerator ReelInPlayer(ControllerState controller)
@@ -137,6 +141,7 @@ public class GrappleCollider : MonoBehaviour {
         */
         Grappled = false; //pretty sure this isn't used and can be removed
         HookshotFired = false; // this needs to be refactored into some code common with the case where it doesn't hit anything
+        _GripTool.ShowHook();
         HideGrapple();
         lr.enabled = false;
         this.transform.parent = null;

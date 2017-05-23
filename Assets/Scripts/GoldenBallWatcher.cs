@@ -32,7 +32,7 @@ public class GoldenBallWatcher : MonoBehaviour
         }
 
         //so if all balls are attached
-        //Win();
+        Win();
     }
 
     public void Win()

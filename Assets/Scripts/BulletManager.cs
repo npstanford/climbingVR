@@ -35,11 +35,6 @@ public class BulletManager : MonoBehaviour {
         if (ia != null)
         {
 
-            if (ia.IsPartOfBody)
-            {
-
-            }
-
             if (ia.CanClimb || ia.IsGround || ia.IsPartOfBody || ia.CanPickUp) //I hate this code
             {
                 Destroy(this.gameObject);

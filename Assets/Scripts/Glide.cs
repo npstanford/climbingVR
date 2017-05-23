@@ -6,6 +6,7 @@ public class Glide : MonoBehaviour
 {
 
     public GameObject GliderModel;
+    public GripTool _GripTool;
     //public BoxCollider OverheadCollider;
     //public GameObject OverheadCollider; // the invisible box collider over the players head
     public Rigidbody Room;
@@ -153,7 +154,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
     public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
     {
         GliderModel.SetActive(true);
-
+        _GripTool.HideHook();
 
         if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
         {
@@ -255,10 +256,12 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
         }
     }
 
-    public void StopGliding()
+    public void StopGliding(bool PlayerIsStunned = false)
     {
         //_gliderRenderer.enabled = false;
         GliderModel.SetActive(false);
+        if (PlayerIsStunned) { _GripTool.HideHook(); } 
+        else { _GripTool.ShowHook(); }
         //Room.useGravity = true;
         Room.velocity = new Vector3(Room.velocity.x*0.2f, Mathf.Min(Room.velocity.y, 0), Room.velocity.z*0.2f);
         IsGliding = false;

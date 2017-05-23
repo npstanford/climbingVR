@@ -23,6 +23,8 @@ public class ColliderManager : MonoBehaviour {
     public bool PlayerIsStunned;
     public bool PlayerIsJumping;
     public float StunLength;
+    public GripTool GripToolLeft;
+    public GripTool GripToolRight;
     public Image InjuredMask;
     private Vector3 prevRoomPosition;
     private Vector3 curRoomPosition;
@@ -232,6 +234,9 @@ public class ColliderManager : MonoBehaviour {
 
     IEnumerator StunPlayerCoroutine(Vector3 playerLocation, Vector3 hitDirection)
     {
+        Debug.Log("hidding hooks");
+        GripToolLeft.HideHook();
+        GripToolRight.HideHook();
         hitDirection = hitDirection.normalized;
         float stunnedStart = Time.time;
         PlayerIsStunned = true;
@@ -257,14 +262,19 @@ public class ColliderManager : MonoBehaviour {
                 Room.transform.position += hitDirection * ImpactDistance;
             }
         }
-            while ((Time.time - stunnedStart) < StunLength)
+        while ((Time.time - stunnedStart) < StunLength)
         {
             
-            InjuredMask.color = Color.Lerp(Color.red, Color.clear, (Time.time - stunnedStart) / StunLength);
+            InjuredMask.color = Color.Lerp(Color.red, Color.clear, ((Time.time - stunnedStart) / StunLength)*.4f);
             yield return null;
         }
 
+        InjuredMask.color = Color.clear;
+
         PlayerIsStunned = false;
+        Debug.Log("showing hooks");
+        GripToolLeft.ShowHook();
+        GripToolRight.ShowHook();
     }
 
 
