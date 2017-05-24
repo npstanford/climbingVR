@@ -51,6 +51,11 @@ public class ControllerState : MonoBehaviour
         //prevPos = controller.transform.localPosition;
         prevPos = curPos;
         curPos = controller.transform.localPosition;
+
+        if(!canPickUp && Holding!=null)
+        {
+            Holding = null;
+        }
     }
 
 

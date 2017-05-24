@@ -89,6 +89,8 @@ public class InputManager : MonoBehaviour {
         PlayerIsTouchingGround = cm.PlayerIsTouchingGround;
         PlayerIsStunned = cm.PlayerIsStunned;
 
+
+
         //GripManager
         if (climb.IsClimbing)
         {
