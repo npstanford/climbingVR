@@ -5,6 +5,7 @@ using UnityEngine;
 public class PickUp : MonoBehaviour {
 
     public bool IsPickingUp;
+    public Collider PlayerCollider;
 
     public void Start()
     {
@@ -18,9 +19,20 @@ public class PickUp : MonoBehaviour {
         {
             if (controller.canPickUp)
             {
-
+                
                 Rigidbody rb = controller.ObjectToPickUp;
+                //begin experimental coce
+                Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
+                foreach(Collider pickUpCollider in pickUpColliders)
+                {
+                    if (pickUpColliders != null)
+                    {
+                        Physics.IgnoreCollision(pickUpCollider, PlayerCollider, true);
+                    }
+                }
 
+
+                //end experimental code
                 rb.transform.parent = controller.transform;
                 controller.Holding = rb;
                 rb.useGravity = false;
@@ -45,8 +57,19 @@ public class PickUp : MonoBehaviour {
     {
         Rigidbody rb = controller.Holding;
 
-        if (rb != null) { 
-           controller.Holding.transform.parent = null;
+        if (rb != null) {
+            // begin experimental code
+            Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
+            foreach (Collider pickUpCollider in pickUpColliders)
+            {
+                if (pickUpColliders != null)
+                {
+                    Physics.IgnoreCollision(pickUpCollider, PlayerCollider, false);
+                }
+            }
+            //end experimental code
+
+            controller.Holding.transform.parent = null;
             controller.Holding = null;
             rb.isKinematic = false;
            // FixedJoint j = controller.gameObject.GetComponent<FixedJoint>();

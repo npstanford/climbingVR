@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_Scenes/Tutorial.unity
     guid: 1e71dc44b17012449b9bad48aabc77b8
-  - enabled: 1
+  - enabled: 0
     path: Assets/_Scenes/DemoAtPalaceOfFineArts.unity
     guid: bd76ad0ca837aef4abc9451774001080
+  - enabled: 1
+    path: Assets/_Scenes/RunningTest.unity
+    guid: 8e9d15364e137d44499ac6ccc7c7317a

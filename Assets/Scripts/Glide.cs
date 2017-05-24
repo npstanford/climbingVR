@@ -159,7 +159,8 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
         if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
         {
             IsGliding = true;
-
+            Room.useGravity = false;
+            Room.velocity = Vector3.zero;
             float magnitude = GlideSpeed;
             Vector3 force = forceFromRightVector(controller.transform.right);
             Vector3 forceup = forceFromUpVector(controller.transform.up);
@@ -262,7 +263,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
         GliderModel.SetActive(false);
         if (PlayerIsStunned) { _GripTool.HideHook(); } 
         else { _GripTool.ShowHook(); }
-        //Room.useGravity = true;
+        Room.useGravity = true;
         Room.velocity = new Vector3(Room.velocity.x*0.2f, Mathf.Min(Room.velocity.y, 0), Room.velocity.z*0.2f);
         IsGliding = false;
     }

@@ -52,17 +52,18 @@ public class ColliderManager : MonoBehaviour {
         prevRoomPosition = Room.transform.position;
         curRoomPosition = Room.transform.position;
         //RealPlayerHeight = playerHead.transform.position.y;
+
+
+
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        prevRoomPosition = curRoomPosition;
-        curRoomPosition = Room.transform.position;
-        /*
-        Debug.Log("imclimbing:" + im.climb.IsClimbing);
-        Debug.Log("imgliding:" + im.glide.IsGliding);
-        Debug.Log("hookshot:" + im.hookshot.Grapple.Grappled);
-        */
+
+        //prevRoomPosition = curRoomPosition;
+        //curRoomPosition = Room.transform.position;
+
 
         RaycastHit hit; //err I could and should pull this out of FixedUpdate and put it in start()
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
@@ -71,7 +72,7 @@ public class ColliderManager : MonoBehaviour {
         layerMask += (1 << 8); //ignore the controllers
         layerMask = ~layerMask;
         PlayerIsTouchingGround = false; //so that if we don't hit on the raycast, it will remain false
-        Debug.DrawRay(playerHead.transform.position, Vector3.down * (CurrentPlayerHeight + .05f), Color.cyan);
+        Debug.DrawRay(playerHead.transform.position, Vector3.down, Color.red);
         if (Physics.Raycast(playerHead.transform.position, Vector3.down, out hit, CurrentPlayerHeight + .1f, layerMask))
         {
             InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
@@ -85,23 +86,23 @@ public class ColliderManager : MonoBehaviour {
                     if (AmountPlayerUnderGround > .01)
                     {
                         // instead of not doing anything if below max slope... just raise only by max slope
-                        /*
-                         * new idea: if we exceed the max slope, then push the player back to where they had been
-                         * a horrible hackish idea is 
-                         */
 
                         float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
-    
+                        /*
                         if (AmountPlayerUnderGround > MaxSlope && !im.climb.IsClimbing)
                         {
                             Room.transform.position = prevRoomPosition;
                             curRoomPosition = prevRoomPosition;
                         }
-                        else if (!Head.HeadInWall)
+                        else 
+                    */    
+                    if (!Head.HeadInWall)
                         {
                             Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
                         }
-                    } else if (AmountPlayerUnderGround < 0 && (!im.climb.IsClimbing && !im.glide.IsGliding && im.hookshot.Grapple.Grappled)) 
+                    }
+                    /*
+                    else if (AmountPlayerUnderGround < 0 && (!im.climb.IsClimbing && !im.glide.IsGliding && im.hookshot.Grapple.Grappled)) 
                         // i.e. player is slightly in the air
                         //also horrible code -- I hate that I am pulling in data from input manager here...
                     {
@@ -109,11 +110,11 @@ public class ColliderManager : MonoBehaviour {
 
                         Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
                     }
+                    */
                 }
             }
 
         }
-
 
 
 
@@ -142,10 +143,10 @@ public class ColliderManager : MonoBehaviour {
 
 
         //playerCollider.size = new Vector3(0.2f, colliderCenter.y * 2f, 0.2f);
-        playerCollider.size = new Vector3(0.2f, RealPlayerHeight, 0.2f);
+        playerCollider.size = new Vector3(0.2f, CurrentPlayerHeight, 0.2f);
 
         //OverheadCollider.transform.position = playerHead.transform.position + Vector3.up * OverheadColliderHeight;
-        GroundedCollider.transform.localPosition = new Vector3(colliderCenter.x, 0f, colliderCenter.z);
+        //GroundedCollider.transform.localPosition = new Vector3(colliderCenter.x, 0f, colliderCenter.z);
 
         //update display cube for testing purposes
         displayCube.transform.localPosition = colliderCenter;
@@ -182,30 +183,37 @@ public class ColliderManager : MonoBehaviour {
         {
             if (ia.HurtsPlayer)
             {
-                Vector3 playerLocation = Room.transform.TransformPoint(playerCollider.center);
-                Vector3 hitDirection = (playerLocation) - other.transform.position;
-                Rigidbody rb = other.GetComponent<Rigidbody>();
-                if (rb == null) { hitDirection = Vector3.zero; }
-                else {
-                    hitDirection = rb.velocity;
-                }
-                if (PlayerIsTouchingGround)
-                {
-                    hitDirection.y = 0.0f;
-                }
 
-                if (StunCoroutine != null) { 
-                    StopCoroutine(StunCoroutine);
-                }
-                StunCoroutine = StunPlayerCoroutine(playerLocation, hitDirection);
-                StartCoroutine(StunCoroutine);
-
+                PlayerHit(other.gameObject);
             }
             else if (ia.PushesPlayer)
             {
-                rb.isKinematic = false;
+                //rb.isKinematic = false;
             }
         }
+    }
+
+    public void PlayerHit(GameObject other)
+    {
+        Vector3 playerLocation = Room.transform.TransformPoint(playerCollider.center);
+        Vector3 hitDirection = (playerLocation) - other.transform.position;
+        Rigidbody rb = other.GetComponent<Rigidbody>();
+        if (rb == null) { hitDirection = Vector3.zero; }
+        else
+        {
+            hitDirection = rb.velocity;
+        }
+        if (PlayerIsTouchingGround)
+        {
+            hitDirection.y = 0.0f;
+        }
+
+        if (StunCoroutine != null)
+        {
+            StopCoroutine(StunCoroutine);
+        }
+        StunCoroutine = StunPlayerCoroutine(playerLocation, hitDirection);
+        StartCoroutine(StunCoroutine);
     }
 
     private void OnTriggerExit(Collider other)
@@ -223,7 +231,7 @@ public class ColliderManager : MonoBehaviour {
         {
             if (ia.PushesPlayer) // <--- HACKY
             {
-                rb.isKinematic = true;
+                //rb.isKinematic = true;
 
                // PlayerIsTouchingGround = false;
 
@@ -234,7 +242,6 @@ public class ColliderManager : MonoBehaviour {
 
     IEnumerator StunPlayerCoroutine(Vector3 playerLocation, Vector3 hitDirection)
     {
-        Debug.Log("hidding hooks");
         GripToolLeft.HideHook();
         GripToolRight.HideHook();
         hitDirection = hitDirection.normalized;
@@ -272,7 +279,6 @@ public class ColliderManager : MonoBehaviour {
         InjuredMask.color = Color.clear;
 
         PlayerIsStunned = false;
-        Debug.Log("showing hooks");
         GripToolLeft.ShowHook();
         GripToolRight.ShowHook();
     }

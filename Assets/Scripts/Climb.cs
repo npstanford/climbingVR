@@ -53,15 +53,15 @@ public class Climb : MonoBehaviour {
     {
         Room.transform.parent = null;
         IsClimbing = false;
-        //Room.useGravity = true;
-       // Room.isKinematic = false;
+        Room.useGravity = true;
+        Room.isKinematic = false;
     }
 
     public void Cling(Rigidbody Room)
     {
         IsClimbing = true;
-        //Room.useGravity = false;
-       // Room.isKinematic = true;
+        Room.useGravity = false;
+        Room.isKinematic = true;
     }
 
 

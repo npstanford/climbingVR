@@ -15,7 +15,7 @@ public class ControllerState : MonoBehaviour
     public SteamVR_Controller.Device device;
     public Rigidbody ObjectToPickUp;
     public Rigidbody Holding;
-
+    private ColliderManager cm;
 
 
 
@@ -42,6 +42,7 @@ public class ControllerState : MonoBehaviour
         curPos = controller.transform.localPosition;
         controllerState = States.Grip;
         device = SteamVR_Controller.Input((int)controller.index);
+        cm = FindObjectOfType<ColliderManager>();
     }
 
     void Update()
@@ -67,6 +68,9 @@ public class ControllerState : MonoBehaviour
             {
                 canPickUp = true;
                 ObjectToPickUp = ia.ObjectToPickUp; //TODO if this is null, then assignt PickUpObject as other
+            } else if (ia.HurtsPlayer)
+            {
+                cm.PlayerHit(other.gameObject);
             }
         }
         

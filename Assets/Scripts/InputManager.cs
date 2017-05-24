@@ -335,10 +335,11 @@ public class InputManager : MonoBehaviour {
 
     public void Fall()
     {
-        FallVelocity += FallAcceleration * Time.deltaTime;
-        FallVelocity = Mathf.Min(FallVelocity, 30);
+        //FallVelocity += FallAcceleration * Time.deltaTime;
+        //FallVelocity = Mathf.Min(FallVelocity, 30);
+        float FallVelocity = Body.velocity.y;
         bo.blurSize = FallVelocity / 3; // blursize ranges from 0 to 10. Fall Velocity from 0 to 20. So this scales linearly.
-        Body.transform.position += Vector3.down * FallVelocity * Time.deltaTime;
+        //Body.transform.position += Vector3.down * FallVelocity * Time.deltaTime;
     }
 
     //I don't like this. I had to write this though so that I can grab the golden spheres out of the players hands
