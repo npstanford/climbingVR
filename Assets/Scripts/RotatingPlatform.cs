@@ -17,7 +17,7 @@ public class RotatingPlatform : MonoBehaviour {
 	void Update () {
         if (RotationEnabled)
         {
-            this.transform.Rotate(0.0f, RotationRate * Time.deltaTime, 0.0f, Space.World);
+            this.transform.Rotate(0.0f, RotationRate * Time.deltaTime, 0.0f, Space.Self);
         }
 	}
 }

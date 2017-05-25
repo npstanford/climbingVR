@@ -10,7 +10,6 @@ public class Run : MonoBehaviour {
     public float SpeedFactor;
     public float SpeedPower;
     public float MaxSpeed;
-    public Text Spedometer;
     public VignetteAndChromaticAberration EyeBlur;
     public float BlurAmount;
 
@@ -41,7 +40,6 @@ public class Run : MonoBehaviour {
         }
 
         Room.transform.localPosition += flatDirection * scaledSpeed * Time.deltaTime;
-        Spedometer.text = scaledSpeed.ToString("F2");
         EyeBlur.intensity = BlurAmount * (scaledSpeed / MaxSpeed);
     }
 

@@ -272,19 +272,6 @@ public class InputManager : MonoBehaviour {
 
     void CheckRunning()
     {
-        /* I dont think this code does anything useful so I commented it out to see if anything breaks
-        if (!PlayerIsTouchingGround)
-        {
-            NotTouchingGroundCount += 1;
-            if (NotTouchingGroundCount > 20)
-            {
-                return;
-            }
-        } else
-        {
-            NotTouchingGroundCount = 0;
-        }
-        */
 
 
         if (bmc.Head.speed > run.minHeadSpeedToRun && !bmc.NonRunningHeadMovement)

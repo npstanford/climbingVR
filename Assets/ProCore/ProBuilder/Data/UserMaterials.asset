@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Name: UserMaterials
   m_EditorClassIdentifier: 
   array:
-  - {fileID: 2100000, guid: cb64d13ab02b3054e883327f7e8a29ec, type: 2}
+  - {fileID: 2100000, guid: 57d2b3760e06caf43a782fac90539960, type: 2}
   - {fileID: 2100000, guid: 686e5bf7784eff04497782f956d44330, type: 2}
   - {fileID: 2100000, guid: fae41138d89a76241a15d1a883867d0b, type: 2}
   - {fileID: 2100000, guid: c81638b3753872e499b7d86a071b6e32, type: 2}
   - {fileID: 2100000, guid: 2699dc05ec9bcec41bb57f10f6b90cae, type: 2}
-  - {fileID: 2100000, guid: 01defa9ac4f73d5409cd3d2febe6f0ac, type: 2}
+  - {fileID: 2100000, guid: f08a542704071d8459dc716e659d7d6a, type: 2}
   - {fileID: 2100000, guid: fae41138d89a76241a15d1a883867d0b, type: 2}
   - {fileID: 2100000, guid: fb4eff07285c4624aa470e9485820c5e, type: 2}
   - {fileID: 2100000, guid: 650f2cedbe2840945814ce7cb8f34f5e, type: 2}

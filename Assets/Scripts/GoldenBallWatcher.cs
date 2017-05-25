@@ -58,6 +58,14 @@ public class GoldenBallWatcher : MonoBehaviour
             if (distance < 3)
             {
                 other.transform.position = DarkRoomLocation.transform.position;
+                ControllerState[] controllers = FindObjectsOfType<ControllerState>();
+                foreach (ControllerState cs in controllers)
+                {
+                    cs.gameObject.SetActive(false);
+                }
+
+                InputManager im = FindObjectOfType<InputManager>();
+                im.gameObject.SetActive(false);
             }
         }
 

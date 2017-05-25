@@ -13,4 +13,15 @@ public class ToBeContinuedRoom : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("entered dark room");
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("ambient intensity turned to zero");
+            RenderSettings.ambientIntensity = 0.0f;
+        }
+    }
+
 }
