@@ -75,12 +75,14 @@ public class ChargingEnemy : MonoBehaviour {
     void Update() {
         attack = DetectPlayer.Activated;
 
-        if (hits < WeakPoint.hits) //stunned is enterable by all states. Stun exits after a fixed length of time into headinghome
+        if (WeakPoint != null)
         {
-            hits = WeakPoint.hits;
-            UpdateState(GTState.Stunned);
-        }
-
+            if (hits < WeakPoint.hits) //stunned is enterable by all states. Stun exits after a fixed length of time into headinghome
+            {
+                hits = WeakPoint.hits;
+                UpdateState(GTState.Stunned);
+            }
+        } 
         if (state == GTState.HeadingHome)
         {
             if (attack) { UpdateState(GTState.RotatingTowardPlayer); }
@@ -96,7 +98,7 @@ public class ChargingEnemy : MonoBehaviour {
 
             AngleToPlayer = Vector3.Angle(GTForward, PlayerDirection);
             if (!attack) { UpdateState(GTState.RotatingTowardHome); }
-            else if (AngleToPlayer < 3f)
+            else if (AngleToPlayer < 1f)
             {
                 UpdateState(GTState.Charging);
             }
@@ -222,7 +224,6 @@ public class ChargingEnemy : MonoBehaviour {
         {
             if (Time.time > nextActionTime)
             {
-                Debug.Log("target is updating");
 
                 nextActionTime += .2f;
                 Vector3 GroundPosition = new Vector3(transform.position.x, 0f, transform.position.y);

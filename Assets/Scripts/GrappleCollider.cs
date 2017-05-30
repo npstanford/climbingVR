@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrappleCollider : MonoBehaviour {
+public class GrappleCollider : MonoBehaviour
+{
 
     public bool Grappled = false; //pretty sure this isn't used adn can be removed
     public bool HookshotFired = false;
@@ -15,12 +16,14 @@ public class GrappleCollider : MonoBehaviour {
     IEnumerator coroutineShoot;
 
     // Use this for initialization
-    void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -130,10 +133,7 @@ public class GrappleCollider : MonoBehaviour {
         while ((Body.transform.position - (this.transform.position - handToBody)).magnitude > .001) //if there is anything brittle, it is this logic
         {
             Body.transform.position = Vector3.Lerp(bodyStartPosition, this.transform.position - handToBody, timeElapsed / timeToComplete ); //when hookshotting moving objects, is something happening while this coroutine runs to move collider back to orign?
-
-
             Debug.Log("Time: " + timeElapsed + " | Target Position: " + this.transform.position);
-
             timeElapsed += Time.deltaTime;
             lr.SetPosition(0, controller.controller.transform.position);
             yield return null;
@@ -150,7 +150,7 @@ public class GrappleCollider : MonoBehaviour {
         this.transform.localScale = new Vector3(.05f, .001f, .02f);
 
     }
-    
+
 
     void UnHideGrapple()
     {

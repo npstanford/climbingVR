@@ -24,7 +24,7 @@ public class ChargingEnemyFace : MonoBehaviour
 
     public void Update()
     {
-        if (ce.attack && !ce.IsStunned)
+        if (ce.attack && !ce.IsStunned  && ce.state != ChargingEnemy.GTState.Charging)
         {
             trackPlayerIsRunning = true;
             /*
@@ -41,32 +41,14 @@ public class ChargingEnemyFace : MonoBehaviour
         {
             trackPlayerIsRunning = false;
         }
-    }
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-
-        if (other.gameObject.CompareTag("Player"))
+        if (ce.state == ChargingEnemy.GTState.Charging)
         {
-            //Debug.Log("GT hit: " + other.gameObject.name);
-            ///other.transform.position += chargingVelocity * ChargingDirection * Time.deltaTime;
-            Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-
-
-            IEnumerator StunPlayerCoroutine = StunPlayer(rb);
-
-            //StartCoroutine(StunPlayerCoroutine);
+            // if charging, lock the face straight
+            pivot.transform.localEulerAngles = new Vector3(7.8f, 0f, 0f);
         }
     }
 
-    IEnumerator StunPlayer(Rigidbody rb)
-    {
-        rb.isKinematic = false;
-        yield return new WaitForSeconds(2.0f);
-        rb.isKinematic = true;
-        rb.transform.rotation = Quaternion.identity;
-    }
 
     private IEnumerator TrackPlayer()
     {

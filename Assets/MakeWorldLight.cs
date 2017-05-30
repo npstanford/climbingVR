@@ -13,4 +13,9 @@ public class MakeWorldLight : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        RenderSettings.ambientIntensity = 1f;
+    }
 }

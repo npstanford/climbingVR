@@ -114,8 +114,7 @@ public class InputManager : MonoBehaviour {
             //climbing
             if (ClimbingEnabled)
             {
-                if (rController.Holding == null) { CheckClimbing(rController); };
-                if (lController.Holding == null) { CheckClimbing(lController); };
+                if (rController.Holding == null || lController.Holding == null) { CheckClimbing(rController, lController); };
             }
             //gliding
             if (GlidingEnabled && lController.Holding == null) { CheckGliding(lController); }
@@ -217,13 +216,35 @@ public class InputManager : MonoBehaviour {
         }
     }
 
-    void CheckClimbing(ControllerState controller)
+    void CheckClimbing(ControllerState rController, ControllerState lController)
     {
-        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)
+        if (rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)) {
+            climb.Grab(rController, Body);
+        } else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)) {
+            climb.Grab(lController, Body);
+        }
+
+        //if the player let's go and isn't holding on with the other hand, then -- and only then -- drop
+        if (rController.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger)
+            && !lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            climb.Drop(Body);
+            climb.ThrowPlayer(rController, Body);
+        }
+        else if (lController.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger)
+          && !rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+        {
+            climb.Drop(Body);
+            climb.ThrowPlayer(lController, Body);
+        }
+
+        /*
+            if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)
     || controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
             climb.Grab(controller, Body);
         }
+        */
     }
 
     void CheckPickUp(ControllerState controller)
