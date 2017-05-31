@@ -47,6 +47,7 @@ public class Hookshot : MonoBehaviour
         if (Physics.Raycast(controller.controller.transform.position, controller.controller.transform.forward, out hit, GrappleLength, layerMask))
         {
             LaserSight.transform.position = hit.point;
+            LaserSight.transform.localScale = new Vector3(.06f,  .06f, .001f) * Mathf.Max(1.0f, hit.distance / 3.0f);
             LaserSight.transform.rotation = Quaternion.LookRotation(hit.normal);
             LaserSight.GetComponent<MeshRenderer>().enabled = true;
 
