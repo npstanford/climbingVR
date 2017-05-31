@@ -227,9 +227,6 @@ public class ChargingEnemy : MonoBehaviour {
 
                 nextActionTime += .2f;
                 Vector3 GroundPosition = new Vector3(transform.position.x, 0f, transform.position.y);
-
-
-
                 TargetDirection = (target.transform.position - transform.position);
                 TargetDirection.y = 0;
                 Debug.DrawRay(GroundPosition, TargetDirection, Color.red, 1f);
@@ -252,11 +249,14 @@ public class ChargingEnemy : MonoBehaviour {
         float stunnedStart = Time.time;
         IsStunned = true;
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.useGravity = true;
-        rb.isKinematic = false;
+        //rb.useGravity = true;
+        //rb.isKinematic = false;
         foreach (MeshRenderer mr in mrs)
         {
-            mr.material = stunnedMaterial;
+            if (mr.GetComponent<GoldenBall>() == null) // don't turn the ball to concrete
+            {
+                mr.material = stunnedMaterial;
+            }
         }
 
         bool[] hurtsPlayer = new bool[ias.Length];
@@ -272,7 +272,7 @@ public class ChargingEnemy : MonoBehaviour {
             }
         }
 
-        PickUpZone.GetComponent<InteractionAttributes>().CanPickUp = true;
+        //PickUpZone.GetComponent<InteractionAttributes>().CanPickUp = true;
 
         yield return new WaitForSeconds(Mathf.Max(0, StunLength - 2));
 
