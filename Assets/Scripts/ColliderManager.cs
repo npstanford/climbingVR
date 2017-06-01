@@ -54,15 +54,14 @@ public class ColliderManager : MonoBehaviour {
         //RealPlayerHeight = playerHead.transform.position.y;
 
 
-
-
     }
-	
-	// Update is called once per frame
-	void Update () {
 
-        //prevRoomPosition = curRoomPosition;
-        //curRoomPosition = Room.transform.position;
+    // Update is called once per frame
+    void Update()
+    {
+
+        prevRoomPosition = curRoomPosition;
+        curRoomPosition = Room.transform.position;
 
 
         RaycastHit hit; //err I could and should pull this out of FixedUpdate and put it in start()
@@ -72,7 +71,8 @@ public class ColliderManager : MonoBehaviour {
         layerMask += (1 << 8); //ignore the controllers
         layerMask = ~layerMask;
         PlayerIsTouchingGround = false; //so that if we don't hit on the raycast, it will remain false
-        Debug.DrawRay(playerHead.transform.position, Vector3.down, Color.red);
+
+        //raycast to determine if touching ground and to adjust y position if necessary
         if (Physics.Raycast(playerHead.transform.position, Vector3.down, out hit, CurrentPlayerHeight + .1f, layerMask))
         {
             InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
@@ -88,16 +88,8 @@ public class ColliderManager : MonoBehaviour {
                         // instead of not doing anything if below max slope... just raise only by max slope
 
                         float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
-                        //goal of code below is 
-                        /*
-                        if (AmountPlayerUnderGround > MaxSlope && !im.climb.IsClimbing)
-                        {
-                            Room.transform.position = prevRoomPosition;
-                            curRoomPosition = prevRoomPosition;
-                        }
-                        else 
-                    */    
-                    if (!Head.HeadInWall)
+
+                        if (!Head.HeadInWall)
                         {
                             Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
                             // below code is supposed to help players get over ledges... not sure if it will work
@@ -105,23 +97,26 @@ public class ColliderManager : MonoBehaviour {
                             Room.transform.position += new Vector3(PlayerDirection.x, 0.0f, PlayerDirection.z).normalized * .1f;
                         }
                     }
-                    /*
-                    else if (AmountPlayerUnderGround < 0 && (!im.climb.IsClimbing && !im.glide.IsGliding && im.hookshot.Grapple.Grappled)) 
-                        // i.e. player is slightly in the air
-                        //also horrible code -- I hate that I am pulling in data from input manager here...
-                    {
-                        float HeightAdjustment = Room.transform.position.y + AmountPlayerUnderGround;
-
-                        Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
-                    }
-                    */
                 }
             }
 
         }
 
+        /*
+        //Raycast to keep you from smashing into walls. Note, this will 100% prevent players from approaching walls. If 
+        if (!im.climb.IsClimbing)
+        {
+            float BubbleSize = 3f;
+            Debug.DrawRay(playerHead.transform.position, playerHead.transform.forward * BubbleSize, Color.red);
+            if (Physics.Raycast(playerHead.transform.position, playerHead.transform.forward, out hit, BubbleSize, layerMask))
+            {
+                Debug.Log("backup raycast hit:" + hit.collider.gameObject.name);
+                Room.transform.position = prevRoomPosition;
 
 
+            }
+        }
+        */
     }
 
     void FixedUpdate ()
@@ -148,9 +143,6 @@ public class ColliderManager : MonoBehaviour {
 
         //playerCollider.size = new Vector3(0.2f, colliderCenter.y * 2f, 0.2f);
         playerCollider.size = new Vector3(0.2f, CurrentPlayerHeight, 0.2f);
-
-        //OverheadCollider.transform.position = playerHead.transform.position + Vector3.up * OverheadColliderHeight;
-        //GroundedCollider.transform.localPosition = new Vector3(colliderCenter.x, 0f, colliderCenter.z);
 
         //update display cube for testing purposes
         displayCube.transform.localPosition = colliderCenter;

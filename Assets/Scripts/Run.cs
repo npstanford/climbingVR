@@ -7,11 +7,13 @@ public class Run : MonoBehaviour {
 
     public GameObject Room;
     public GameObject Player;
+    public GameObject PlayerHead;
     public float SpeedFactor;
     public float SpeedPower;
     public float MaxSpeed;
     public VignetteAndChromaticAberration EyeBlur;
     public float BlurAmount;
+    public float Bubble;
 
     public float minHeadSpeedToRun;
 
@@ -26,7 +28,7 @@ public class Run : MonoBehaviour {
         Vector3 flatDirection = new Vector3(direction.x, 0f, direction.z).normalized;
 
         RaycastHit hit;
-        if (Physics.Raycast(Player.transform.position, flatDirection, out hit, .15f))
+        if (Physics.Raycast(PlayerHead.transform.position, flatDirection, out hit, Bubble))
         {
             InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
             if (ia != null)
