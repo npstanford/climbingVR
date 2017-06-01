@@ -88,6 +88,7 @@ public class ColliderManager : MonoBehaviour {
                         // instead of not doing anything if below max slope... just raise only by max slope
 
                         float HeightAdjustment = Room.transform.position.y + Mathf.Min(CurrentPlayerHeight / 2, (CurrentPlayerHeight - hit.distance));
+                        //goal of code below is 
                         /*
                         if (AmountPlayerUnderGround > MaxSlope && !im.climb.IsClimbing)
                         {
@@ -99,6 +100,9 @@ public class ColliderManager : MonoBehaviour {
                     if (!Head.HeadInWall)
                         {
                             Room.transform.position = new Vector3(Room.transform.position.x, HeightAdjustment, Room.transform.position.z);
+                            // below code is supposed to help players get over ledges... not sure if it will work
+                            Vector3 PlayerDirection = playerHead.transform.forward;
+                            Room.transform.position += new Vector3(PlayerDirection.x, 0.0f, PlayerDirection.z).normalized * .1f;
                         }
                     }
                     /*
