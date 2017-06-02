@@ -11,6 +11,7 @@ public class GoldenBallWatcher : MonoBehaviour
     public GameObject NoReturnArea;
     public GameObject DarkRoomLocation;
     public float distance;
+    public ScriptedMovement GripTools;
 
     private bool AllBallsCollected = false;
 
@@ -30,16 +31,28 @@ public class GoldenBallWatcher : MonoBehaviour
 
     public void CheckWinState()
     {
+        int i = 0;
+        int totalBalls = gbArray.Length;
         foreach (GoldenBall gb in gbArray)
         {
-            if (!gb.Attached)
+            if (gb.Attached)
             {
-                return;
+
+                i += 1;
             }
         }
 
-        //so if all balls are attached
-        Win();
+
+        if (i == 2)
+        {
+            GripTools.EnableMovement = true;
+        } else if (i == totalBalls)
+        {
+            //so if all balls are attached
+            Win();
+        }
+
+        Debug.Log("how many balls do I have?: " + i);
     }
 
     public void Win()

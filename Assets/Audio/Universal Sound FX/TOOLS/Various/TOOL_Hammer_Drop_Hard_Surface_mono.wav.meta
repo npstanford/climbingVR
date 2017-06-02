@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 8d368d37b0d3d2248b6d3213743d8621
+labels:
+- usfx
+- imphenzia
+- tool
+- hammer
+- mono
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

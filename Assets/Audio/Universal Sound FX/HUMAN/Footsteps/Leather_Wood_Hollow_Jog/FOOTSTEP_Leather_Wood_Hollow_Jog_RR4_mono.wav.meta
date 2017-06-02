@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: a1f8e65f674c9e542b93cf10d4cd6923
+labels:
+- imphenzia
+- usfx
+- mono
+- footstep
+- leather
+- shoe
+- wood
+- hollow
+- jog
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

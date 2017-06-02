@@ -7,6 +7,9 @@ public class GrappleCollider : MonoBehaviour
 
     public bool Grappled = false; //pretty sure this isn't used adn can be removed
     public bool HookshotFired = false;
+    public AudioSource FiredSound;
+    public AudioSource ShootingSound;
+    public AudioSource ReelInSound;
     public Rigidbody Body;
     public GripTool _GripTool;
     int i = 0;
@@ -58,7 +61,7 @@ public class GrappleCollider : MonoBehaviour
 
     IEnumerator ShootGrapple(GameObject grappleTarget, ControllerState controller2, float GrappleLength, float GrappleSpeed2)
     {
-
+        FiredSound.Play();
         controller = controller2; // BIG HUGE UGLY HACK. I am just doing this now to see if I can fix a race condition
         GrappleSpeed = GrappleSpeed2; // AND I DID IT AGAIN. Definitely need to think about how to better organize this code. But prototype the hookshot first.
 
@@ -77,7 +80,10 @@ public class GrappleCollider : MonoBehaviour
 
         while (elapsedTime < totalTime)
         {
-
+            if (!ShootingSound.isPlaying)
+            {
+                ShootingSound.Play();
+            }
             this.transform.position = Vector3.Lerp(grappleStart, grappleTarget.transform.position, elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
             lr.SetPosition(1, this.transform.position);
@@ -92,12 +98,17 @@ public class GrappleCollider : MonoBehaviour
 
         while (elapsedTime < totalTime)
         {
-
+            if (!ShootingSound.isPlaying)
+            {
+                ShootingSound.Play();
+            }
             this.transform.position = Vector3.Lerp(grappleTarget.transform.position, controller.controller.transform.position, elapsedTime / totalTime);
             elapsedTime += Time.deltaTime;
             lr.SetPosition(1, this.transform.position);
             yield return null;
         }
+
+        ShootingSound.Stop();
 
         HideGrapple();
         lr.enabled = false; //fyi, should refactor this into Hide Grapple
@@ -120,7 +131,10 @@ public class GrappleCollider : MonoBehaviour
         while ((Body.transform.position - (this.transform.position - controller.controller.transform.position + Body.transform.position)).magnitude > .005) //if there is anything brittle, it is this logic
         {
             Body.transform.position = Vector3.Lerp(bodyStartPosition, this.transform.position - controller.controller.transform.position + Body.transform.position, timeElapsed / timeToComplete); //when hookshotting moving objects, is something happening while this coroutine runs to move collider back to orign?
-
+            if (!ReelInSound.isPlaying)
+            {
+                ReelInSound.Play();
+            }
 
 
             timeElapsed += Time.deltaTime;
@@ -139,6 +153,9 @@ public class GrappleCollider : MonoBehaviour
             yield return null;
         }
         */
+
+        ReelInSound.Stop();
+
         Grappled = false; //pretty sure this isn't used and can be removed
         HookshotFired = false; // this needs to be refactored into some code common with the case where it doesn't hit anything
         _GripTool.ShowHook();

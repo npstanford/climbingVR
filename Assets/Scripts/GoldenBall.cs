@@ -28,6 +28,7 @@ public class GoldenBall : MonoBehaviour {
             rb.useGravity = false;
         }
 
+
         IEnumerator MoveCoroutine = MoveToPodium(attachPosition);
         //StartCoroutine(MoveCoroutine);
         StartCoroutine("RandomRotation");
@@ -38,11 +39,12 @@ public class GoldenBall : MonoBehaviour {
         //TODO do some cool rotation
     }
 
+    /*
     public void Detach()
     {
         Attached = false;
     }
-
+    */
     private void OnTriggerEnter(Collider other)
     {
         Teleporter t = other.GetComponent<Teleporter>();
@@ -58,6 +60,18 @@ public class GoldenBall : MonoBehaviour {
         float rotX = Random.Range(30, 180);
         float rotY = Random.Range(30, 180);
         float rotZ = Random.Range(30, 180);
+
+        //i'M TIRED SO FUCK IT. We need to disable CanPickUp, but if we do, then our hands don't realize we've let go of it...
+        yield return new WaitForSeconds(.3f);
+
+        InteractionAttributes ia = GetComponent<InteractionAttributes>();
+
+        if (ia != null)
+        {
+            ia.CanPickUp = false;
+        }
+
+
         while (true)
         {
 

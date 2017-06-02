@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: 6abb77750e724fb4e8e3dd41e0222977
+labels:
+- usfx
+- imphenzia
+- stereo
+- machine
+- tool
+- powertool
+- compressor
+- air
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

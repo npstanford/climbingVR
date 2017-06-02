@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: b2600e0ad1989054c93d78bb5d4c708e
+labels:
+- usfx
+- imphenzia
+- puzzle
+- success
+- triumph
+- complete
+- done
+- match
+- stereo
+- banjo
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

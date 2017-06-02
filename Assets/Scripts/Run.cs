@@ -17,10 +17,13 @@ public class Run : MonoBehaviour {
 
     public float minHeadSpeedToRun;
 
+    private float TimeOfNextStepSound;
 
     public void Step(Vector3 direction, float speed)
     {
         float scaledSpeed;
+
+
 
         scaledSpeed = Mathf.Pow((1 + speed) * SpeedFactor, SpeedPower);
         scaledSpeed = Mathf.Min(scaledSpeed, MaxSpeed);

@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: c57484d03f1f94a46b50a2c4a6945533
+labels:
+- usfx
+- imphenzia
+- helicopter
+- rotor
+- flyby
+- vehicle
+- air
+- stereo
+- heli
+- chopper
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

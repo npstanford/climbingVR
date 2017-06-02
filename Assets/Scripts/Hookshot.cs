@@ -7,6 +7,8 @@ public class Hookshot : MonoBehaviour
     public GameObject GrappleOffset;
     public GameObject LaserSight;
     public float ShootingAngle = 40.0f;
+
+
     private GameObject _grappleOrigin;
 
     public float GrappleSpeed = 1.0f;

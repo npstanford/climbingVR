@@ -5,7 +5,8 @@ using UnityEngine;
 public class BulletManager : MonoBehaviour {
 
     public float lifetime;
-
+    public AudioSource bulletEmitted;
+    public AudioSource bulletHitsPlayer;
 
 
 
@@ -13,6 +14,7 @@ public class BulletManager : MonoBehaviour {
 	void Start () {
         IEnumerator bulletCoroutine = BulletLifeTime(lifetime);
         StartCoroutine(bulletCoroutine);
+        bulletEmitted.Play();
 	}
 	
 	// Update is called once per frame
@@ -37,6 +39,10 @@ public class BulletManager : MonoBehaviour {
 
             if (ia.CanClimb || ia.IsGround || ia.IsPartOfBody || ia.CanPickUp) //I hate this code
             {
+                if (ia.IsPartOfBody)
+                {
+                    bulletHitsPlayer.Play();
+                }
                 Destroy(this.gameObject);
             }
         }

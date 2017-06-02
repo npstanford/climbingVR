@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: 3f26b77d23cf53d4785f8351f8dcc870
+labels:
+- usfx
+- imphenzia
+- thud
+- thump
+- mono
+- impact
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 81b5bf5ab82ea344e98a48018d56ec9e
+labels:
+- usfx
+- imphenzia
+- animal
+- goose
+- mono
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

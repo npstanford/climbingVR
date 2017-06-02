@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 7db37fdd7745078448c77d9050244a2d
+labels:
+- usfx
+- imphenzia
+- puzzle
+- success
+- triumph
+- complete
+- done
+- match
+- stereo
+- piano
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -20,6 +20,9 @@ public class Glide : MonoBehaviour
     public ColliderManager cm;
     public float DragCoefficient;
     private Vector3 GlideVelocity;
+    public AudioSource OpenGliderSound;
+    public AudioSource CloseGliderSound;
+    public AudioSource GliderSoarSound;
 
 
     // private MeshRenderer _gliderRenderer;
@@ -153,12 +156,20 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
 
     public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround, bool HandIsOverHead)
     {
-        GliderModel.SetActive(true);
-        _GripTool.HideHook();
+        if (!GliderModel.activeInHierarchy)
+        {
+            GliderModel.SetActive(true);
+            _GripTool.HideHook();
+            OpenGliderSound.Play();
+        }
 
         if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
         {
             IsGliding = true;
+            if (!GliderSoarSound.isPlaying)
+            {
+                GliderSoarSound.Play();
+            }
             Room.useGravity = false;
             Room.velocity = Vector3.zero;
             float magnitude = GlideSpeed;
@@ -260,6 +271,9 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
     public void StopGliding(bool PlayerIsStunned = false)
     {
         //_gliderRenderer.enabled = false;
+        GliderSoarSound.Stop();
+        OpenGliderSound.Stop();
+        CloseGliderSound.Play();
         GliderModel.SetActive(false);
         if (PlayerIsStunned) { _GripTool.HideHook(); } 
         else { _GripTool.ShowHook(); }

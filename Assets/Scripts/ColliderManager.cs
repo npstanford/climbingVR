@@ -30,7 +30,7 @@ public class ColliderManager : MonoBehaviour {
     private Vector3 curRoomPosition;
     public InputManager im;
     public BlurVisionInWalls Head;
-
+    public PlayerLandingSounds playerLandingSounds;
 
 
     private IEnumerator StunCoroutine;
@@ -70,6 +70,9 @@ public class ColliderManager : MonoBehaviour {
         layerMask += (1 << 9); //ignore the player's body
         layerMask += (1 << 8); //ignore the controllers
         layerMask = ~layerMask;
+
+        bool PlayerWasTouchingGround = PlayerIsTouchingGround;
+
         PlayerIsTouchingGround = false; //so that if we don't hit on the raycast, it will remain false
 
         //raycast to determine if touching ground and to adjust y position if necessary
@@ -81,6 +84,10 @@ public class ColliderManager : MonoBehaviour {
             {
                 if (ia.IsGround && !(ia.CanPickUp && hit.collider.transform.IsChildOf(transform)))
                 {
+                    if (!PlayerWasTouchingGround)
+                    {
+                        playerLandingSounds.PlayerLanded();
+                    }
                     PlayerIsTouchingGround = true;
                     float AmountPlayerUnderGround = CurrentPlayerHeight - hit.distance;
                     if (AmountPlayerUnderGround > .01)
@@ -140,6 +147,8 @@ public class ColliderManager : MonoBehaviour {
 
         playerCollider.center = colliderCenter;
 
+        GroundedCollider.transform.localPosition = new Vector3(playerCollider.center.x, playerCollider.center.y - CurrentPlayerHeight / 2,
+            playerCollider.center.z);
 
         //playerCollider.size = new Vector3(0.2f, colliderCenter.y * 2f, 0.2f);
         playerCollider.size = new Vector3(0.2f, CurrentPlayerHeight, 0.2f);

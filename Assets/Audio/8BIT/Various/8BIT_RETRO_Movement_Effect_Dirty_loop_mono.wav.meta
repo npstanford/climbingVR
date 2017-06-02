@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: 745c7b78bbe68f64482be4de1a0a22e4
+labels:
+- 8bit
+- retro
+- movement
+- effect
+- usfx
+- mono
+- imphenzia
+- loop
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: f214d79579713984394f900233f81f32
+labels:
+- usfx
+- imphenzia
+- stereo
+- tool
+- wrench
+- impact
+- impactwrench
+- compressed
+- compressor
+- air
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

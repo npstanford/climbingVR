@@ -21,9 +21,15 @@ public class GoldenBallCone : MonoBehaviour {
         if (gb != null)
         {
             gb.Attach(transform.position);
+            SphereCollider ourCollider = GetComponentInChildren<SphereCollider>();
+            if (ourCollider != null)
+            {
+                ourCollider.enabled = false;
+            }
         }
     }
 
+    /*
     private void OnTriggerExit(Collider other)
     {
         GoldenBall gb = other.GetComponent<GoldenBall>();
@@ -32,4 +38,5 @@ public class GoldenBallCone : MonoBehaviour {
             gb.Detach();
         }
     }
+    */
 }

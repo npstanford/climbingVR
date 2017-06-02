@@ -1,0 +1,29 @@
+fileFormatVersion: 2
+guid: 2f459a44e6793e24186ad8bd203fbb5d
+labels:
+- imphenzia
+- usfx
+- mono
+- loop
+- pressurewasher
+- pressure
+- washer
+- spray
+- water
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

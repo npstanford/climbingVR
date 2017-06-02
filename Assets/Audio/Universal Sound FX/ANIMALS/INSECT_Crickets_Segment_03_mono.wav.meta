@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: e31fe836da5887e41a342befb9d9ecfe
+labels:
+- imphenzia
+- usfx
+- mono
+- insect
+- cricket
+- crickets
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
