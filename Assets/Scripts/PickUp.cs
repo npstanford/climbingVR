@@ -58,7 +58,13 @@ public class PickUp : MonoBehaviour {
         Rigidbody rb = controller.Holding;
 
         if (rb != null) {
+            /*
+            IEnumerator DelayCoroutine = DelayReturnCollisionDetection(rb);
             // begin experimental code
+            StartCoroutine(DelayCoroutine);
+            //end experimental code
+            */
+
             Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
             foreach (Collider pickUpCollider in pickUpColliders)
             {
@@ -67,8 +73,6 @@ public class PickUp : MonoBehaviour {
                     Physics.IgnoreCollision(pickUpCollider, PlayerCollider, false);
                 }
             }
-            //end experimental code
-
             controller.Holding.transform.parent = null;
             controller.Holding = null;
             rb.isKinematic = false;
@@ -81,4 +85,18 @@ public class PickUp : MonoBehaviour {
         }
     }
 
+    /*
+    IEnumerator DelayReturnCollisionDetection(Rigidbody rb)
+    {
+        yield return new WaitForSeconds(.1f);
+        Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
+        foreach (Collider pickUpCollider in pickUpColliders)
+        {
+            if (pickUpColliders != null)
+            {
+                Physics.IgnoreCollision(pickUpCollider, PlayerCollider, false);
+            }
+        }
+    }
+    */
 }

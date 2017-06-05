@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 71b284775d9edf2449f7cff260b42cf1
+labels:
+- usfx
+- imphenzia
+- snap
+- mono
+- break
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

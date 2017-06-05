@@ -6,6 +6,7 @@ public class GoldenBall : MonoBehaviour {
     private Vector3 startPosition;
     public bool Attached = false;
     private GoldenBallWatcher gbw;
+    public AudioSource AttachSound;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,7 @@ public class GoldenBall : MonoBehaviour {
             rb.useGravity = false;
         }
 
+        AttachSound.Play();
 
         IEnumerator MoveCoroutine = MoveToPodium(attachPosition);
         //StartCoroutine(MoveCoroutine);

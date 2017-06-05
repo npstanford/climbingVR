@@ -226,13 +226,15 @@ public class InputManager : MonoBehaviour {
 
         //if the player let's go and isn't holding on with the other hand, then -- and only then -- drop
         if (rController.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger)
-            && !lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+            && !lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)
+            && climb.IsClimbing)
         {
             climb.Drop(Body);
             climb.ThrowPlayer(rController, Body);
         }
         else if (lController.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger)
-          && !rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+          && !rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)
+          && climb.IsClimbing)
         {
             climb.Drop(Body);
             climb.ThrowPlayer(lController, Body);

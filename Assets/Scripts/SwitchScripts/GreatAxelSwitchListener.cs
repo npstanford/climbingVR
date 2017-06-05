@@ -6,6 +6,9 @@ public class GreatAxelSwitchListener : MonoBehaviour {
 
     public float AnglesPerHit;
     public float TimeToRotate;
+    public AudioSource ScrapingSound1;
+    public AudioSource ScrapingSound2;
+    public AudioSource ScrapingSound3;
 
     public SwitchControl[] scs;
 
@@ -41,6 +44,9 @@ public class GreatAxelSwitchListener : MonoBehaviour {
 
     IEnumerator Activate()
     {
+        ScrapingSound1.Play();
+        ScrapingSound2.Play();
+        ScrapingSound3.Play();
         float TimeElapsed = 0;
         while (TimeElapsed < TimeToRotate)
         {
@@ -48,6 +54,8 @@ public class GreatAxelSwitchListener : MonoBehaviour {
             TimeElapsed += Time.deltaTime;
             yield return null;
         }
-
+        ScrapingSound1.Stop();
+        ScrapingSound2.Stop();
+        ScrapingSound3.Stop();
     }
 }

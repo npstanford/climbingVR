@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: 89e625f99e2f6cb478132d3d19b132a2
+labels:
+- usfx
+- imphenzia
+- break
+- mono
+- crack
+- breaking
+- cracking
+- crunch
+AudioImporter:
+  serializedVersion: 6
+  defaultSettings:
+    loadType: 1
+    sampleRateSetting: 0
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
+    conversionMode: 0
+  platformSettingOverrides: {}
+  forceToMono: 0
+  preloadAudioData: 1
+  loadInBackground: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
