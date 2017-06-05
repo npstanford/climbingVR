@@ -48,21 +48,21 @@ public class Run : MonoBehaviour {
 
         Room.transform.localPosition += flatDirection * scaledSpeed * Time.deltaTime;
         EyeBlur.intensity = BlurAmount * (scaledSpeed / MaxSpeed);
-        /*
+
         if (!RushingAirSounds.isPlaying)
         {
             RushingAirSounds.Play();
         }
         else
         {
-            RushingAirSounds.volume = scaledSpeed / MaxSpeed;
+            //RushingAirSounds.volume = scaledSpeed / MaxSpeed;
         }
-        */
+
     }
 
     public void Stop()
     {
         EyeBlur.intensity = 0;
-        //RushingAirSounds.Stop();
+        RushingAirSounds.Stop();
     }
 }

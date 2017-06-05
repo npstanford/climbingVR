@@ -10,6 +10,7 @@ public class GripTool : MonoBehaviour {
     public GameObject hookStart;
     public GameObject touchpad;
     public GameObject hookshotTouchpad;
+    public AudioSource ClickSound;
 
     public GameObject gripL;
     public GameObject gripR;
@@ -25,7 +26,7 @@ public class GripTool : MonoBehaviour {
     private Vector3 touchpadActivatedPosition;
     private Vector3 gripStartScale;
     private Vector3 gripActivatedScale;
-
+    private bool HooksVisible;
 
     private MeshRenderer[] mrs;
 
@@ -35,6 +36,8 @@ public class GripTool : MonoBehaviour {
     void Start () {
         hookActivatedPosition = Vector3.zero;
         hookActivatedRotation = Quaternion.identity;
+        HooksVisible = false;
+
 
         triggerStartPosition = trigger.transform.localPosition;
         triggerActivatedPosition = triggerStartPosition;
@@ -73,9 +76,12 @@ public class GripTool : MonoBehaviour {
             triggerPress = Vector2.zero;
         }
 
+        if (controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)&& HooksVisible)
+        {
+            ClickSound.Play();
+        }
 
-
-        hook.transform.localPosition = Vector3.Lerp(hookStart.transform.localPosition, hookActivatedPosition, triggerPress.x);
+            hook.transform.localPosition = Vector3.Lerp(hookStart.transform.localPosition, hookActivatedPosition, triggerPress.x);
         hook.transform.localRotation = Quaternion.Lerp(hookStart.transform.localRotation, hookActivatedRotation, triggerPress.x);
 
         trigger.transform.localPosition = Vector3.Lerp(triggerStartPosition, triggerActivatedPosition, triggerPress.x);
@@ -102,6 +108,7 @@ public class GripTool : MonoBehaviour {
 
     public void HideHook()
     {
+        HooksVisible = false;
         foreach (MeshRenderer mr in mrs)
         {
             mr.enabled = false;
@@ -110,6 +117,7 @@ public class GripTool : MonoBehaviour {
 
     public void ShowHook()
     {
+        HooksVisible = true;
         foreach (MeshRenderer mr in mrs)
         {
             mr.enabled = true;

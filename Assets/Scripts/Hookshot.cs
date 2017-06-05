@@ -7,13 +7,16 @@ public class Hookshot : MonoBehaviour
     public GameObject GrappleOffset;
     public GameObject LaserSight;
     public float ShootingAngle = 40.0f;
-
+    public AudioSource HookShotLaserScanSound;
 
     private GameObject _grappleOrigin;
 
     public float GrappleSpeed = 1.0f;
     public float GrappleLength = 15.0f;
     private GameObject grappleTarget;
+
+    private float LaserStartTimer;
+    private float LaserStartTime = .3f;
 
     // Use this for initialization
     void Start()
@@ -40,6 +43,12 @@ public class Hookshot : MonoBehaviour
 
     public void Scan(ControllerState controller)
     {
+        LaserStartTimer -= Time.deltaTime; //reset each time we let go of the touchpad button, this is a way to not have hookshot noise every time we step
+
+        if (!HookShotLaserScanSound.isPlaying && !Grapple.HookshotFired && LaserStartTimer < 0f)
+        {
+            HookShotLaserScanSound.Play();
+        }
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
         layerMask += (1 << 2); //ignore raycast layer 
         layerMask += (1 << 9); //ignore the player's body
@@ -63,6 +72,8 @@ public class Hookshot : MonoBehaviour
     public void StopScan()
     {
         LaserSight.GetComponent<MeshRenderer>().enabled = false;
+        HookShotLaserScanSound.Stop();
+        LaserStartTimer = LaserStartTime;
     }
 
     public void Shoot(ControllerState controller)
@@ -75,7 +86,8 @@ public class Hookshot : MonoBehaviour
             _grappleOrigin.transform.Rotate(Vector3.right * ShootingAngle);
             _grappleOrigin.transform.localPosition += GrappleOffset.transform.position;
 
-
+            HookShotLaserScanSound.Stop();
+            LaserStartTimer = LaserStartTime * 2;
 
             Grapple.transform.position = _grappleOrigin.transform.position;
             Grapple.transform.rotation = _grappleOrigin.transform.rotation;

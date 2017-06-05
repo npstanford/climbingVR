@@ -18,7 +18,8 @@ public class Enemy : MonoBehaviour {
     public GameObject Player;
     public Material stunnedMaterial;
     public GameObject EnemyBody;
-
+    public float FlySpeed;
+    public GameObject WhatItSees;// for debugging only
 
     private bool attack;
     private Vector3 startPosition;
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviour {
     private bool reset; //this is used to trigger special Update code to reorient the enemy after whatever the fuck the player did to him
     private Quaternion targetRot;
     private bool trackPlayerIsRunning = false;
+    private Vector3 HomePosition; // this is where propeller heads will return to if you displace them
 
     // Use this for initialization
     void Start() {
@@ -38,6 +40,7 @@ public class Enemy : MonoBehaviour {
         StartCoroutine(shoot);
         StartCoroutine(trackPlayer);
         startPosition = EnemyBody.transform.localPosition;
+        HomePosition = transform.position;
         mrs = GetComponentsInChildren<MeshRenderer>();
         ias = GetComponentsInChildren<InteractionAttributes>();
         mats = new Material[mrs.Length];
@@ -61,10 +64,26 @@ public class Enemy : MonoBehaviour {
 
         if (attack && !IsStunned)
         {
-            trackPlayerIsRunning = true;
-            
-            float step = rotateSpeed * Time.deltaTime;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
+            RaycastHit hit;
+
+            //note the below code may allow a player to cover their face in order to not be seen
+            Debug.DrawRay(transform.position, newPlayerLocation - transform.position, Color.cyan);
+            if (Physics.Raycast(transform.position, newPlayerLocation - transform.position, out hit, AttackRadius + 5))
+            {
+                WhatItSees = hit.collider.gameObject;
+                InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
+                if (ia != null)
+                {
+                    if (ia.IsPartOfBody || ia.CanPickUp)
+                    {
+                        trackPlayerIsRunning = true;
+                        float step = rotateSpeed * Time.deltaTime;
+                        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
+                    }
+                }
+            }
+
+
         } else
         {
             trackPlayerIsRunning = false;
@@ -85,6 +104,13 @@ public class Enemy : MonoBehaviour {
             rb.isKinematic = true;
             //startPosition.y += 1.0f; //this fucks up aiming for some reason. 
 
+        }
+
+
+        if ((transform.position - HomePosition).magnitude > .2f && !IsStunned)
+        {
+            Vector3 DirectionHome = (HomePosition - transform.position).normalized;
+            transform.position += DirectionHome * FlySpeed * Time.deltaTime;
         }
 
     }
@@ -146,6 +172,7 @@ public class Enemy : MonoBehaviour {
 
         targetRot = Quaternion.LookRotation(aimDirection);
     }
+
 
 
     private IEnumerator StunCoroutine()

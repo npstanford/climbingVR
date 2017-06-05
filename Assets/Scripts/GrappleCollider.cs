@@ -10,6 +10,7 @@ public class GrappleCollider : MonoBehaviour
     public AudioSource FiredSound;
     public AudioSource ShootingSound;
     public AudioSource ReelInSound;
+    public AudioSource RicochetSound;
     public Rigidbody Body;
     public GripTool _GripTool;
     int i = 0;
@@ -43,6 +44,9 @@ public class GrappleCollider : MonoBehaviour
                 StartCoroutine(coroutineReelInPlayer);
 
                 StopCoroutine(coroutineShoot);
+            } else
+            {
+                RicochetSound.Play();
             }
         }
     }
@@ -93,7 +97,6 @@ public class GrappleCollider : MonoBehaviour
         }
 
         elapsedTime = 0.0f;
-
 
 
         while (elapsedTime < totalTime)

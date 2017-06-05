@@ -23,6 +23,7 @@ public class Glide : MonoBehaviour
     public AudioSource OpenGliderSound;
     public AudioSource CloseGliderSound;
     public AudioSource GliderSoarSound;
+    public AudioSource RushingAirSound;
 
 
     // private MeshRenderer _gliderRenderer;
@@ -169,6 +170,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
             if (!GliderSoarSound.isPlaying)
             {
                 GliderSoarSound.Play();
+                RushingAirSound.Play();
             }
             Room.useGravity = false;
             Room.velocity = Vector3.zero;
@@ -273,6 +275,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
         //_gliderRenderer.enabled = false;
         GliderSoarSound.Stop();
         OpenGliderSound.Stop();
+        RushingAirSound.Stop();
         CloseGliderSound.Play();
         GliderModel.SetActive(false);
         if (PlayerIsStunned) { _GripTool.HideHook(); } 
