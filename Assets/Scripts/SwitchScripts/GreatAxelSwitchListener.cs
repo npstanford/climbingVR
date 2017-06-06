@@ -44,16 +44,21 @@ public class GreatAxelSwitchListener : MonoBehaviour {
 
     IEnumerator Activate()
     {
-        ScrapingSound1.Play();
-        ScrapingSound2.Play();
-        ScrapingSound3.Play();
+
         float TimeElapsed = 0;
         while (TimeElapsed < TimeToRotate)
         {
+            if (!ScrapingSound1.isPlaying)
+            {
+                ScrapingSound1.Play();
+                ScrapingSound2.Play();
+                ScrapingSound3.Play();
+            }
             this.transform.Rotate(0.0f, (AnglesPerHit * Time.deltaTime) / TimeToRotate, 0.0f, Space.Self);
             TimeElapsed += Time.deltaTime;
             yield return null;
         }
+
         ScrapingSound1.Stop();
         ScrapingSound2.Stop();
         ScrapingSound3.Stop();
