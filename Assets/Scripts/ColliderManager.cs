@@ -31,6 +31,8 @@ public class ColliderManager : MonoBehaviour {
     public InputManager im;
     public BlurVisionInWalls Head;
     public PlayerLandingSounds playerLandingSounds;
+    public AudioSource StunnedImpactSound;
+    public AudioSource RingingInEarsSound;
 
 
     private IEnumerator StunCoroutine;
@@ -252,7 +254,11 @@ public class ColliderManager : MonoBehaviour {
         hitDirection = hitDirection.normalized;
         float stunnedStart = Time.time;
         PlayerIsStunned = true;
-        
+
+        StunnedImpactSound.Stop();
+        RingingInEarsSound.Stop();
+        StunnedImpactSound.Play();
+        RingingInEarsSound.Play();
 
 
         //make screen red or something
@@ -278,6 +284,7 @@ public class ColliderManager : MonoBehaviour {
         {
             
             InjuredMask.color = Color.Lerp(Color.red, Color.clear, ((Time.time - stunnedStart) / StunLength)*.4f);
+            RingingInEarsSound.volume = 1f - (Time.time - stunnedStart) / StunLength;
             yield return null;
         }
 

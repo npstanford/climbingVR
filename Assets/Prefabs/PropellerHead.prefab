@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 65796035298205774}
   - component: {fileID: 23137286569141072}
   - component: {fileID: 114769955002814370}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PropellerBlade1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 135940707334484832}
   - component: {fileID: 23183270329383826}
   - component: {fileID: 114631894506784486}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4045121807870572}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: EnemyBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 114852043098452360}
   - component: {fileID: 114414125978469336}
   - component: {fileID: 114866855805183418}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: WeakPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 23965945147683322}
   - component: {fileID: 114465580987581320}
   - component: {fileID: 114650467532676134}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PropellerRod
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 33185985981604992}
   - component: {fileID: 135895572554868634}
   - component: {fileID: 23639358473719052}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: MissleOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 65356290420161050}
   - component: {fileID: 23267479045613564}
   - component: {fileID: 114988537657601602}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PropellerBlade1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 82433738703659542}
   - component: {fileID: 114508234836829492}
   - component: {fileID: 82040826015423238}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PropellerHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 65326496858030600}
   - component: {fileID: 23276059090374790}
   - component: {fileID: 114493780966891718}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PropellerBlade1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 136939709085291884}
   - component: {fileID: 23778808867474918}
   - component: {fileID: 114551863014011976}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4605116652258896}
   - component: {fileID: 65164313651161284}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PlayerDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1041,6 +1041,8 @@ MonoBehaviour:
   stunnedMaterial: {fileID: 2100000, guid: c81638b3753872e499b7d86a071b6e32, type: 2}
   EnemyBody: {fileID: 1166691693145512}
   FlySpeed: 2
+  WhatItSees: {fileID: 0}
+  CanSeePlayer: 0
 --- !u!114 &114631894506784486
 MonoBehaviour:
   m_ObjectHideFlags: 1

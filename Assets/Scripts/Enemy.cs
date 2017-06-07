@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour {
     public GameObject WhatItSees;// for debugging only
 
     private bool attack;
+    public bool CanSeePlayer;
     private Vector3 startPosition;
     private MeshRenderer[] mrs;
     private Material[] mats;
@@ -51,6 +52,7 @@ public class Enemy : MonoBehaviour {
         newPlayerLocation = Player.transform.position;
         oldPlayerLocation = newPlayerLocation;
         targetRot = Quaternion.identity;
+        CanSeePlayer = false;
     }
 
     // Update is called once per frame
@@ -65,10 +67,11 @@ public class Enemy : MonoBehaviour {
         if (attack && !IsStunned)
         {
             RaycastHit hit;
+            LayerMask lm = (1 << 13);
+            lm = ~lm;
 
             //note the below code may allow a player to cover their face in order to not be seen
-            Debug.DrawRay(transform.position, newPlayerLocation - transform.position, Color.cyan);
-            if (Physics.Raycast(transform.position, newPlayerLocation - transform.position, out hit, AttackRadius + 5))
+            if (Physics.Raycast(transform.position, newPlayerLocation - transform.position, out hit, AttackRadius + 5, lm))
             {
                 WhatItSees = hit.collider.gameObject;
                 InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
@@ -77,10 +80,18 @@ public class Enemy : MonoBehaviour {
                     if (ia.IsPartOfBody || ia.CanPickUp)
                     {
                         trackPlayerIsRunning = true;
+                        CanSeePlayer = true;
                         float step = rotateSpeed * Time.deltaTime;
                         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, step);
                     }
+                    else
+                    {
+                        CanSeePlayer = false;
+                    }
                 }
+            } else
+            {
+                CanSeePlayer = false;
             }
 
 
@@ -130,7 +141,7 @@ public class Enemy : MonoBehaviour {
     {
         while (true)
         {
-            if (attack && !IsStunned)
+            if (attack && !IsStunned && CanSeePlayer)
             {
                 Rigidbody bullet = Instantiate(MisslePrefab, MissleOrigin.transform.position, Quaternion.identity) as Rigidbody;
                 bullet.velocity = transform.forward * BulletVelocity;
