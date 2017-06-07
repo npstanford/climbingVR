@@ -67,7 +67,7 @@ public class ColliderManager : MonoBehaviour {
 
 
         RaycastHit hit; //err I could and should pull this out of FixedUpdate and put it in start()
-        LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
+        LayerMask layerMask = (1 << 16);  // layer mask against "grapple" layer
         layerMask += (1 << 2); //ignore raycast layer 
         layerMask += (1 << 9); //ignore the player's body
         layerMask += (1 << 8); //ignore the controllers
