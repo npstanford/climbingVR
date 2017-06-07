@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 114852043098452360}
   - component: {fileID: 114414125978469336}
   - component: {fileID: 114866855805183418}
+  - component: {fileID: 114256192317860902}
   m_Layer: 13
   m_Name: WeakPoint
   m_TagString: Untagged
@@ -268,7 +269,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1657719562575734}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -76.6, y: 0.099999905, z: -120}
+  m_LocalPosition: {x: 24.540627, y: 3.44, z: -10.175003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4605116652258896}
@@ -905,6 +906,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &114256192317860902
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1228542485939560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ba91282602c714b92ad038f188c756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 114608811820494392}
 --- !u!114 &114414125978469336
 MonoBehaviour:
   m_ObjectHideFlags: 1
