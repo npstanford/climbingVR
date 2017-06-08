@@ -12,6 +12,7 @@ public class ItemActivationSwitch : MonoBehaviour {
     public Color color2 = Color.red;
 
     private Material mat;
+    private bool Triggered = false;
 
 	// Use this for initialization
 	void Start () {
@@ -30,10 +31,9 @@ public class ItemActivationSwitch : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Controller"))
+        if (other.gameObject.CompareTag("Controller") && !Triggered)
         {
             im.EnableCapability(ActivateWhat);
-            //this.gameObject.SetActive(false);
             Transform[] ts = this.GetComponentsInChildren<Transform>();
             foreach (Transform t in ts)
             {
@@ -43,6 +43,7 @@ public class ItemActivationSwitch : MonoBehaviour {
                 }
 
             }
+            Triggered = true;
 
         }
     }

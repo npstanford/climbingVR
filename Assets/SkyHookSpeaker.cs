@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SkyHookSpeaker : MonoBehaviour {
     public enum SpeakerPrograms { Intro, Climbing, Zipshot, Glider, HeronLabs};
+
+    public GameObject PlayersHead;
+    public float angle;
     public AudioSource BackgroundMusic;
     public AudioSource Speaker;
 
@@ -41,7 +44,24 @@ public class SkyHookSpeaker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        //going to try to do a directionalized volume affect
+        // take angle between speaker and players head and adjust volume based on that angle (0 degrees -> 1, 180 degrees -> 0)
+
+        Vector3 VectorToPlayersHead = (transform.position - PlayersHead.transform.position).normalized;
+        Vector3 SpeakerDirection = -transform.up.normalized;
+
+        angle = Mathf.Acos(Vector3.Dot(VectorToPlayersHead, SpeakerDirection));
+
+        angle = Mathf.Clamp(angle, 0, Mathf.PI);
+
+
+
+
+        //float volume = 1 - angle / Mathf.Pow(angle + 1, 2) / Mathf.Pow(Mathf.PI, 2);
+        float volume = 1 - (angle / Mathf.PI);
+
+        Speaker.volume = volume;
+        BackgroundMusic.volume = volume;
 	}
 
     public void LaunchAudio(SpeakerPrograms sp)
@@ -83,15 +103,15 @@ public class SkyHookSpeaker : MonoBehaviour {
             yield return new WaitForSeconds(.5f);
         }
 
-        float TimeToAnnoyPlayer = Time.time + 10f;
+        float TimeToAnnoyPlayer = Time.time + 3f;
 
         while (!im.climb.HasClimbed)
         {
-            if (TimeToAnnoyPlayer > Time.time)
+            if (Time.time > TimeToAnnoyPlayer)
             {
                 Speaker.clip = ClimbingNag;
                 Speaker.Play();
-                TimeToAnnoyPlayer += 10f;
+                TimeToAnnoyPlayer += 20f;
             }
             yield return new WaitForSeconds(.5f);
         }
@@ -196,7 +216,7 @@ public class SkyHookSpeaker : MonoBehaviour {
             {
                 Speaker.clip = ChideUserToDashStep;
                 Speaker.Play();
-                TimeToAnnoyPlayer += 20f;
+                TimeToAnnoyPlayer += ChideUserToDashStep.length + 10f;
             }
 
             yield return new WaitForSeconds(.5f);

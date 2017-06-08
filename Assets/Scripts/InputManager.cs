@@ -338,6 +338,7 @@ public class InputManager : MonoBehaviour {
             ClimbingEnabled = true;
             GripToolLeft.DisplayClimbingComponents();
             GripToolRight.DisplayClimbingComponents();
+            Debug.Log("How often is enable capability for climbing being called?");
             Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Climbing);
         }
 
