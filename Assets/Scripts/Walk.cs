@@ -15,12 +15,15 @@ public class Walk : MonoBehaviour {
     public float MaxVignette;
     public BlurOptimized bo;
 
+    public bool HasStepped = false; // used by intro sequence to see if player has successfully taken a dash step yet.
+
 
     public GameObject Player;
     public Rigidbody Room;
 
     void Start () {
         Stepped = false;
+        HasStepped = false;
     }
 
     public void Step(SteamVR_TrackedObject controller) {
@@ -88,7 +91,7 @@ public class Walk : MonoBehaviour {
 
         //StartCoroutine(WalkAndBlur2(finalPositionLocal, finalPositionWorld));
         StartCoroutine(WalkAndBlur3(walkDirection));
-
+        HasStepped = true;
 
     }
         

@@ -7,7 +7,7 @@ public class Climb : MonoBehaviour {
     public float JumpDampFactor = 1.0f;
     public bool IsClimbing;
     public float GripDepletion;
-
+    public bool HasClimbed = false; // for use by the tutorial system
 
     // Use this for initialization
     void Start () {
@@ -25,6 +25,7 @@ public class Climb : MonoBehaviour {
 
         if (controller.canGrip && controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
         {
+            HasClimbed = true;
             StickPlayerToPlatform sptp = controller.GripObject.GetComponent<StickPlayerToPlatform>();
             if (sptp != null)
             {

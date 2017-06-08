@@ -6,10 +6,12 @@ public class PickUp : MonoBehaviour {
 
     public bool IsPickingUp;
     public Collider PlayerCollider;
+    public bool HasPickedUp = false;
 
     public void Start()
     {
         IsPickingUp = false;
+        HasPickedUp = false;
     }
 
     public void Grab(ControllerState controller)
@@ -19,7 +21,7 @@ public class PickUp : MonoBehaviour {
         {
             if (controller.canPickUp)
             {
-                
+                HasPickedUp = true;
                 Rigidbody rb = controller.ObjectToPickUp;
                 //begin experimental coce
                 Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();

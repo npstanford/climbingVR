@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour {
     public enum Capabilities { Climb, Hookshot, Glide};
 
     public bool EnableAllComponents = true;
+    public bool EnableTutorial = true;
     //public bool RunInPlace = false;
     public ControllerState lController;
     public ControllerState rController;
@@ -16,6 +17,7 @@ public class InputManager : MonoBehaviour {
     public GripTool GripToolRight;
     public GameObject PlayerHead;
     public BlurOptimized bo;
+    public SkyHookSpeaker Speaker;
     public int NotTouchingGroundCount; //for smoothing otu not touching ground during running
 
 
@@ -35,13 +37,20 @@ public class InputManager : MonoBehaviour {
     public float walkHookDiff = 1.0f;
 
     //capabilities
-    private Walk walk;
+    [HideInInspector]
+    public Walk walk;
+    [HideInInspector]
     public Climb climb;
+    [HideInInspector]
     public Hookshot hookshot;
+    [HideInInspector]
     public Glide glide;
-    private Run run;
+    [HideInInspector]
+    public Run run;
+    [HideInInspector]
     private GripMeter gm;
-    private PickUp pu;
+    [HideInInspector]
+    public PickUp pu;
 
     //inputs
     private ColliderManager cm;
@@ -329,6 +338,7 @@ public class InputManager : MonoBehaviour {
             ClimbingEnabled = true;
             GripToolLeft.DisplayClimbingComponents();
             GripToolRight.DisplayClimbingComponents();
+            Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Climbing);
         }
 
         if (cap == Capabilities.Hookshot)

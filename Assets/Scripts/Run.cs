@@ -17,14 +17,21 @@ public class Run : MonoBehaviour {
     public AudioSource RushingAirSounds;
 
     public float minHeadSpeedToRun;
+    public bool HasRun = false;
 
     private float TimeOfNextStepSound;
+
+
+    public void Start()
+    {
+        HasRun = false;
+    }
 
     public void Step(Vector3 direction, float speed)
     {
         float scaledSpeed;
 
-
+        HasRun = true;
 
 
         scaledSpeed = Mathf.Pow((1 + speed) * SpeedFactor, SpeedPower);

@@ -49,6 +49,7 @@ public class Hookshot : MonoBehaviour
         {
             HookShotLaserScanSound.Play();
         }
+
         LayerMask layerMask = (1 << 16); // layer mask against "grapple" layer
         layerMask += (1 << 2); //ignore raycast layer 
         layerMask += (1 << 9); //ignore the player's body
