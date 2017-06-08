@@ -1065,7 +1065,7 @@ MonoBehaviour:
   stunnedMaterial: {fileID: 2100000, guid: c81638b3753872e499b7d86a071b6e32, type: 2}
   EnemyBody: {fileID: 1166691693145512}
   FlySpeed: 2
-  WhatItSees: {fileID: 0}
+  PropellerNoise: {fileID: 82433738703659542}
   CanSeePlayer: 0
 --- !u!114 &114631894506784486
 MonoBehaviour:

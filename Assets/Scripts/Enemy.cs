@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour {
     public Material stunnedMaterial;
     public GameObject EnemyBody;
     public float FlySpeed;
-    public GameObject WhatItSees;// for debugging only
+    public AudioSource PropellerNoise;
 
     private bool attack;
     public bool CanSeePlayer;
@@ -73,7 +73,6 @@ public class Enemy : MonoBehaviour {
             //note the below code may allow a player to cover their face in order to not be seen
             if (Physics.Raycast(transform.position, newPlayerLocation - transform.position, out hit, AttackRadius + 5, lm))
             {
-                WhatItSees = hit.collider.gameObject;
                 InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
                 if (ia != null)
                 {
@@ -194,6 +193,7 @@ public class Enemy : MonoBehaviour {
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.useGravity = true;
         rb.isKinematic = false;
+        PropellerNoise.Stop();
         foreach (MeshRenderer mr in mrs)
         {
             mr.material = stunnedMaterial;
@@ -251,7 +251,8 @@ public class Enemy : MonoBehaviour {
         rb.isKinematic = true;
         rb.velocity = Vector3.zero;
         IsStunned = false;
-        reset = true;
+        reset = true; // I have a feeling this isn't actually used anymore...
+        PropellerNoise.Play();
         transform.parent = null; // to stop corner cases where the enemy on coming unstunned is still childed to the controller
     }
 

@@ -34,6 +34,7 @@ public class GoldenBall : MonoBehaviour {
         IEnumerator MoveCoroutine = MoveToPodium(attachPosition);
         //StartCoroutine(MoveCoroutine);
         StartCoroutine("RandomRotation");
+
         transform.parent = null;
         transform.position = attachPosition;
         Attached = true;

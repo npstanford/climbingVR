@@ -14,6 +14,7 @@ public class Walk : MonoBehaviour {
     public VignetteAndChromaticAberration Vignette;
     public float MaxVignette;
     public BlurOptimized bo;
+    public float GripDepletion;
 
     public bool HasStepped = false; // used by intro sequence to see if player has successfully taken a dash step yet.
 
@@ -21,9 +22,12 @@ public class Walk : MonoBehaviour {
     public GameObject Player;
     public Rigidbody Room;
 
+    private InputManager im;
+
     void Start () {
         Stepped = false;
         HasStepped = false;
+        im = FindObjectOfType<InputManager>();
     }
 
     public void Step(SteamVR_TrackedObject controller) {
@@ -91,6 +95,7 @@ public class Walk : MonoBehaviour {
 
         //StartCoroutine(WalkAndBlur2(finalPositionLocal, finalPositionWorld));
         StartCoroutine(WalkAndBlur3(walkDirection));
+        im.gm.DepleteGripDiscrete(GripDepletion);
         HasStepped = true;
 
     }

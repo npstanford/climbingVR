@@ -48,7 +48,7 @@ public class InputManager : MonoBehaviour {
     [HideInInspector]
     public Run run;
     [HideInInspector]
-    private GripMeter gm;
+    public GripMeter gm;
     [HideInInspector]
     public PickUp pu;
 
@@ -108,10 +108,14 @@ public class InputManager : MonoBehaviour {
         else if (glide.IsGliding)
         {
             gm.DepleteGrip(glide.GripDepletion);
-        } else if (PlayerIsTouchingGround && !PlayerIsStunned)
+
+        } else if (pu.IsPickingUp){
+            gm.DepleteGrip(pu.GripDepletion); //this is a function of the weight of the object being picked up
+        } 
+        else if (PlayerIsTouchingGround && !PlayerIsStunned)
         {
             //TODO make this contingent on the player being on the ground
-            gm.RestoreGrip();
+            gm.RestoreGrip(lController.CurrentChargingRate, rController.CurrentChargingRate);
         }
 
         if (gm.RemainingGrip > 0.0f && !PlayerIsStunned)
@@ -127,10 +131,18 @@ public class InputManager : MonoBehaviour {
             }
             //gliding
             if (GlidingEnabled && lController.Holding == null) { CheckGliding(lController); }
+
+
+            CheckWalking(rController, ref rTouchpadPressTime);
+            CheckWalking(lController, ref lTouchpadPressTime);
+
+            CheckPickUp(rController);
+            CheckPickUp(lController);
         }
         else {
             climb.Drop(Body);
             glide.StopGliding(PlayerIsStunned);
+            DropEverything();
         }
 
         if (PlayerIsStunned)
@@ -138,24 +150,11 @@ public class InputManager : MonoBehaviour {
             DropEverything();
         }
 
+        //running is the only capability that doesn't require grip strength (e.g. batteries)
+        CheckRunning();
 
-        if (lController.device == null || rController.device == null) {
-            Debug.Log("Device is null");
-            return;
-        }
 
-        //I think this should allow players to either run in place or click button to step
-        //if (RunInPlace)
-        //{
-            CheckRunning();
-        //} else
-        //{
-            CheckWalking(rController, ref rTouchpadPressTime);
-            CheckWalking(lController, ref lTouchpadPressTime);
-        //}
 
-        CheckPickUp(rController);
-        CheckPickUp(lController);
 
         
 
@@ -172,17 +171,6 @@ public class InputManager : MonoBehaviour {
         if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Grip) && GlidingEnabled)
         {
             GripToolLeft.HideHook();
-        } else if (ClimbingEnabled)
-        {
-            //GripToolLeft.ShowHook();
-        }
-
-        if (hookshot.Grapple.HookshotFired)
-        {
-            //GripToolRight.HideHook();
-        } else if (ClimbingEnabled)
-        {
-            //GripToolRight.ShowHook();
         }
 
         if (!PlayerIsTouchingGround && !climb.IsClimbing && !glide.IsGliding)
@@ -339,7 +327,10 @@ public class InputManager : MonoBehaviour {
             GripToolLeft.DisplayClimbingComponents();
             GripToolRight.DisplayClimbingComponents();
             Debug.Log("How often is enable capability for climbing being called?");
-            Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Climbing);
+            if (!EnableAllComponents)
+            {
+                Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Climbing);
+            }
         }
 
         if (cap == Capabilities.Hookshot)
@@ -358,11 +349,8 @@ public class InputManager : MonoBehaviour {
 
     public void Fall()
     {
-        //FallVelocity += FallAcceleration * Time.deltaTime;
-        //FallVelocity = Mathf.Min(FallVelocity, 30);
         float FallVelocity = Body.velocity.y;
         bo.blurSize = FallVelocity / 3; // blursize ranges from 0 to 10. Fall Velocity from 0 to 20. So this scales linearly.
-        //Body.transform.position += Vector3.down * FallVelocity * Time.deltaTime;
     }
 
     //I don't like this. I had to write this though so that I can grab the golden spheres out of the players hands

@@ -7,11 +7,29 @@ public class PickUp : MonoBehaviour {
     public bool IsPickingUp;
     public Collider PlayerCollider;
     public bool HasPickedUp = false;
+    public float GripDepletionRate; // this is what is set
+
+    //this is only needed to enforce a state
+    public ControllerState rController;
+    public ControllerState lController;
+
+    [HideInInspector]
+    public float GripDepletion; // this is a function of grip depletion rate and the weight of the object
 
     public void Start()
     {
         IsPickingUp = false;
         HasPickedUp = false;
+    }
+
+    public void Update()
+    {
+        // I hate this. Basically the problem is that when the gold ball is snatched out of our hands, we never drop it.
+        // Thus IsPickingUp stays true. 
+        if (rController.Holding == null && lController.Holding == null)
+        {
+            IsPickingUp = false;
+        }
     }
 
     public void Grab(ControllerState controller)
@@ -23,6 +41,7 @@ public class PickUp : MonoBehaviour {
             {
                 HasPickedUp = true;
                 Rigidbody rb = controller.ObjectToPickUp;
+                GripDepletion = GripDepletionRate * rb.mass;
                 //begin experimental coce
                 Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
                 foreach(Collider pickUpCollider in pickUpColliders)
@@ -39,8 +58,6 @@ public class PickUp : MonoBehaviour {
                 controller.Holding = rb;
                 rb.useGravity = false;
                 rb.isKinematic = true;
-                //FixedJoint j = controller.gameObject.AddComponent<FixedJoint>();
-                // j.connectedBody = rb;
                 IsPickingUp = true;
             }
             else
@@ -60,13 +77,6 @@ public class PickUp : MonoBehaviour {
         Rigidbody rb = controller.Holding;
 
         if (rb != null) {
-            /*
-            IEnumerator DelayCoroutine = DelayReturnCollisionDetection(rb);
-            // begin experimental code
-            StartCoroutine(DelayCoroutine);
-            //end experimental code
-            */
-
             Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
             foreach (Collider pickUpCollider in pickUpColliders)
             {
@@ -78,8 +88,6 @@ public class PickUp : MonoBehaviour {
             controller.Holding.transform.parent = null;
             controller.Holding = null;
             rb.isKinematic = false;
-           // FixedJoint j = controller.gameObject.GetComponent<FixedJoint>();
-           // Destroy(j);
             rb.useGravity = true;
             IsPickingUp = false;
             Vector3 force = (controller.controller.transform.localPosition - controller.prevPos) / Time.deltaTime;
@@ -87,18 +95,4 @@ public class PickUp : MonoBehaviour {
         }
     }
 
-    /*
-    IEnumerator DelayReturnCollisionDetection(Rigidbody rb)
-    {
-        yield return new WaitForSeconds(.1f);
-        Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();
-        foreach (Collider pickUpCollider in pickUpColliders)
-        {
-            if (pickUpColliders != null)
-            {
-                Physics.IgnoreCollision(pickUpCollider, PlayerCollider, false);
-            }
-        }
-    }
-    */
 }

@@ -51,8 +51,6 @@ public class GoldenBallWatcher : MonoBehaviour
             //so if all balls are attached
             Win();
         }
-
-        Debug.Log("how many balls do I have?: " + i);
     }
 
     public void Win()

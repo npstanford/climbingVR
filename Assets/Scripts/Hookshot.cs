@@ -8,6 +8,7 @@ public class Hookshot : MonoBehaviour
     public GameObject LaserSight;
     public float ShootingAngle = 40.0f;
     public AudioSource HookShotLaserScanSound;
+    public float GripDepletion;
 
     private GameObject _grappleOrigin;
 
@@ -17,6 +18,8 @@ public class Hookshot : MonoBehaviour
 
     private float LaserStartTimer;
     private float LaserStartTime = .3f;
+
+    private InputManager im;
 
     // Use this for initialization
     void Start()
@@ -30,7 +33,7 @@ public class Hookshot : MonoBehaviour
         LaserSight.GetComponent<MeshRenderer>().enabled = false;
 
          grappleTarget = new GameObject("GrappleTarget");
-
+        im = FindObjectOfType<InputManager>();
     }
 
     // Update is called once per frame
@@ -119,7 +122,7 @@ public class Hookshot : MonoBehaviour
 
             Grapple.Shoot(grappleTarget, controller, GrappleLength, GrappleSpeed);
 
-
+            im.gm.DepleteGripDiscrete(GripDepletion);
         }
 
     }

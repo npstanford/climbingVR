@@ -14,44 +14,37 @@ public class BodyMovementCollector : MonoBehaviour
     public bool ShowDirectioNRays = false;
     public ColliderManager cm;
     public Transform Room;
+    [HideInInspector]
     public bool NonRunningHeadMovement = false;
 
-
+    [HideInInspector]
     public BodyTrackingTimeSeries RightArm;
+    [HideInInspector]
     public BodyTrackingTimeSeries LeftArm;
+    [HideInInspector]
     public BodyTrackingTimeSeries Head;
 
-    public float HeadSpeed;
-    public Vector3 HeadDirection;
-    public float RightArmSpeed;
-    public Vector3 RightArmDirection;
-
-
     /*
-     * Arms... imagine they are moving in a vertical plane. We record the xz vectors and average over them. We then combine left
-     * and right arms with equal weight to get the overall movement direction.
-     * 
-     * I am going to need primitives of a time series that can give statistics of that time series. At least mean, possible variance.
-     * 
-     * Head movement, we collect head position to calculate velocity
-     * 
-     * 
-     * So I think we have six components to work with. For head, left and right arms, we have "speed" and "direction".
-     * - For first version, we just average the directions together (weighted average -- later heuristics can adjust weights)
-     * - For speed, we also do a weighted average and then have a function (probably non-linear) that translates that into forward movement. 
-     * - There should be a signal that if the x and z of the head are changing (sufficiently) ,then we shouldn't run. 
-     * 
-     * In the future, we can pull whether the glider is currently deployed or whether the hookshot is shown. 
-     * 
-     */
+    [HideInInspector]
+    public float HeadSpeed;
+    [HideInInspector]
+    public Vector3 HeadDirection;
+    [HideInInspector]
+    public float RightArmSpeed;
+    [HideInInspector]
+    public Vector3 RightArmDirection;
+    */
 
 
     // Use this for initialization
     void Start()
     {
+        //These three are used for running
         RightArm = new BodyTrackingTimeSeries(size);
         LeftArm = new BodyTrackingTimeSeries(size);
         Head = new BodyTrackingTimeSeries(size);
+
+
         if (ShowDirectioNRays)
         {
             RightLR.enabled = true;
@@ -106,29 +99,15 @@ public class BodyMovementCollector : MonoBehaviour
         LeftArm.Update(LeftController.transform.localPosition, lDirection.normalized, cm.PlayerIsTouchingGround);
         Head.Update(TopOfHeadInRoomLocalSpace, TopOfHead.transform.forward, cm.PlayerIsTouchingGround);
 
-        /*
-        if (TopOfHeadInRoomLocalSpace.y < .95 * cm.RealPlayerHeight) {
-            NonRunningHeadMovement = true;
-        } else
-        {
-            if (NonRunningHeadMovement == true)
-            {
-                //if we're standing up quickly, we need to clear out all the time series
-                RightArm.Clear();
-                LeftArm.Clear();
-                Head.Clear();
-            }
-            NonRunningHeadMovement = false;
-        }
-        */
 
         NonRunningHeadMovement = Head.CheckForDucking();
 
+        /*
         RightArmSpeed = RightArm.speed;
         RightArmDirection = RightArm.direction;
         HeadSpeed = Head.speed;
         HeadDirection = Head.direction;
-
+        */
 
 
     }

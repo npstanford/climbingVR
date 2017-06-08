@@ -9,6 +9,7 @@ public class GripMeter : MonoBehaviour {
     public float MaxGrip;
     public float RemainingGrip;
     public float GripRecoverRate;
+    public float GripShakeRecoverRate;
     public float GripDepletedPenalty;
     public float FlashRate;
 
@@ -78,9 +79,20 @@ public class GripMeter : MonoBehaviour {
         }
     }
 
-    public void RestoreGrip()
+    public void DepleteGripDiscrete(float depletionAmount)
+    {
+        RemainingGrip = Mathf.Max(0.0f, RemainingGrip - depletionAmount);
+        if (RemainingGrip <= 0.0f) // the floating point boolean scares me a bit
+        {
+            DisablePlayer(GripDepletedPenalty);
+        }
+    }
+
+    public void RestoreGrip(float ShakingRechargeRateL, float ShakingRechargeRateR)
     {
         RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + GripRecoverRate * Time.deltaTime);
+
+        RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + Mathf.Max(ShakingRechargeRateL, ShakingRechargeRateR) * Time.deltaTime);
     }
 
     public void DisablePlayer(float penalty)
