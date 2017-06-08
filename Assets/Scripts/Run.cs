@@ -15,6 +15,7 @@ public class Run : MonoBehaviour {
     public float BlurAmount;
     public float Bubble;
     public AudioSource RushingAirSounds;
+    public bool IsRunning;
 
     public float minHeadSpeedToRun;
     public bool HasRun = false;
@@ -25,12 +26,13 @@ public class Run : MonoBehaviour {
     public void Start()
     {
         HasRun = false;
+        IsRunning = false;
     }
 
     public void Step(Vector3 direction, float speed)
     {
         float scaledSpeed;
-
+        IsRunning = true;
         HasRun = true;
 
 
@@ -71,5 +73,6 @@ public class Run : MonoBehaviour {
     {
         EyeBlur.intensity = 0;
         RushingAirSounds.Stop();
+        IsRunning = false;
     }
 }

@@ -12,6 +12,8 @@ public class GripMeter : MonoBehaviour {
     public float GripShakeRecoverRate;
     public float GripDepletedPenalty;
     public float FlashRate;
+    public ControllerState rController;
+    public ControllerState lController;
 
 
     // public bool Displayed;
@@ -97,6 +99,8 @@ public class GripMeter : MonoBehaviour {
 
     public void DisablePlayer(float penalty)
     {
+        rController.ControllerShortCircuit();
+        lController.ControllerShortCircuit();
         RemainingGrip = -(penalty*GripRecoverRate);
     }
 

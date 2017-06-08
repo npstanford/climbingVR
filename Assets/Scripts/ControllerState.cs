@@ -5,19 +5,14 @@ using System.Collections;
 public class ControllerState : MonoBehaviour
 {
 
-    //public enum States { Grip, Shoot };
 
-    
-    //public MeshRenderer StatusSphere;
-    //public States controllerState;
-    //public Material GripMaterial;
-   // public Material ShootMaterial;
     public SteamVR_Controller.Device device;
     public Rigidbody ObjectToPickUp;
     public Rigidbody Holding;
     private ColliderManager cm;
     public float CurrentChargingRate;
-
+    public AudioSource ChargingShakeNoise;
+    public AudioSource ControllerShortCircuitSound;
 
     //end area of locomotion variables
 
@@ -34,6 +29,10 @@ public class ControllerState : MonoBehaviour
     public GameObject GripObject;
 
     private InputManager im;
+    private float WhenToStartChargeNoise;
+    private float[] SpeedArrayForCharging;
+    private int size = 10;
+    private int i;
 
     // Use this for initialization
     void Start()
@@ -41,16 +40,21 @@ public class ControllerState : MonoBehaviour
         controller = GetComponent<SteamVR_TrackedObject>();
         prevPos = controller.transform.localPosition;
         curPos = controller.transform.localPosition;
-        //controllerState = States.Grip;
         device = SteamVR_Controller.Input((int)controller.index);
         cm = FindObjectOfType<ColliderManager>();
         im = FindObjectOfType<InputManager>();
+
+        SpeedArrayForCharging = new float[size];
+        for (int j = 0; j<size; j++)
+        {
+            SpeedArrayForCharging[j] = 0;
+        }
+
     }
 
     void Update()
     {
         device = SteamVR_Controller.Input((int)controller.index);
-        //prevPos = controller.transform.localPosition;
         prevPos = curPos;
         curPos = controller.transform.localPosition;
 
@@ -60,23 +64,76 @@ public class ControllerState : MonoBehaviour
         }
 
         CurrentChargingRate = UpdateChargingRate();
+        PlayChargingNoises(CurrentChargingRate);
+    }
+
+    public void ControllerShortCircuit()
+    {
+        ControllerShortCircuitSound.Play();
+    }
+
+    private void PlayChargingNoises(float CurrentChargingRate)
+    {
+        if (CurrentChargingRate > 3 && !im.run.IsRunning)
+        {
+            if (WhenToStartChargeNoise == 0)
+            {
+                WhenToStartChargeNoise = Time.time + .8f;
+            }
+            else if (Time.time > WhenToStartChargeNoise)
+            {
+
+
+                ChargingShakeNoise.volume = Mathf.Max(.5f, CurrentChargingRate / 40);
+                if (!ChargingShakeNoise.isPlaying)
+                {
+                    ChargingShakeNoise.Play();
+                }
+
+                device.TriggerHapticPulse((ushort)500);
+            }
+
+        }
+        else
+        {
+            ChargingShakeNoise.Stop();
+            WhenToStartChargeNoise = 0;
+        }
     }
 
     private float UpdateChargingRate()
     {
         //finds the projection of the displacement vector onto the controllers forward axis
+        if (im.run.IsRunning)
+        {
+            SpeedArrayForCharging[i] = 0f;
+        }
+        else
+        {
+            Vector3 displacementVector = (curPos - prevPos);
+            float displacementMag = displacementVector.magnitude;
+            displacementVector = displacementVector.normalized;
 
-        Vector3 displacementVector = (curPos - prevPos);
-        float displacementMag = displacementVector.magnitude;
-        displacementVector = displacementVector.normalized;
+            Vector3 forwardAxis = transform.forward.normalized;
 
-        Vector3 forwardAxis = transform.forward.normalized;
+            float displacementAlongAxis = Mathf.Abs(Vector3.Dot(displacementVector, forwardAxis));
 
-        float displacementAlongAxis = Mathf.Abs(Vector3.Dot(displacementVector, forwardAxis));
+            SpeedArrayForCharging[i] = (displacementAlongAxis * displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
+        }
 
+        
 
+        float avg = 0;
+        for (int j = 0; j<size; j++)
+        {
+            avg += SpeedArrayForCharging[j];
+        }
+        //avg = avg / size;
+        i += 1;
 
-        return (displacementAlongAxis * displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
+        if (i >= size) { i = 0; }
+
+        return avg;
 
     }
 
