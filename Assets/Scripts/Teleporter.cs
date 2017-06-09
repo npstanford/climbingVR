@@ -6,11 +6,15 @@ public class Teleporter : MonoBehaviour
 
     public TeleportLocation LastTeleportLocation;
     public GameObject Player;
+    private bool HaveTeleported = false;
+    public SkyHookSpeaker Speaker;
+    public AudioSource TeleportationSound;
+    private GripMeter gm;
 
     // Use this for initialization
     void Start()
     {
-
+        gm = FindObjectOfType<GripMeter>();
     }
 
     // Update is called once per frame
@@ -23,8 +27,7 @@ public class Teleporter : MonoBehaviour
     {
         if (LastTeleportLocation != null)
         {
-            Debug.Log("player was teleported");
-            Player.transform.position = LastTeleportLocation.transform.position;
+            StartCoroutine("TeleportCoroutine");
         }
     }
 
@@ -32,10 +35,21 @@ public class Teleporter : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("this object is calling teleport: " + this.name);
             Teleport();
         }
     }
 
+    IEnumerator TeleportCoroutine()
+    {
+        TeleportationSound.Play();
+        yield return new WaitForSeconds(.5f);
+        Player.transform.position = LastTeleportLocation.transform.position;
+        gm.DisablePlayer(gm.GripDepletedPenalty);
+        if (!HaveTeleported)
+        {
+            HaveTeleported = true;
+            Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Tethering);
+        }
+    }
 
 }

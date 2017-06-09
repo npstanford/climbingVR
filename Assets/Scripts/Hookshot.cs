@@ -9,6 +9,7 @@ public class Hookshot : MonoBehaviour
     public float ShootingAngle = 40.0f;
     public AudioSource HookShotLaserScanSound;
     public float GripDepletion;
+    public bool HasFired;
 
     private GameObject _grappleOrigin;
 
@@ -34,6 +35,7 @@ public class Hookshot : MonoBehaviour
 
          grappleTarget = new GameObject("GrappleTarget");
         im = FindObjectOfType<InputManager>();
+        HasFired = false;
     }
 
     // Update is called once per frame
@@ -121,7 +123,7 @@ public class Hookshot : MonoBehaviour
 
 
             Grapple.Shoot(grappleTarget, controller, GrappleLength, GrappleSpeed);
-
+            HasFired = true;
             im.gm.DepleteGripDiscrete(GripDepletion);
         }
 

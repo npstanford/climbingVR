@@ -56,7 +56,8 @@ public class Run : MonoBehaviour {
         }
 
         Room.transform.localPosition += flatDirection * scaledSpeed * Time.deltaTime;
-        EyeBlur.intensity = BlurAmount * (scaledSpeed / MaxSpeed);
+        EyeBlur.intensity = (4*EyeBlur.intensity + BlurAmount * (scaledSpeed / MaxSpeed)) / 5;
+        //EyeBlur.intensity = BlurAmount * (scaledSpeed / MaxSpeed);
 
         if (!RushingAirSounds.isPlaying)
         {

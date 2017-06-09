@@ -326,7 +326,6 @@ public class InputManager : MonoBehaviour {
             ClimbingEnabled = true;
             GripToolLeft.DisplayClimbingComponents();
             GripToolRight.DisplayClimbingComponents();
-            Debug.Log("How often is enable capability for climbing being called?");
             if (!EnableAllComponents)
             {
                 Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Climbing);
@@ -337,12 +336,20 @@ public class InputManager : MonoBehaviour {
         {
             HookshotEnabled = true;
             GripToolRight.DisplayHookshotComponents();
+            if (!EnableAllComponents)
+            {
+                Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Zipshot);
+            }
         }
 
         if (cap == Capabilities.Glide)
         {
             GlidingEnabled = true;
             GripToolLeft.DisplayGliderComponents();
+            if (!EnableAllComponents)
+            {
+                Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Glider);
+            }
         }
 
     }

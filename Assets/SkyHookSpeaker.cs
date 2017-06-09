@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SkyHookSpeaker : MonoBehaviour {
-    public enum SpeakerPrograms { Intro, Climbing, Zipshot, Glider, HeronLabs};
+    public enum SpeakerPrograms { Intro, Climbing, Tethering, Zipshot, Glider, Battery, HeronLabs};
 
     public GameObject PlayersHead;
-    public float angle;
     public AudioSource BackgroundMusic;
     public AudioSource Speaker;
+    public Material SpeakerMaterial;
 
     // intro audio clips
     public AudioClip SkyHookCrashAndReboot;
@@ -22,11 +22,29 @@ public class SkyHookSpeaker : MonoBehaviour {
     public AudioClip CongratsOnDashStep;
     public AudioClip SkyHookDisclaimer;
 
+    // loading new capability
+    public AudioClip CapabilityLoad;
+
     // climbing audio clips
-    public AudioClip ClimbingLoad;
     public AudioClip ClimbingExplanation;
     public AudioClip ClimbingNag;
     public AudioClip ClimbingSuccess;
+
+    // Tethering Audio Clips
+    public AudioClip TetheringExplanation;
+
+    // zipshot audio clips
+    public AudioClip ZipShotExplanation;
+    public AudioClip ZipShotNag;
+    public AudioClip ZipShotSuccess;
+
+    // wingcloth audio clips
+    public AudioClip WingClothExplanation;
+    public AudioClip WingClothNag;
+    public AudioClip WingClothSuccess;
+
+    // battery clips
+    public AudioClip BatteryExplanation;
 
     private InputManager im;
 
@@ -50,7 +68,7 @@ public class SkyHookSpeaker : MonoBehaviour {
         Vector3 VectorToPlayersHead = (transform.position - PlayersHead.transform.position).normalized;
         Vector3 SpeakerDirection = -transform.up.normalized;
 
-        angle = Mathf.Acos(Vector3.Dot(VectorToPlayersHead, SpeakerDirection));
+        float angle = Mathf.Acos(Vector3.Dot(VectorToPlayersHead, SpeakerDirection));
 
         angle = Mathf.Clamp(angle, 0, Mathf.PI);
 
@@ -76,57 +94,25 @@ public class SkyHookSpeaker : MonoBehaviour {
                 StartCoroutine("Climbing");
                 break;
 
+            case SpeakerPrograms.Tethering:
+                StartCoroutine("Tethering");
+                break;
+
+            case SpeakerPrograms.Zipshot:
+                StartCoroutine("Zipshot");
+                break;
+
+            case SpeakerPrograms.Glider:
+                StartCoroutine("WingCloth");
+                break;
+
+            case SpeakerPrograms.Battery:
+                StartCoroutine("BatteryRecharge");
+                break;
+
             default:
                 return;
         }
-    }
-
-    IEnumerator Climbing()
-    {
-        Speaker.clip = ClimbingLoad;
-        Speaker.Play();
-
-        while (Speaker.isPlaying)
-        {
-            yield return new WaitForSeconds(.5f);
-        }
-
-        BackgroundMusic.Play();
-
-        Speaker.clip = ClimbingExplanation;
-        Speaker.Play();
-
-        im.climb.HasClimbed = false;
-
-        while(Speaker.isPlaying && !im.climb.HasClimbed)
-        {
-            yield return new WaitForSeconds(.5f);
-        }
-
-        float TimeToAnnoyPlayer = Time.time + 3f;
-
-        while (!im.climb.HasClimbed)
-        {
-            if (Time.time > TimeToAnnoyPlayer)
-            {
-                Speaker.clip = ClimbingNag;
-                Speaker.Play();
-                TimeToAnnoyPlayer += 20f;
-            }
-            yield return new WaitForSeconds(.5f);
-        }
-
-        Speaker.Stop();
-        Speaker.clip = ClimbingSuccess;
-        Speaker.Play();
-
-        while (Speaker.isPlaying)
-        {
-            yield return new WaitForSeconds(.5f);
-        }
-
-        yield return new WaitForSeconds(3f);
-        BackgroundMusic.Stop();
     }
 
     IEnumerator Intro()
@@ -243,5 +229,187 @@ public class SkyHookSpeaker : MonoBehaviour {
 
         BackgroundMusic.Stop();
 
+    }
+
+    IEnumerator Climbing()
+    {
+        Speaker.clip = CapabilityLoad;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        BackgroundMusic.Play();
+
+        Speaker.clip = ClimbingExplanation;
+        Speaker.Play();
+
+        im.climb.HasClimbed = false;
+
+        while (Speaker.isPlaying && !im.climb.HasClimbed)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        float TimeToAnnoyPlayer = Time.time + 3f;
+
+        while (!im.climb.HasClimbed)
+        {
+            if (Time.time > TimeToAnnoyPlayer)
+            {
+                Speaker.clip = ClimbingNag;
+                Speaker.Play();
+                TimeToAnnoyPlayer += 20f;
+            }
+            yield return new WaitForSeconds(.5f);
+        }
+
+        Speaker.Stop();
+        Speaker.clip = ClimbingSuccess;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        yield return new WaitForSeconds(3f);
+        BackgroundMusic.Stop();
+    }
+
+    IEnumerator Tethering()
+    {
+        BackgroundMusic.Play();
+
+        yield return new WaitForSeconds(5f);
+
+        Speaker.clip = TetheringExplanation;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        yield return new WaitForSeconds(3f);
+
+        BackgroundMusic.Stop();
+    }
+
+
+    IEnumerator Zipshot()
+    {
+        Speaker.clip = CapabilityLoad;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        BackgroundMusic.Play();
+
+        Speaker.clip = ZipShotExplanation;
+        Speaker.Play();
+
+        im.hookshot.HasFired = false;
+
+        while (Speaker.isPlaying && !im.hookshot.HasFired)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        float TimeToAnnoyPlayer = Time.time + 3f;
+
+        while (!im.hookshot.HasFired)
+        {
+            if (Time.time > TimeToAnnoyPlayer)
+            {
+                Speaker.clip = ZipShotNag;
+                Speaker.Play();
+                TimeToAnnoyPlayer += 20f;
+            }
+            yield return new WaitForSeconds(.5f);
+        }
+
+        Speaker.Stop();
+        Speaker.clip = ZipShotSuccess;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        yield return new WaitForSeconds(3f);
+        BackgroundMusic.Stop();
+    }
+
+    IEnumerator WingCloth() 
+    {
+        Speaker.clip = CapabilityLoad;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        BackgroundMusic.Play();
+
+        Speaker.clip = WingClothExplanation;
+        Speaker.Play();
+
+        im.glide.HasGlided = false;
+
+        while (Speaker.isPlaying && !im.glide.HasGlided)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        float TimeToAnnoyPlayer = Time.time + 3f;
+
+        while (!im.glide.HasGlided)
+        {
+            if (Time.time > TimeToAnnoyPlayer)
+            {
+                Speaker.clip = WingClothNag;
+                Speaker.Play();
+                TimeToAnnoyPlayer += 20f;
+            }
+            yield return new WaitForSeconds(.5f);
+        }
+
+        Speaker.Stop();
+        Speaker.clip = WingClothSuccess;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        yield return new WaitForSeconds(3f);
+        BackgroundMusic.Stop();
+    }
+
+    IEnumerator BatteryRecharge()
+    {
+        BackgroundMusic.Play();
+
+        yield return new WaitForSeconds(3f);
+
+        Speaker.clip = BatteryExplanation;
+        Speaker.Play();
+
+        while (Speaker.isPlaying)
+        {
+            yield return new WaitForSeconds(.5f);
+        }
+
+        yield return new WaitForSeconds(3f);
+        BackgroundMusic.Stop();
     }
 }

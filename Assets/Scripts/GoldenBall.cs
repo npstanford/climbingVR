@@ -53,6 +53,7 @@ public class GoldenBall : MonoBehaviour {
         Teleporter t = other.GetComponent<Teleporter>();
         if (t != null)
         {
+            transform.parent = null;
             transform.position = startPosition;
         }
     }

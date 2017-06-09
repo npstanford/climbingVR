@@ -20,6 +20,7 @@ public class Glide : MonoBehaviour
     public ColliderManager cm;
     public float DragCoefficient;
     private Vector3 GlideVelocity;
+    public bool HasGlided;
     public AudioSource OpenGliderSound;
     public AudioSource CloseGliderSound;
     public AudioSource GliderSoarSound;
@@ -38,6 +39,7 @@ public class Glide : MonoBehaviour
         GliderModel.SetActive(false);
         IsGliding = false;
         Body = Room.GetComponent<ColliderManager>();
+        HasGlided = false;
     }
 
     // Update is called once per frame
@@ -167,6 +169,7 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
         if ((!PlayerIsTouchingGround || Body.WindVelocity != Vector3.zero) && HandIsOverHead)
         {
             IsGliding = true;
+            HasGlided = true;
             if (!GliderSoarSound.isPlaying)
             {
                 GliderSoarSound.Play();

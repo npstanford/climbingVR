@@ -15,6 +15,7 @@ public class Walk : MonoBehaviour {
     public float MaxVignette;
     public BlurOptimized bo;
     public float GripDepletion;
+    public AudioSource DashStepSound;
 
     public bool HasStepped = false; // used by intro sequence to see if player has successfully taken a dash step yet.
 
@@ -44,9 +45,9 @@ public class Walk : MonoBehaviour {
             { */
                 walkDirection = new Vector3(controller.transform.forward.x, 0, controller.transform.forward.z).normalized;
 
-            //}
+        //}
 
-
+        DashStepSound.Play();
             float walkDistance;
             //trim walk so it doesn't go through a wall
             //TODO with new walking mechanism that is time and trig based, this no longer works

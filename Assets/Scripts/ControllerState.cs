@@ -74,7 +74,7 @@ public class ControllerState : MonoBehaviour
 
     private void PlayChargingNoises(float CurrentChargingRate)
     {
-        if (CurrentChargingRate > 3 && !im.run.IsRunning)
+        if (CurrentChargingRate > 3 && !im.run.IsRunning && !im.climb.IsClimbing && !im.glide.IsGliding)
         {
             if (WhenToStartChargeNoise == 0)
             {

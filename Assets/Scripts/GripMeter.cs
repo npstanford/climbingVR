@@ -14,6 +14,9 @@ public class GripMeter : MonoBehaviour {
     public float FlashRate;
     public ControllerState rController;
     public ControllerState lController;
+    public bool GripHasDepletedBefore = false;
+
+    public SkyHookSpeaker Speaker;
 
 
     // public bool Displayed;
@@ -31,6 +34,9 @@ public class GripMeter : MonoBehaviour {
         OKColor = new Color(0f, 161f, 75f, 255f);
         BadColor = Color.red;
         WristColor = OKColor;
+        GripHasDepletedBefore = false;
+
+        //Speaker = FindObjectOfType<SkyHookSpeaker>();
     }
 
     // Update is called once per frame
@@ -78,6 +84,11 @@ public class GripMeter : MonoBehaviour {
         if (RemainingGrip <= 0.0f) // the floating point boolean scares me a bit
         {
             DisablePlayer(GripDepletedPenalty);
+            if (!GripHasDepletedBefore)
+            {
+                GripHasDepletedBefore = true;
+                Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Battery);
+            }
         }
     }
 
@@ -87,6 +98,11 @@ public class GripMeter : MonoBehaviour {
         if (RemainingGrip <= 0.0f) // the floating point boolean scares me a bit
         {
             DisablePlayer(GripDepletedPenalty);
+            if (!GripHasDepletedBefore)
+            {
+                GripHasDepletedBefore = true;
+                Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.Battery);
+            }
         }
     }
 
