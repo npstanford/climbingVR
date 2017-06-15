@@ -11,8 +11,11 @@ public class ControllerState : MonoBehaviour
     public Rigidbody Holding;
     private ColliderManager cm;
     public float CurrentChargingRate;
-    public AudioSource ChargingShakeNoise;
+    public AudioSource ChargingSounds;
     public AudioSource ControllerShortCircuitSound;
+    public AudioSource ChargingSuccess;
+
+
 
     //end area of locomotion variables
 
@@ -28,10 +31,13 @@ public class ControllerState : MonoBehaviour
     public bool canPickUp;
     public GameObject GripObject;
 
+    private GripMeter gm;
     private InputManager im;
-    private float WhenToStartChargeNoise;
+    private float WhenToStartCharging;
     private float[] SpeedArrayForCharging;
     private int size = 10;
+    private float prevGMStrength;
+    private float curGMStrength;
     private int i;
 
     // Use this for initialization
@@ -43,6 +49,7 @@ public class ControllerState : MonoBehaviour
         device = SteamVR_Controller.Input((int)controller.index);
         cm = FindObjectOfType<ColliderManager>();
         im = FindObjectOfType<InputManager>();
+        gm = FindObjectOfType<GripMeter>();
 
         SpeedArrayForCharging = new float[size];
         for (int j = 0; j<size; j++)
@@ -65,6 +72,8 @@ public class ControllerState : MonoBehaviour
 
         CurrentChargingRate = UpdateChargingRate();
         PlayChargingNoises(CurrentChargingRate);
+        prevGMStrength = curGMStrength;
+        curGMStrength = gm.RemainingGrip;
     }
 
     public void ControllerShortCircuit()
@@ -74,30 +83,25 @@ public class ControllerState : MonoBehaviour
 
     private void PlayChargingNoises(float CurrentChargingRate)
     {
-        if (CurrentChargingRate > 3 && !im.run.IsRunning && !im.climb.IsClimbing && !im.glide.IsGliding)
+        //play if charging is sufficient, player isn't doing other things, and grip meter < 0
+        if (CurrentChargingRate > 5 && curGMStrength < gm.MaxGrip 
+            && !im.run.IsRunning && !im.climb.IsClimbing && !im.glide.IsGliding)
         {
-            if (WhenToStartChargeNoise == 0)
-            {
-                WhenToStartChargeNoise = Time.time + .8f;
-            }
-            else if (Time.time > WhenToStartChargeNoise)
-            {
-
-
-                ChargingShakeNoise.volume = Mathf.Max(.5f, CurrentChargingRate / 40);
-                if (!ChargingShakeNoise.isPlaying)
+                ChargingSounds.volume = Mathf.Max(.5f, CurrentChargingRate / 40);
+                if (!ChargingSounds.isPlaying)
                 {
-                    ChargingShakeNoise.Play();
+                    ChargingSounds.Play();
                 }
 
-                device.TriggerHapticPulse((ushort)500);
-            }
+                device.TriggerHapticPulse((ushort)1000);
 
+        } else if (curGMStrength > 0 && prevGMStrength < 0)
+        {
+            ChargingSuccess.Play();
         }
         else
-        {
-            ChargingShakeNoise.Stop();
-            WhenToStartChargeNoise = 0;
+        { 
+            ChargingSounds.Stop();
         }
     }
 
@@ -118,13 +122,14 @@ public class ControllerState : MonoBehaviour
 
             float displacementAlongAxis = Mathf.Abs(Vector3.Dot(displacementVector, forwardAxis));
 
-            SpeedArrayForCharging[i] = (displacementAlongAxis * displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
+            //SpeedArrayForCharging[i] = (displacementAlongAxis * displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
+            SpeedArrayForCharging[i] = (displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
         }
 
-        
+
 
         float avg = 0;
-        for (int j = 0; j<size; j++)
+        for (int j = 0; j < size; j++)
         {
             avg += SpeedArrayForCharging[j];
         }
@@ -133,8 +138,27 @@ public class ControllerState : MonoBehaviour
 
         if (i >= size) { i = 0; }
 
-        return avg;
+        if (avg > 5)
+        {
+            if (WhenToStartCharging == 0)
+            {
+                WhenToStartCharging = Time.time + .8f;
+            }
+            else if (Time.time > WhenToStartCharging)
+            {
+                return avg; // so only return a value when we've measured a value above the threshold for longer than .8s
+            } else
+            {
+                return 0;
+            }
 
+
+        } else
+        {
+            WhenToStartCharging = 0;
+
+        }
+        return 0;
     }
 
 

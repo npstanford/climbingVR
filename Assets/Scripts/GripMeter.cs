@@ -48,9 +48,9 @@ public class GripMeter : MonoBehaviour {
 
         if (RemainingGrip >= 0.0f)
         {
-            LWristDisplay.text = RemainingGrip.ToString("F0") + " / " + MaxGrip.ToString();
+            LWristDisplay.text = RemainingGrip.ToString("F0");
 
-            RWristDisplay.text = RemainingGrip.ToString("F0") + " / " + MaxGrip.ToString();
+            RWristDisplay.text = RemainingGrip.ToString("F0");
 
 
             if (  RemainingGrip >=  MaxGrip * .25)
@@ -108,9 +108,20 @@ public class GripMeter : MonoBehaviour {
 
     public void RestoreGrip(float ShakingRechargeRateL, float ShakingRechargeRateR)
     {
-        RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + GripRecoverRate * Time.deltaTime);
-
-        RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + Mathf.Max(ShakingRechargeRateL, ShakingRechargeRateR) * Time.deltaTime);
+        if (RemainingGrip > 0)
+        {
+            RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + GripRecoverRate * Time.deltaTime);
+            RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + Mathf.Max(ShakingRechargeRateL, ShakingRechargeRateR) * Time.deltaTime);
+        }
+        if (RemainingGrip < 0)
+        {
+            RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + GripRecoverRate * Time.deltaTime);
+            RemainingGrip = Mathf.Min(MaxGrip, RemainingGrip + Mathf.Max(ShakingRechargeRateL, ShakingRechargeRateR) * Time.deltaTime);
+            if (RemainingGrip > 0)
+            {
+                RemainingGrip = MaxGrip;
+            }
+        }
     }
 
     public void DisablePlayer(float penalty)

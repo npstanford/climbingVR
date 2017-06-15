@@ -109,7 +109,7 @@ public class InputManager : MonoBehaviour {
         {
             gm.DepleteGrip(glide.GripDepletion);
 
-        } else if (pu.IsPickingUp){
+        } else if (pu.IsPickingUp && ClimbingEnabled){ //only deplete if climbing is enabled to avoid players triggering batter recharge tutorial at beginning
             gm.DepleteGrip(pu.GripDepletion); //this is a function of the weight of the object being picked up
         } 
         else if (PlayerIsTouchingGround && !PlayerIsStunned)
