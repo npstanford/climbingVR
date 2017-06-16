@@ -217,7 +217,7 @@ public class InputManager : MonoBehaviour {
     {
         if (rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && rController.Holding ==null) {
             climb.Grab(rController, Body);
-        } else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger)) {
+        } else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && rController.Holding == null) {
             climb.Grab(lController, Body);
         }
 
