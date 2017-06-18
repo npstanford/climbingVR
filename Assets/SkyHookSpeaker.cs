@@ -84,6 +84,11 @@ public class SkyHookSpeaker : MonoBehaviour {
 
     public void LaunchAudio(SpeakerPrograms sp)
     {
+        if (!im.EnableTutorial)
+        {
+            return;
+        }
+
         switch (sp)
         {
             case SpeakerPrograms.Intro:

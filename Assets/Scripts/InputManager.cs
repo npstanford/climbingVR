@@ -217,7 +217,7 @@ public class InputManager : MonoBehaviour {
     {
         if (rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && rController.Holding ==null) {
             climb.Grab(rController, Body);
-        } else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && rController.Holding == null) {
+        } else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && lController.Holding == null) {
             climb.Grab(lController, Body);
         }
 
@@ -294,7 +294,7 @@ public class InputManager : MonoBehaviour {
     {
 
 
-        if (bmc.Head.speed > run.minHeadSpeedToRun && !bmc.NonRunningHeadMovement)
+        if (bmc.Head.speed > run.minHeadSpeedToRun && !bmc.NonRunningHeadMovement && PlayerIsTouchingGround)
         {
             Vector3 avgDirection = (bmc.Head.direction + bmc.RightArm.direction + bmc.LeftArm.direction) / 3;
             avgDirection = avgDirection.normalized;
