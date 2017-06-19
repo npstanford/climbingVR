@@ -15,6 +15,7 @@ public class GripMeter : MonoBehaviour {
     public ControllerState rController;
     public ControllerState lController;
     public bool GripHasDepletedBefore = false;
+    public bool EnableGripStrength = false;
 
     public SkyHookSpeaker Speaker;
 
@@ -31,10 +32,19 @@ public class GripMeter : MonoBehaviour {
     void Start()
     {
         RemainingGrip = MaxGrip;
+        if (!EnableGripStrength)
+        {
+            LWristDisplay.text = "";
+            RWristDisplay.text = "";
+            return;
+        }
+
         OKColor = new Color(0f, 161f, 75f, 255f);
         BadColor = Color.red;
         WristColor = OKColor;
         GripHasDepletedBefore = false;
+
+
 
         //Speaker = FindObjectOfType<SkyHookSpeaker>();
     }
@@ -42,6 +52,12 @@ public class GripMeter : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+
+        if (!EnableGripStrength) {
+
+
+
+            return; }
 
         LWristDisplay.color = WristColor;
         RWristDisplay.color = WristColor;
@@ -80,6 +96,7 @@ public class GripMeter : MonoBehaviour {
 
     public void DepleteGrip(float depletionRate)
     {
+        if (!EnableGripStrength) { return; }
         RemainingGrip = Mathf.Max(0.0f, RemainingGrip - depletionRate * Time.deltaTime);
         if (RemainingGrip <= 0.0f) // the floating point boolean scares me a bit
         {
@@ -94,6 +111,7 @@ public class GripMeter : MonoBehaviour {
 
     public void DepleteGripDiscrete(float depletionAmount)
     {
+        if (!EnableGripStrength) { return; }
         RemainingGrip = Mathf.Max(0.0f, RemainingGrip - depletionAmount);
         if (RemainingGrip <= 0.0f) // the floating point boolean scares me a bit
         {

@@ -51,12 +51,14 @@ public class ControllerState : MonoBehaviour
         im = FindObjectOfType<InputManager>();
         gm = FindObjectOfType<GripMeter>();
 
-        SpeedArrayForCharging = new float[size];
-        for (int j = 0; j<size; j++)
+        if (gm.EnableGripStrength)
         {
-            SpeedArrayForCharging[j] = 0;
+            SpeedArrayForCharging = new float[size];
+            for (int j = 0; j < size; j++)
+            {
+                SpeedArrayForCharging[j] = 0;
+            }
         }
-
     }
 
     void Update()
@@ -70,10 +72,13 @@ public class ControllerState : MonoBehaviour
             Holding = null;
         }
 
-        CurrentChargingRate = UpdateChargingRate();
-        PlayChargingNoises(CurrentChargingRate);
-        prevGMStrength = curGMStrength;
-        curGMStrength = gm.RemainingGrip;
+        if (gm.EnableGripStrength)
+        {
+            CurrentChargingRate = UpdateChargingRate();
+            PlayChargingNoises(CurrentChargingRate);
+            prevGMStrength = curGMStrength;
+            curGMStrength = gm.RemainingGrip;
+        }
     }
 
     public void ControllerShortCircuit()
@@ -83,10 +88,12 @@ public class ControllerState : MonoBehaviour
 
     private void PlayChargingNoises(float CurrentChargingRate)
     {
-        //play if charging is sufficient, player isn't doing other things, and grip meter < 0
-        if (CurrentChargingRate > 5 && curGMStrength < gm.MaxGrip 
-            && !im.run.IsRunning && !im.climb.IsClimbing && !im.glide.IsGliding)
+        if (gm.EnableGripStrength)
         {
+            //play if charging is sufficient, player isn't doing other things, and grip meter < 0
+            if (CurrentChargingRate > 5 && curGMStrength < gm.MaxGrip
+                && !im.run.IsRunning && !im.climb.IsClimbing && !im.glide.IsGliding)
+            {
                 ChargingSounds.volume = Mathf.Max(.5f, CurrentChargingRate / 40);
                 if (!ChargingSounds.isPlaying)
                 {
@@ -95,70 +102,80 @@ public class ControllerState : MonoBehaviour
 
                 device.TriggerHapticPulse((ushort)1000);
 
-        } else if (curGMStrength > 0 && prevGMStrength < 0)
-        {
-            ChargingSuccess.Play();
-        }
-        else
-        { 
-            ChargingSounds.Stop();
+            }
+            else if (curGMStrength > 0 && prevGMStrength < 0)
+            {
+                ChargingSuccess.Play();
+            }
+            else
+            {
+                ChargingSounds.Stop();
+            }
         }
     }
 
     private float UpdateChargingRate()
     {
-        //finds the projection of the displacement vector onto the controllers forward axis
-        if (im.run.IsRunning)
+        if (gm.EnableGripStrength)
         {
-            SpeedArrayForCharging[i] = 0f;
-        }
-        else
-        {
-            Vector3 displacementVector = (curPos - prevPos);
-            float displacementMag = displacementVector.magnitude;
-            displacementVector = displacementVector.normalized;
-
-            Vector3 forwardAxis = transform.forward.normalized;
-
-            float displacementAlongAxis = Mathf.Abs(Vector3.Dot(displacementVector, forwardAxis));
-
-            //SpeedArrayForCharging[i] = (displacementAlongAxis * displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
-            SpeedArrayForCharging[i] = (displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
-        }
-
-
-
-        float avg = 0;
-        for (int j = 0; j < size; j++)
-        {
-            avg += SpeedArrayForCharging[j];
-        }
-        //avg = avg / size;
-        i += 1;
-
-        if (i >= size) { i = 0; }
-
-        if (avg > 5)
-        {
-            if (WhenToStartCharging == 0)
+            //finds the projection of the displacement vector onto the controllers forward axis
+            if (im.run.IsRunning)
             {
-                WhenToStartCharging = Time.time + .8f;
+                SpeedArrayForCharging[i] = 0f;
             }
-            else if (Time.time > WhenToStartCharging)
+            else
             {
-                return avg; // so only return a value when we've measured a value above the threshold for longer than .8s
-            } else
-            {
-                return 0;
+                Vector3 displacementVector = (curPos - prevPos);
+                float displacementMag = displacementVector.magnitude;
+                displacementVector = displacementVector.normalized;
+
+                Vector3 forwardAxis = transform.forward.normalized;
+
+                float displacementAlongAxis = Mathf.Abs(Vector3.Dot(displacementVector, forwardAxis));
+
+                //SpeedArrayForCharging[i] = (displacementAlongAxis * displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
+                SpeedArrayForCharging[i] = (displacementMag * im.gm.GripShakeRecoverRate) / Time.deltaTime;
             }
 
 
+
+            float avg = 0;
+            for (int j = 0; j < size; j++)
+            {
+                avg += SpeedArrayForCharging[j];
+            }
+            //avg = avg / size;
+            i += 1;
+
+            if (i >= size) { i = 0; }
+
+            if (avg > 5)
+            {
+                if (WhenToStartCharging == 0)
+                {
+                    WhenToStartCharging = Time.time + .8f;
+                }
+                else if (Time.time > WhenToStartCharging)
+                {
+                    return avg; // so only return a value when we've measured a value above the threshold for longer than .8s
+                }
+                else
+                {
+                    return 0;
+                }
+
+
+            }
+            else
+            {
+                WhenToStartCharging = 0;
+
+            }
+            return 0;
         } else
         {
-            WhenToStartCharging = 0;
-
+            return 0;
         }
-        return 0;
     }
 
 
