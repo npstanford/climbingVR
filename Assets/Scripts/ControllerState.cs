@@ -14,7 +14,7 @@ public class ControllerState : MonoBehaviour
     public AudioSource ChargingSounds;
     public AudioSource ControllerShortCircuitSound;
     public AudioSource ChargingSuccess;
-
+    public ParticleSystem InteractionCircle;
 
 
     //end area of locomotion variables
@@ -39,6 +39,7 @@ public class ControllerState : MonoBehaviour
     private float prevGMStrength;
     private float curGMStrength;
     private int i;
+    private ParticleSystem.Particle[] particles;
 
     // Use this for initialization
     void Start()
@@ -50,7 +51,7 @@ public class ControllerState : MonoBehaviour
         cm = FindObjectOfType<ColliderManager>();
         im = FindObjectOfType<InputManager>();
         gm = FindObjectOfType<GripMeter>();
-
+        particles = new ParticleSystem.Particle[1000];
         if (gm.EnableGripStrength)
         {
             SpeedArrayForCharging = new float[size];
@@ -79,6 +80,9 @@ public class ControllerState : MonoBehaviour
             prevGMStrength = curGMStrength;
             curGMStrength = gm.RemainingGrip;
         }
+
+
+
     }
 
     public void ControllerShortCircuit()
@@ -198,8 +202,34 @@ public class ControllerState : MonoBehaviour
             }
         }
         
+        
 
+    }
 
+    private void OnTriggerStay(Collider other)
+    {
+        InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
+
+        if (ia != null)
+        {
+            if (ia.CanClimb || ia.CanPickUp)
+            {
+                /*
+                Vector3 interactionCircleLocation = other.ClosestPointOnBounds(this.transform.position);
+                InteractionCircle.SetActive(true);
+                InteractionCircle.transform.position = interactionCircleLocation;
+                */
+
+                Ray contactDirection = new Ray(this.transform.position, transform.forward);
+                RaycastHit hit;
+                if (other.Raycast(contactDirection, out hit, 1f)) {
+                    InteractionCircle.Play();
+                    InteractionCircle.transform.position = hit.point;
+                    InteractionCircle.transform.localPosition += transform.InverseTransformDirection(hit.normal).normalized * .01f;
+                    InteractionCircle.transform.rotation = Quaternion.LookRotation(hit.normal);
+                }
+            }
+        }
     }
 
     void OnTriggerExit(Collider other)
@@ -217,6 +247,16 @@ public class ControllerState : MonoBehaviour
                 canPickUp = false;
                 ObjectToPickUp = null;
             }
+            InteractionCircle.Stop();
+            
+            int numParticles = InteractionCircle.GetParticles(particles);
+
+            for (int i = 0; i<numParticles; i++)
+            {
+                particles[i].remainingLifetime = 0f;
+            }
+
+            InteractionCircle.SetParticles(particles, numParticles);
         }
     }
 

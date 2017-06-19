@@ -39,13 +39,6 @@ public class Climb : MonoBehaviour {
             Room.transform.position += transform.TransformPoint(controller.prevPos) - transform.TransformPoint(controller.curPos);
         }
 
-        else if (controller.canGrip && controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            //Drop(controller, Room);
-           //theoretically, input manager handles this now
-        }
-
-        //controller.prevPos = controller.transform.localPosition;
 
     }
 

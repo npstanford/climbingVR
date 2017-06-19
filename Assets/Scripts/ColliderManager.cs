@@ -147,13 +147,28 @@ public class ColliderManager : MonoBehaviour {
             PlayerIsJumping = false;
         }
 
-        playerCollider.center = colliderCenter;
+        /*
+        if (im.climb.IsClimbing) // if player is climbing, make collider just head to chest so player can get over ledges
+        {
+            playerCollider.center = new Vector3(colliderCenter.x, playerHead.transform.position.y - .3f, colliderCenter.z);
 
-        GroundedCollider.transform.localPosition = new Vector3(playerCollider.center.x, playerCollider.center.y - CurrentPlayerHeight / 2,
-            playerCollider.center.z);
+            GroundedCollider.transform.localPosition = new Vector3(playerCollider.center.x, playerCollider.center.y - CurrentPlayerHeight / 2,
+    playerCollider.center.z);
+            playerCollider.size = new Vector3(0.25f, .6f, 0.25f);
+
+        }
+        else
+        {
+        */
+            playerCollider.center = colliderCenter;
+
+            GroundedCollider.transform.localPosition = new Vector3(playerCollider.center.x, playerCollider.center.y - CurrentPlayerHeight / 2,
+                playerCollider.center.z);
+            playerCollider.size = new Vector3(0.2f, CurrentPlayerHeight, 0.2f);
+
+        //}
 
         //playerCollider.size = new Vector3(0.2f, colliderCenter.y * 2f, 0.2f);
-        playerCollider.size = new Vector3(0.2f, CurrentPlayerHeight, 0.2f);
 
         //update display cube for testing purposes
         displayCube.transform.localPosition = colliderCenter;

@@ -2034,7 +2034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df33f46cb973150469fe36cf7207e436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionThudSound: {fileID: 0}
+  CollisionThudSound: {fileID: 82591111056920692}
 --- !u!114 &114645957144115986
 MonoBehaviour:
   m_ObjectHideFlags: 1
