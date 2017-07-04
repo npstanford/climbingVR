@@ -44,7 +44,7 @@ public class Teleporter : MonoBehaviour
         TeleportationSound.Play();
         yield return new WaitForSeconds(.5f);
         Player.transform.position = LastTeleportLocation.transform.position;
-        gm.DisablePlayer(gm.GripDepletedPenalty);
+        //gm.DisablePlayer(gm.GripDepletedPenalty);
         if (!HaveTeleported)
         {
             HaveTeleported = true;

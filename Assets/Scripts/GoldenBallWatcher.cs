@@ -43,7 +43,7 @@ public class GoldenBallWatcher : MonoBehaviour
         }
 
 
-        if (i == 2)
+        if (i == 3)
         {
             GripTools.EnableMovement = true;
         } else if (i == totalBalls)

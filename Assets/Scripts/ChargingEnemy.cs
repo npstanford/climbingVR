@@ -9,6 +9,8 @@ public class ChargingEnemy : MonoBehaviour {
     public float chargingVelocity;
     private Vector3 ChargingDirection;
     public float rotateSpeed;
+    public AudioSource ScrapingNoise;
+    public AudioSource ChargingNoise;
 
     public bool IsStunned;
     //public bool IsCharging;
@@ -74,6 +76,12 @@ public class ChargingEnemy : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         attack = DetectPlayer.Activated;
+
+        if (nma.velocity == Vector3.zero && state == GTState.HeadingHome)
+        {
+            ScrapingNoise.Stop(); //I have to do this here because there is no "stopped" state
+            ChargingNoise.Stop();
+        }
 
         if (WeakPoint != null)
         {
@@ -162,6 +170,11 @@ public class ChargingEnemy : MonoBehaviour {
             nma.acceleration = 3;
             nma.updatePosition = true;
             nma.isStopped = false;
+            if (!ScrapingNoise.isPlaying) {
+                ScrapingNoise.Play();
+                ChargingNoise.Stop();
+            }
+
         }
         else if(newState == GTState.RotatingTowardHome)
         {
@@ -170,6 +183,10 @@ public class ChargingEnemy : MonoBehaviour {
             StopCoroutine(ChargeCoroutine);
             RotateTowardsCoroutine = RotateTowards(startPosition);
             StartCoroutine(RotateTowardsCoroutine);
+            if (!ScrapingNoise.isPlaying) {
+                ScrapingNoise.Play();
+                ChargingNoise.Stop();
+            }
         }
 
         else if (newState == GTState.RotatingTowardPlayer)
@@ -179,6 +196,10 @@ public class ChargingEnemy : MonoBehaviour {
             StopCoroutine(ChargeCoroutine);
             RotateTowardsCoroutine = RotateTowards(Player);
             StartCoroutine(RotateTowardsCoroutine);
+            if (!ScrapingNoise.isPlaying) {
+                ScrapingNoise.Play();
+                ChargingNoise.Stop();
+            }
         }
 
         else if (newState == GTState.Charging)
@@ -188,6 +209,10 @@ public class ChargingEnemy : MonoBehaviour {
             StopCoroutine(ChargeCoroutine);
             ChargeCoroutine = Charge(transform.forward);
             StartCoroutine(ChargeCoroutine);
+            if (!ScrapingNoise.isPlaying) {
+                ScrapingNoise.Stop();
+                ChargingNoise.Play();
+            }
 
         }
 
@@ -199,6 +224,8 @@ public class ChargingEnemy : MonoBehaviour {
             StopCoroutine(StunCoroutine);
             StunCoroutine = Stun();
             StartCoroutine(StunCoroutine);
+            ScrapingNoise.Stop();
+            ChargingNoise.Stop();
         }
     }
 

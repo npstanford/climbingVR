@@ -133,8 +133,7 @@ public class InputManager : MonoBehaviour {
             if (GlidingEnabled && lController.Holding == null) { CheckGliding(lController); }
 
 
-            CheckWalking(rController, ref rTouchpadPressTime);
-            CheckWalking(lController, ref lTouchpadPressTime);
+
 
             CheckPickUp(rController);
             CheckPickUp(lController);
@@ -150,7 +149,9 @@ public class InputManager : MonoBehaviour {
             DropEverything();
         }
 
-        //running is the only capability that doesn't require grip strength (e.g. batteries)
+        //running and dash step still work when stunned
+        CheckWalking(rController, ref rTouchpadPressTime);
+        CheckWalking(lController, ref lTouchpadPressTime);
         CheckRunning();
 
 

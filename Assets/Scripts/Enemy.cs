@@ -263,11 +263,18 @@ public class Enemy : MonoBehaviour {
         {
             if(ia.CanPickUp)
             {
+                //decided to try seeing what it is like if propeller heads get stunend when hit by rocks
+                StopCoroutine("StunCoroutine");
+                StartCoroutine("StunCoroutine");
+
+
+                /*
                 if (!IsStunned)
                 {
                     StopCoroutine("Battered");
                     StartCoroutine("Battered");
                 }
+                */
             }
         }
     }
@@ -279,11 +286,18 @@ public class Enemy : MonoBehaviour {
         {
             if (ia.CanPickUp)
             {
+                //decided to try seeing what it is like if propeller heads get stunend when hit by rocks
+                StopCoroutine("StunCoroutine");
+                StartCoroutine("StunCoroutine");
+
+
+                /*
                 if (!IsStunned)
                 {
                     StopCoroutine("Battered");
                     StartCoroutine("Battered");
                 }
+                */
             }
         }
     }
