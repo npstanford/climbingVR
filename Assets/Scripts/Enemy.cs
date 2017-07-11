@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
+    public bool Broken;
     public float FireRate;
     public float BulletVelocity;
     public float AttackRadius;
@@ -53,6 +54,14 @@ public class Enemy : MonoBehaviour {
         oldPlayerLocation = newPlayerLocation;
         targetRot = Quaternion.identity;
         CanSeePlayer = false;
+
+        if (Broken)
+        {
+            Rigidbody rb = GetComponent<Rigidbody>();
+            rb.useGravity = true;
+            rb.isKinematic = false;
+            PropellerNoise.Stop();
+        }
     }
 
     // Update is called once per frame
@@ -110,8 +119,11 @@ public class Enemy : MonoBehaviour {
         {
             reset = false;
             Rigidbody rb = GetComponent<Rigidbody>();
-            rb.useGravity = false;
-            rb.isKinematic = true;
+            if (!Broken)
+            {
+                rb.useGravity = false;
+                rb.isKinematic = true;
+            }
             //startPosition.y += 1.0f; //this fucks up aiming for some reason. 
 
         }
@@ -247,12 +259,16 @@ public class Enemy : MonoBehaviour {
         }
 
         GetComponentInChildren<RotatingPlatform>().RotationEnabled = true;
-        rb.useGravity = false;
-        rb.isKinematic = true;
+        if (!Broken)
+        {
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            PropellerNoise.Play();
+        }
         rb.velocity = Vector3.zero;
         IsStunned = false;
         reset = true; // I have a feeling this isn't actually used anymore...
-        PropellerNoise.Play();
+
         transform.parent = null; // to stop corner cases where the enemy on coming unstunned is still childed to the controller
     }
 
