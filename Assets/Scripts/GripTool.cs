@@ -11,6 +11,7 @@ public class GripTool : MonoBehaviour {
     public GameObject touchpad;
     public GameObject hookshotTouchpad;
     public AudioSource ClickSound;
+    public GameObject GliderIndicator;
 
     public GameObject gripL;
     public GameObject gripR;
@@ -60,7 +61,7 @@ public class GripTool : MonoBehaviour {
         gripL.GetComponent<MeshRenderer>().enabled = false;
         gripR.GetComponent<MeshRenderer>().enabled = false;
         hookshotTouchpad.GetComponent<MeshRenderer>().enabled = false;
-
+        GliderIndicator.GetComponent<MeshRenderer>().enabled = false;
         HideHook();
 
     }
@@ -138,11 +139,14 @@ public class GripTool : MonoBehaviour {
         //hookshotTouchpad.GetComponent<MeshRenderer>().enabled = true;
         gripL.GetComponent<MeshRenderer>().enabled = true;
         gripR.GetComponent<MeshRenderer>().enabled = true;
+
     }
 
     public void DisplayGliderComponents ()
     {
         gripL.GetComponent<MeshRenderer>().enabled = true;
         gripR.GetComponent<MeshRenderer>().enabled = true;
+        GliderIndicator.GetComponent<MeshRenderer>().enabled = true;
+
     }
 }
