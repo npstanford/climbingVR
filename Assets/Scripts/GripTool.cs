@@ -8,10 +8,8 @@ public class GripTool : MonoBehaviour {
     public GameObject hook;
     public GameObject trigger;
     public GameObject hookStart;
-    public GameObject hookActivated;
     public GameObject touchpad;
     public GameObject hookshotTouchpad;
-    public GameObject GliderIndicator;
     public AudioSource ClickSound;
 
     public GameObject gripL;
@@ -36,11 +34,8 @@ public class GripTool : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        //hookActivatedPosition = Vector3.zero;
-        //hookActivatedRotation = Quaternion.identity;
-
-        hookActivatedPosition = hookActivated.transform.localPosition;
-        hookActivatedRotation = hookActivated.transform.localRotation;
+        hookActivatedPosition = Vector3.zero;
+        hookActivatedRotation = Quaternion.identity;
         HooksVisible = false;
 
 
@@ -64,9 +59,7 @@ public class GripTool : MonoBehaviour {
         trigger.GetComponent<MeshRenderer>().enabled = false;
         gripL.GetComponent<MeshRenderer>().enabled = false;
         gripR.GetComponent<MeshRenderer>().enabled = false;
-        //hookshotTouchpad.GetComponent<MeshRenderer>().enabled = false;
-        GliderIndicator.GetComponent<MeshRenderer>().enabled = false;
-
+        hookshotTouchpad.GetComponent<MeshRenderer>().enabled = false;
 
         HideHook();
 
@@ -142,15 +135,12 @@ public class GripTool : MonoBehaviour {
 
     public void DisplayHookshotComponents()
     {
-        //hookshotTouchpad.GetComponent<MeshRenderer>().enabled = true;
-        gripL.GetComponent<MeshRenderer>().enabled = true;
-        gripR.GetComponent<MeshRenderer>().enabled = true;
+        hookshotTouchpad.GetComponent<MeshRenderer>().enabled = true;
     }
 
     public void DisplayGliderComponents ()
     {
         gripL.GetComponent<MeshRenderer>().enabled = true;
         gripR.GetComponent<MeshRenderer>().enabled = true;
-        GliderIndicator.GetComponent<MeshRenderer>().enabled = true;
     }
 }

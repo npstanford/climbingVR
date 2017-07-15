@@ -35,8 +35,6 @@ public class ColliderManager : MonoBehaviour {
     public AudioSource RingingInEarsSound;
     public AudioSource ShortCircuitLeft;
     public AudioSource ShortCircuitRight;
-    public AudioSource RechargedRight;
-    public AudioSource RechargedLeft;
 
     private IEnumerator StunCoroutine;
 
@@ -277,10 +275,8 @@ public class ColliderManager : MonoBehaviour {
         RingingInEarsSound.Stop();
         StunnedImpactSound.Play();
         RingingInEarsSound.Play();
-        RechargedLeft.Stop();
         ShortCircuitLeft.Stop();
         ShortCircuitLeft.Play();
-        RechargedRight.Stop();
         ShortCircuitRight.Stop();
         ShortCircuitRight.Play();
 
@@ -313,9 +309,6 @@ public class ColliderManager : MonoBehaviour {
         }
 
         InjuredMask.color = Color.clear;
-
-        RechargedRight.Play();
-        RechargedLeft.Play();
 
         PlayerIsStunned = false;
         GripToolLeft.ShowHook();
