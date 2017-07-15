@@ -135,7 +135,9 @@ public class GripTool : MonoBehaviour {
 
     public void DisplayHookshotComponents()
     {
-        hookshotTouchpad.GetComponent<MeshRenderer>().enabled = true;
+        //hookshotTouchpad.GetComponent<MeshRenderer>().enabled = true;
+        gripL.GetComponent<MeshRenderer>().enabled = true;
+        gripR.GetComponent<MeshRenderer>().enabled = true;
     }
 
     public void DisplayGliderComponents ()

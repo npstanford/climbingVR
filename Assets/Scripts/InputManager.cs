@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.ImageEffects;
 
-public class InputManager : MonoBehaviour {
-    public enum Capabilities { Climb, Hookshot, Glide};
+public class InputManager : MonoBehaviour
+{
+    public enum Capabilities { Climb, Hookshot, Glide };
 
     public bool EnableAllComponents = true;
     public bool EnableTutorial = true;
@@ -26,7 +27,7 @@ public class InputManager : MonoBehaviour {
 
     //booleans for capabilities
     private bool ClimbingEnabled = false;
-    private bool HookshotEnabled= false;
+    private bool HookshotEnabled = false;
     private bool GlidingEnabled = false;
 
     //stunning
@@ -54,7 +55,7 @@ public class InputManager : MonoBehaviour {
 
     //inputs
     private ColliderManager cm;
-    private BodyMovementCollector bmc; 
+    private BodyMovementCollector bmc;
 
     private float lTouchpadPressTime;
     private float rTouchpadPressTime;
@@ -64,7 +65,8 @@ public class InputManager : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         walk = GetComponent<Walk>();
         climb = GetComponent<Climb>();
         hookshot = GetComponent<Hookshot>();
@@ -85,7 +87,8 @@ public class InputManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
 
         if (EnableAllComponents)
         {
@@ -109,9 +112,11 @@ public class InputManager : MonoBehaviour {
         {
             gm.DepleteGrip(glide.GripDepletion);
 
-        } else if (pu.IsPickingUp && ClimbingEnabled){ //only deplete if climbing is enabled to avoid players triggering batter recharge tutorial at beginning
+        }
+        else if (pu.IsPickingUp && ClimbingEnabled)
+        { //only deplete if climbing is enabled to avoid players triggering batter recharge tutorial at beginning
             gm.DepleteGrip(pu.GripDepletion); //this is a function of the weight of the object being picked up
-        } 
+        }
         else if (PlayerIsTouchingGround && !PlayerIsStunned)
         {
             //TODO make this contingent on the player being on the ground
@@ -138,7 +143,8 @@ public class InputManager : MonoBehaviour {
             CheckPickUp(rController);
             CheckPickUp(lController);
         }
-        else {
+        else
+        {
             climb.Drop(Body);
             glide.StopGliding(PlayerIsStunned);
             DropEverything();
@@ -157,7 +163,7 @@ public class InputManager : MonoBehaviour {
 
 
 
-        
+
 
         //HACK -- problem is users could slip out of gripping blocks without letting up on the trigger
 
@@ -165,7 +171,7 @@ public class InputManager : MonoBehaviour {
         {
 
 
-                climb.Drop(Body);
+            climb.Drop(Body);
 
         }
 
@@ -176,9 +182,10 @@ public class InputManager : MonoBehaviour {
 
         if (!PlayerIsTouchingGround && !climb.IsClimbing && !glide.IsGliding)
         {
-     
+
             Fall();
-        } else
+        }
+        else
         {
             FallVelocity = 0;
             bo.blurSize = 0;
@@ -188,7 +195,7 @@ public class InputManager : MonoBehaviour {
 
     private void FixedUpdate()
     {
- 
+
     }
 
 
@@ -203,7 +210,7 @@ public class InputManager : MonoBehaviour {
 
         if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad) && PlayerIsTouchingGround)
         {
-            
+
             // if the touch was quick enough, take a step
             if (Time.time - touchpadPressTime < walkHookDiff)
             {
@@ -216,9 +223,12 @@ public class InputManager : MonoBehaviour {
 
     void CheckClimbing(ControllerState rController, ControllerState lController)
     {
-        if (rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && rController.Holding ==null) {
+        if (rController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && rController.Holding == null)
+        {
             climb.Grab(rController, Body);
-        } else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && lController.Holding == null) {
+        }
+        else if (lController.device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && lController.Holding == null)
+        {
             climb.Grab(lController, Body);
         }
 
@@ -254,21 +264,25 @@ public class InputManager : MonoBehaviour {
         {
             pu.Grab(controller);
         }
-    } 
+    }
 
 
     void CheckShooting(ControllerState controller)
     {
-        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+        //if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+
         {
 
             hookshot.Scan(controller);
-            if(controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 hookshot.Shoot(controller);
             }
         }
-        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        //if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
+
         {
             hookshot.StopScan();
         }
@@ -300,10 +314,11 @@ public class InputManager : MonoBehaviour {
             Vector3 avgDirection = (bmc.Head.direction + bmc.RightArm.direction + bmc.LeftArm.direction) / 3;
             avgDirection = avgDirection.normalized;
 
-            float avgSpeed = .5f * bmc.Head.speed + .25f *bmc.RightArm.speed + .25f * bmc.LeftArm.speed;
+            float avgSpeed = .5f * bmc.Head.speed + .25f * bmc.RightArm.speed + .25f * bmc.LeftArm.speed;
 
             run.Step(avgDirection, avgSpeed);
-        } else
+        }
+        else
         {
             run.Stop();
         }

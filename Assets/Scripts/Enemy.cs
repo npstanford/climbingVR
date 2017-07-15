@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour {
     public AudioSource PropellerNoise;
     public AudioSource SuckingNoise;
     public ParticleSystem SuckingParticles;
+    public AudioSource PHDefeatedSound;
 
     private bool attack;
     public bool CanSeePlayer;
@@ -215,6 +216,7 @@ public class Enemy : MonoBehaviour {
 
     private IEnumerator StunCoroutine()
     {
+        PHDefeatedSound.Play();
         float stunnedStart = Time.time;
         IsStunned = true;
         GetComponentInChildren<RotatingPlatform>().RotationEnabled = false;
