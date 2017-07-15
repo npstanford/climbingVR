@@ -259,7 +259,9 @@ public class InputManager : MonoBehaviour {
 
     void CheckShooting(ControllerState controller)
     {
-        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+        //if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+        if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Grip))
+
         {
 
             hookshot.Scan(controller);
@@ -268,7 +270,9 @@ public class InputManager : MonoBehaviour {
                 hookshot.Shoot(controller);
             }
         }
-        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        //if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
+
         {
             hookshot.StopScan();
         }
