@@ -21,6 +21,8 @@ public class Enemy : MonoBehaviour {
     public GameObject EnemyBody;
     public float FlySpeed;
     public AudioSource PropellerNoise;
+    public AudioSource SuckingNoise;
+    public ParticleSystem SuckingParticles;
 
     private bool attack;
     public bool CanSeePlayer;
@@ -34,6 +36,7 @@ public class Enemy : MonoBehaviour {
     private Quaternion targetRot;
     private bool trackPlayerIsRunning = false;
     private Vector3 HomePosition; // this is where propeller heads will return to if you displace them
+
 
     // Use this for initialization
     void Start() {
@@ -61,6 +64,7 @@ public class Enemy : MonoBehaviour {
             rb.useGravity = true;
             rb.isKinematic = false;
             PropellerNoise.Stop();
+            GetComponentInChildren<RotatingPlatform>().RotationEnabled = false;
         }
     }
 
@@ -78,6 +82,7 @@ public class Enemy : MonoBehaviour {
             RaycastHit hit;
             LayerMask lm = (1 << 13);
             lm = ~lm;
+
 
             //note the below code may allow a player to cover their face in order to not be seen
             if (Physics.Raycast(transform.position, newPlayerLocation - transform.position, out hit, AttackRadius + 5, lm))
@@ -135,6 +140,7 @@ public class Enemy : MonoBehaviour {
             transform.position += DirectionHome * FlySpeed * Time.deltaTime;
         }
 
+
     }
 
     /*
@@ -150,12 +156,22 @@ public class Enemy : MonoBehaviour {
 
     private IEnumerator Shoot()
     {
-        while (true)
+        while (true && !Broken)
         {
+
+
+
             if (attack && !IsStunned && CanSeePlayer)
             {
-                Rigidbody bullet = Instantiate(MisslePrefab, MissleOrigin.transform.position, Quaternion.identity) as Rigidbody;
-                bullet.velocity = transform.forward * BulletVelocity;
+                SuckingNoise.Play();
+                SuckingParticles.Play();
+                yield return new WaitForSeconds(SuckingNoise.clip.length + .1f);
+                SuckingParticles.Stop();
+                if (attack && !IsStunned && CanSeePlayer)
+                {
+                    Rigidbody bullet = Instantiate(MisslePrefab, MissleOrigin.transform.position, Quaternion.identity) as Rigidbody;
+                    bullet.velocity = transform.forward * BulletVelocity;
+                }
 
             }
             float timeToNextShot = Random.value;
@@ -258,9 +274,10 @@ public class Enemy : MonoBehaviour {
             }
         }
 
-        GetComponentInChildren<RotatingPlatform>().RotationEnabled = true;
+
         if (!Broken)
         {
+            GetComponentInChildren<RotatingPlatform>().RotationEnabled = true;
             rb.useGravity = false;
             rb.isKinematic = true;
             PropellerNoise.Play();
@@ -333,5 +350,7 @@ public class Enemy : MonoBehaviour {
         rb.useGravity = false;
         IsStunned = false;
 
-    } 
+    }
+
+
 }

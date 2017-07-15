@@ -33,7 +33,8 @@ public class ColliderManager : MonoBehaviour {
     public PlayerLandingSounds playerLandingSounds;
     public AudioSource StunnedImpactSound;
     public AudioSource RingingInEarsSound;
-
+    public AudioSource ShortCircuitLeft;
+    public AudioSource ShortCircuitRight;
 
     private IEnumerator StunCoroutine;
 
@@ -274,6 +275,10 @@ public class ColliderManager : MonoBehaviour {
         RingingInEarsSound.Stop();
         StunnedImpactSound.Play();
         RingingInEarsSound.Play();
+        ShortCircuitLeft.Stop();
+        ShortCircuitLeft.Play();
+        ShortCircuitRight.Stop();
+        ShortCircuitRight.Play();
 
 
         //make screen red or something
