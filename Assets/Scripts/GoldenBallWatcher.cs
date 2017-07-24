@@ -12,6 +12,7 @@ public class GoldenBallWatcher : MonoBehaviour
     public GameObject DarkRoomLocation;
     public float distance;
     public ScriptedMovement GripTools;
+    public RandomBackgroundNoises rbn;
 
     private bool AllBallsCollected = false;
 
@@ -69,6 +70,7 @@ public class GoldenBallWatcher : MonoBehaviour
             if (distance < 3)
             {
                 other.transform.position = DarkRoomLocation.transform.position;
+                rbn.SwitchMode(RandomBackgroundNoises.BackgroundNoiseMode.ToBeContinuedRoom);
                 ControllerState[] controllers = FindObjectsOfType<ControllerState>();
                 foreach (ControllerState cs in controllers)
                 {

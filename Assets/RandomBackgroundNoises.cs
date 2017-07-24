@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class RandomBackgroundNoises : MonoBehaviour {
 
-    public enum BackgroundNoiseMode { Outside, Mine};
+    public enum BackgroundNoiseMode { Outside, Mine, ToBeContinuedRoom};
     public BackgroundNoiseMode mode = BackgroundNoiseMode.Outside;
 
     public AudioSource BirdSounds;
     public AudioSource CricketSounds;
     public AudioSource AmbientForestNoise;
     public AudioSource MineDrip;
+    public AudioSource Harp;
     public float BirdFrequency;
     public float CricketFrequency;
 
@@ -57,6 +58,11 @@ public class RandomBackgroundNoises : MonoBehaviour {
         {
             MineDrip.Play();
             AmbientForestNoise.Stop();
+        } else if (mode == BackgroundNoiseMode.ToBeContinuedRoom)
+        {
+            MineDrip.Stop();
+            AmbientForestNoise.Stop();
+            Harp.Play();
         }
     }
 

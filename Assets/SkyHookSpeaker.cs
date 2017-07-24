@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SkyHookSpeaker : MonoBehaviour {
-    public enum SpeakerPrograms { Intro, Climbing, Tethering, Zipshot, Glider, Battery, HeronLabs};
+    public enum SpeakerPrograms { Intro, Climbing, Tethering, Zipshot, Glider, Battery, HeronLabs, PropellerHead, Windmill1, Windmill2, Windmill3};
 
     public GameObject PlayersHead;
     public AudioSource BackgroundMusic;
@@ -45,6 +45,13 @@ public class SkyHookSpeaker : MonoBehaviour {
 
     // battery clips
     public AudioClip BatteryExplanation;
+
+    //propeller head audio clips
+    public AudioClip PropellerHeadComputerScan;
+    public AudioClip PropellerHeadExplanation;
+
+    // windmill audio clips
+    public AudioClip Static;
 
     private InputManager im;
 
@@ -115,6 +122,14 @@ public class SkyHookSpeaker : MonoBehaviour {
                 StartCoroutine("BatteryRecharge");
                 break;
 
+            case SpeakerPrograms.PropellerHead:
+                StartCoroutine("PropellerHead");
+                break;
+
+            case SpeakerPrograms.Windmill1:
+                StartCoroutine("Windmill1");
+                break;
+            
             default:
                 return;
         }
@@ -417,4 +432,26 @@ public class SkyHookSpeaker : MonoBehaviour {
         yield return new WaitForSeconds(3f);
         BackgroundMusic.Stop();
     }
+
+    IEnumerator PropellerHead()
+    {
+        Speaker.clip = PropellerHeadComputerScan;
+        Speaker.Play();
+        yield return new WaitForSeconds(Speaker.clip.length);
+
+        BackgroundMusic.Play();
+        yield return new WaitForSeconds(3f);
+        Speaker.clip = PropellerHeadExplanation;
+        Speaker.Play();
+        yield return new WaitForSeconds(Speaker.clip.length);
+        BackgroundMusic.Stop();
+    }
+
+    IEnumerator Windmill1()
+    {
+        Speaker.clip = Static;
+        Speaker.Play();
+        yield return null;
+    }
+
 }
