@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour
     public BlurOptimized bo;
     public SkyHookSpeaker Speaker;
     public int NotTouchingGroundCount; //for smoothing otu not touching ground during running
-
+    public float DistanceFromWalls; //how far to stop player from wall. Referenced by both run and walk.
 
     public float FallAcceleration;
     private float FallVelocity;

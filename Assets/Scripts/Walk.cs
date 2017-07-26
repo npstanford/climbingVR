@@ -128,7 +128,7 @@ public class Walk : MonoBehaviour {
             
 
             RaycastHit hit; 
-            if (Physics.Raycast(Player.transform.position, walkDirectionWorld, out hit, .1f))
+            if (Physics.Raycast(Player.transform.position, walkDirectionWorld, out hit, im.DistanceFromWalls))
             {
                 Vignette.intensity = 0.0f;
                 yield break;

@@ -57,6 +57,7 @@ public class ScriptedMovement : MonoBehaviour {
         while (true) {
             while (EnableMovement)
             {
+
                 if ((MovingObject.transform.position - Targets[_targetIndex].position).magnitude < .005)
                 {
                     _targetIndex = (_targetIndex + 1) % Targets.Length;

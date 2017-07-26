@@ -12,6 +12,7 @@ public class GoldenBallWatcher : MonoBehaviour
     public GameObject DarkRoomLocation;
     public float distance;
     public ScriptedMovement GripTools;
+    public AudioSource GripToolsMovementSound;
     public RandomBackgroundNoises rbn;
 
     private bool AllBallsCollected = false;
@@ -47,6 +48,7 @@ public class GoldenBallWatcher : MonoBehaviour
         if (i == 2)
         {
             GripTools.EnableMovement = true;
+            StartCoroutine("GripToolPodiumNoise");
         } else if (i == totalBalls)
         {
             //so if all balls are attached
@@ -89,5 +91,14 @@ public class GoldenBallWatcher : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         DimMask.color = Color.clear;   
+    }
+
+    IEnumerator GripToolPodiumNoise()
+    {
+        for (int i=0; i<3; i++)
+        {
+            GripToolsMovementSound.Play();
+            yield return new WaitForSeconds(GripToolsMovementSound.clip.length);
+        }
     }
 }

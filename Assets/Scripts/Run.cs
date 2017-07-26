@@ -13,7 +13,6 @@ public class Run : MonoBehaviour {
     public float MaxSpeed;
     public VignetteAndChromaticAberration EyeBlur;
     public float BlurAmount;
-    public float Bubble;
     public AudioSource RushingAirSounds;
     public bool IsRunning;
 
@@ -21,12 +20,14 @@ public class Run : MonoBehaviour {
     public bool HasRun = false;
 
     private float TimeOfNextStepSound;
-
+    private InputManager im;
 
     public void Start()
     {
         HasRun = false;
         IsRunning = false;
+        im = FindObjectOfType<InputManager>();
+
     }
 
     public void Step(Vector3 direction, float speed)
@@ -42,7 +43,7 @@ public class Run : MonoBehaviour {
         Vector3 flatDirection = new Vector3(direction.x, 0f, direction.z).normalized;
 
         RaycastHit hit;
-        if (Physics.Raycast(PlayerHead.transform.position, flatDirection, out hit, Bubble))
+        if (Physics.Raycast(PlayerHead.transform.position, flatDirection, out hit, im.DistanceFromWalls))
         {
             InteractionAttributes ia = hit.collider.gameObject.GetComponent<InteractionAttributes>();
             if (ia != null)

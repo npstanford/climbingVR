@@ -218,11 +218,19 @@ public class Enemy : MonoBehaviour {
     {
         PHDefeatedSound.Play();
         float stunnedStart = Time.time;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (!IsStunned) // if enemy is already stunned and gets hit again, the player might be holding the enemy, in which case, we don't want to make iskinematic=false;
+        {
+
+
+            rb.useGravity = true;
+            rb.isKinematic = false;
+        }
+
+
         IsStunned = true;
         GetComponentInChildren<RotatingPlatform>().RotationEnabled = false;
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.useGravity = true;
-        rb.isKinematic = false;
+
         PropellerNoise.Stop();
         foreach (MeshRenderer mr in mrs)
         {
