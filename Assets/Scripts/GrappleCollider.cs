@@ -131,7 +131,8 @@ public class GrappleCollider : MonoBehaviour
         float timeElapsed = 0;
 
 
-        while ((Body.transform.position - (this.transform.position - controller.controller.transform.position + Body.transform.position)).magnitude > .005) //if there is anything brittle, it is this logic
+        while ((Body.transform.position - (this.transform.position - controller.controller.transform.position + Body.transform.position)).magnitude > .005
+            && timeElapsed <=timeToComplete + .2f) //the time code here is to stop the bug where the grapple is never quite reeled in
         {
             Body.transform.position = Vector3.Lerp(bodyStartPosition, this.transform.position - controller.controller.transform.position + Body.transform.position, timeElapsed / timeToComplete); //when hookshotting moving objects, is something happening while this coroutine runs to move collider back to orign?
             if (!ReelInSound.isPlaying)
