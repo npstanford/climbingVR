@@ -101,7 +101,22 @@ public class InputManager : MonoBehaviour
         PlayerIsTouchingGround = cm.PlayerIsTouchingGround;
         PlayerIsStunned = cm.PlayerIsStunned;
 
-
+        //lazy but whatevs
+        if (PlayerIsStunned)
+        {
+            if (rController.device.GetPressDown(SteamVR_Controller.ButtonMask.Grip) 
+                || rController.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)
+                )
+            {
+                rController.ControllerError();
+            }
+            if (lController.device.GetPressDown(SteamVR_Controller.ButtonMask.Grip)
+    || lController.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)
+    )
+            {
+                lController.ControllerError();
+            }
+        }
 
         //GripManager
         if (climb.IsClimbing)

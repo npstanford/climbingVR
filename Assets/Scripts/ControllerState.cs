@@ -14,6 +14,7 @@ public class ControllerState : MonoBehaviour
     public AudioSource ChargingSounds;
     public AudioSource ControllerShortCircuitSound;
     public AudioSource ChargingSuccess;
+    public AudioSource ErrorSound;
     public ParticleSystem InteractionCircle;
 
 
@@ -88,6 +89,11 @@ public class ControllerState : MonoBehaviour
     public void ControllerShortCircuit()
     {
         ControllerShortCircuitSound.Play();
+    }
+
+    public void ControllerError()
+    {
+        ErrorSound.Play();
     }
 
     private void PlayChargingNoises(float CurrentChargingRate)
