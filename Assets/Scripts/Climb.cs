@@ -29,14 +29,26 @@ public class Climb : MonoBehaviour {
             StickPlayerToPlatform sptp = controller.GripObject.GetComponent<StickPlayerToPlatform>();
             if (sptp != null)
             {
-                //Room.transform.parent = controller.GripObject.transform.parent;
                 Room.transform.parent = sptp.StickyObject.transform;
             }
+
+
             Cling(Room);
 
-            //Room.transform.localPosition += (controller.prevPos - controller.controller.transform.localPosition);
-            //Room.transform.localPosition += (controller.prevPos - controller.curPos);
             Room.transform.position += transform.TransformPoint(controller.prevPos) - transform.TransformPoint(controller.curPos);
+
+            
+            /*
+            if (controller.prevPosWall != Vector3.zero && controller.curPosWall != Vector3.zero)
+            {
+                Cling(Room);
+                Room.transform.position += transform.TransformPoint(controller.prevPosWall) - transform.TransformPoint(controller.curPosWall);
+                //Debug.Log((controller.prevPosWall - controller.curPosWall));
+            
+                
+            }
+            */
+
         }
 
 

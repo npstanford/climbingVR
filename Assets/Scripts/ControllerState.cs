@@ -20,12 +20,18 @@ public class ControllerState : MonoBehaviour
 
     //end area of locomotion variables
 
-    [HideInInspector]
+    //[HideInInspector]
     public Vector3 prevPos;
-    [HideInInspector]
+    //[HideInInspector]
     public Vector3 curPos;
     [HideInInspector]
     public SteamVR_TrackedObject controller;
+   // [HideInInspector]
+    public Vector3 prevPosWall;
+   // [HideInInspector]
+    public Vector3 curPosWall;
+
+    public GameObject curPosWallIndicator;
 
 
     public bool canGrip;
@@ -233,8 +239,20 @@ public class ControllerState : MonoBehaviour
                     InteractionCircle.transform.position = hit.point;
                     InteractionCircle.transform.localPosition += transform.InverseTransformDirection(hit.normal).normalized * .01f;
                     InteractionCircle.transform.rotation = Quaternion.LookRotation(hit.normal);
+
+                    //experimental: trying to have  climbing update based on where griphook intersects the wall
+                    if (ia.CanClimb)
+                    {
+                        prevPosWall = curPosWall;
+                        curPosWall = transform.InverseTransformPoint(InteractionCircle.transform.position);
+                    }
+
+
                 }
+
             }
+
+
         }
     }
 
@@ -247,6 +265,9 @@ public class ControllerState : MonoBehaviour
             {
                 canGrip = false;
                 GripObject = null;
+                curPosWall = Vector3.zero;
+                prevPosWall = Vector3.zero;
+                Debug.Log("Exited climb object");
             }
             else if (ia.CanPickUp) // THIS IS THE PROBLEM! THIS IS A HUGE BUG. Some objects switch from pickup==true to pickup==false on their own
             {
@@ -254,6 +275,8 @@ public class ControllerState : MonoBehaviour
                 ObjectToPickUp = null;
             }
             InteractionCircle.Stop();
+
+   
             
             int numParticles = InteractionCircle.GetParticles(particles);
 

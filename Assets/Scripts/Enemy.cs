@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour {
     private Quaternion targetRot;
     private bool trackPlayerIsRunning = false;
     private Vector3 HomePosition; // this is where propeller heads will return to if you displace them
-
+    private Rigidbody rb;
 
     // Use this for initialization
     void Start() {
@@ -58,10 +58,10 @@ public class Enemy : MonoBehaviour {
         oldPlayerLocation = newPlayerLocation;
         targetRot = Quaternion.identity;
         CanSeePlayer = false;
-
+        rb = GetComponent<Rigidbody>();
         if (Broken)
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
+            
             rb.useGravity = true;
             rb.isKinematic = false;
             PropellerNoise.Stop();
@@ -124,7 +124,7 @@ public class Enemy : MonoBehaviour {
         if (reset)
         {
             reset = false;
-            Rigidbody rb = GetComponent<Rigidbody>();
+
             if (!Broken)
             {
                 rb.useGravity = false;
@@ -139,6 +139,14 @@ public class Enemy : MonoBehaviour {
         {
             Vector3 DirectionHome = (HomePosition - transform.position).normalized;
             transform.position += DirectionHome * FlySpeed * Time.deltaTime;
+        }
+
+        if (Broken && !rb.useGravity && !IsStunned)
+        {
+
+            rb.useGravity = true;
+            rb.isKinematic = false;
+            transform.parent = null;
         }
 
 
@@ -186,7 +194,7 @@ public class Enemy : MonoBehaviour {
 
     public void Stun()
     {
-        StopCoroutine("Battered"); //not sure if this line works..
+        StopCoroutine("Staggered"); //not sure if this line works..
         StopCoroutine("StunCoroutine");
         StartCoroutine("StunCoroutine");
     }
@@ -218,7 +226,7 @@ public class Enemy : MonoBehaviour {
     {
         PHDefeatedSound.Play();
         float stunnedStart = Time.time;
-        Rigidbody rb = GetComponent<Rigidbody>();
+
         if (!IsStunned) // if enemy is already stunned and gets hit again, the player might be holding the enemy, in which case, we don't want to make iskinematic=false;
         {
 
@@ -308,6 +316,7 @@ public class Enemy : MonoBehaviour {
             {
                 //decided to try seeing what it is like if propeller heads get stunend when hit by rocks
                 StopCoroutine("StunCoroutine");
+                StopCoroutine("Staggered");
                 StartCoroutine("StunCoroutine");
 
 
@@ -319,6 +328,11 @@ public class Enemy : MonoBehaviour {
                 }
                 */
             }
+        }
+
+        if (other.CompareTag("Grapple"))
+        {
+            StartCoroutine("Staggered");
         }
     }
 
@@ -331,6 +345,7 @@ public class Enemy : MonoBehaviour {
             {
                 //decided to try seeing what it is like if propeller heads get stunend when hit by rocks
                 StopCoroutine("StunCoroutine");
+                StopCoroutine("Staggered");
                 StartCoroutine("StunCoroutine");
 
 
@@ -345,6 +360,7 @@ public class Enemy : MonoBehaviour {
         }
     }
 
+    /*
     private IEnumerator Battered()
     {
         float batteredTime = 2.0f;
@@ -361,6 +377,15 @@ public class Enemy : MonoBehaviour {
         IsStunned = false;
 
     }
+    */
 
+    private IEnumerator Staggered()
+    {
+        float staggeredTime = 0.5f;
+        IsStunned = true;
+        SuckingParticles.Stop();
 
+        yield return new WaitForSeconds(staggeredTime);
+        IsStunned = false;
+    }
 }

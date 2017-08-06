@@ -89,12 +89,25 @@ public class SkyHookSpeaker : MonoBehaviour {
         BackgroundMusic.volume = volume;
 	}
 
+    public void KillAllTutorials()
+    {
+        StopCoroutine("Intro");
+        StopCoroutine("Climbing");
+        StopCoroutine("Tethering");
+        StopCoroutine("Zipshot");
+        StopCoroutine("WingCloth");
+        StopCoroutine("PropellerHead");
+        StopCoroutine("Windmill1");
+    }
+
     public void LaunchAudio(SpeakerPrograms sp)
     {
         if (!im.EnableTutorial)
         {
             return;
         }
+
+        KillAllTutorials();
 
         switch (sp)
         {
@@ -116,10 +129,6 @@ public class SkyHookSpeaker : MonoBehaviour {
 
             case SpeakerPrograms.Glider:
                 StartCoroutine("WingCloth");
-                break;
-
-            case SpeakerPrograms.Battery:
-                StartCoroutine("BatteryRecharge");
                 break;
 
             case SpeakerPrograms.PropellerHead:
