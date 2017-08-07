@@ -58,7 +58,7 @@ public class Climb : MonoBehaviour {
     {
         //purpose for the first controller state argument is to know whether to throw the player or not
         // a better way of doing this would be to remove it and create a new method called "throw" and have input manager call that on press up
-        Room.transform.parent = null;
+        //Room.transform.parent = null;
         IsClimbing = false;
         Room.useGravity = true;
         Room.isKinematic = false;

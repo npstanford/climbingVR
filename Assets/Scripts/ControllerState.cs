@@ -20,18 +20,18 @@ public class ControllerState : MonoBehaviour
 
     //end area of locomotion variables
 
-    //[HideInInspector]
+    [HideInInspector]
     public Vector3 prevPos;
-    //[HideInInspector]
+    [HideInInspector]
     public Vector3 curPos;
     [HideInInspector]
     public SteamVR_TrackedObject controller;
-   // [HideInInspector]
+   [HideInInspector]
     public Vector3 prevPosWall;
-   // [HideInInspector]
+   [HideInInspector]
     public Vector3 curPosWall;
 
-    public GameObject curPosWallIndicator;
+
 
 
     public bool canGrip;

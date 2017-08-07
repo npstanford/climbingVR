@@ -82,6 +82,7 @@ public class Enemy : MonoBehaviour {
         {
             RaycastHit hit;
             LayerMask lm = (1 << 13);
+            lm += (1 << 2);
             lm = ~lm;
 
 
@@ -332,7 +333,8 @@ public class Enemy : MonoBehaviour {
 
         if (other.CompareTag("Grapple"))
         {
-            StartCoroutine("Staggered");
+            Vector3 staggerDirection = (transform.position - other.transform.position).normalized;
+            StartCoroutine(Staggered(staggerDirection));
         }
     }
 
@@ -379,13 +381,33 @@ public class Enemy : MonoBehaviour {
     }
     */
 
-    private IEnumerator Staggered()
+    private IEnumerator Staggered(Vector3 staggerDirection)
     {
-        float staggeredTime = 0.5f;
+        float staggeredTime = .6f;
+
         IsStunned = true;
         SuckingParticles.Stop();
 
+        transform.position += staggerDirection * .5f;
+
+
+
+        Vector3 HeadSnapBackAngle = new Vector3(-20f, 0f, 0f);
+        transform.Rotate(HeadSnapBackAngle, Space.Self);
+        yield return new WaitForSeconds(.3f);
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        /*TODO animation ideas
+         *  ring blel
+         *  head snaps back
+         *  shakes head side to side
+         */
+
         yield return new WaitForSeconds(staggeredTime);
+        rb.isKinematic = true;
+        rb.useGravity = false;
         IsStunned = false;
     }
 }

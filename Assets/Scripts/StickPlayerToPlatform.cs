@@ -11,12 +11,14 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
 
 
-    /*
+
     void OnTriggerEnter(Collider collider)
     {
+       
     if (collider.gameObject.CompareTag("Player"))
     {
-        OnPlatform = true;
+            Debug.Log("Player entered trigger");
+            OnPlatform = true;
         ObjectToStick = collider.gameObject;
 
             if (rb != null)
@@ -67,7 +69,7 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
     }
 
-    void OnCollisionExit(Collider collider)
+    void OnTriggerExit(Collider collider)
     {
         if (collider.gameObject.CompareTag("Player"))
         {
@@ -87,5 +89,5 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
     }
 
-    */
+
 }
