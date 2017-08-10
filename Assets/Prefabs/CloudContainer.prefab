@@ -75,8 +75,8 @@ GameObject:
   - component: {fileID: 114079604742778868}
   - component: {fileID: 23964229375457284}
   - component: {fileID: 114616743632481546}
-  - component: {fileID: 64920941019198880}
   - component: {fileID: 114882599909387532}
+  - component: {fileID: 64040027991571592}
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Untagged
@@ -96,10 +96,9 @@ GameObject:
   - component: {fileID: 114292752383150296}
   - component: {fileID: 23858383048532232}
   - component: {fileID: 114006231088031480}
-  - component: {fileID: 64480654521700408}
   - component: {fileID: 135874266978484216}
   - component: {fileID: 114544144633174772}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Icosphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,7 +141,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1681867034224138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.8}
+  m_LocalPosition: {x: -21.5, y: 0, z: 47.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4439066591168632}
@@ -155,7 +154,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1817610576986576}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8.681862, y: 0, z: -19.127235}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4566898260795804}
@@ -169,7 +168,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1019645102508840}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.3}
+  m_LocalPosition: {x: 25.4, y: 0, z: -38.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4439066591168632}
@@ -181,7 +180,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1681867034224138}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_MotionVectors: 1
@@ -213,7 +212,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1019645102508840}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_MotionVectors: 1
@@ -331,21 +330,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1019645102508840}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!64 &64480654521700408
-MeshCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1942506519526614}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 0}
---- !u!64 &64920941019198880
+--- !u!64 &64040027991571592
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -4070,7 +4055,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StickyObject: {fileID: 1817610576986576}
   rb: {fileID: 0}
-  OnPlatform: 0
+  OnPlatform: 1
   ObjectToStick: {fileID: 0}
 --- !u!114 &114566101115576086
 MonoBehaviour:
@@ -9012,7 +8997,7 @@ MonoBehaviour:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
-  userCollisions: 1
+  userCollisions: 0
   isSelectable: 1
   unwrapParameters:
     hardAngle: 88

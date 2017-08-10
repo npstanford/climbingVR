@@ -262,7 +262,8 @@ public void StartGliding(ControllerState controller, bool PlayerIsTouchingGround
 
 
 
-            Room.position += totalVelocity * Time.deltaTime;
+            Room.transform.position += totalVelocity * Time.deltaTime;
+            Debug.Log("Room position: " + Room.position);
 
 
         }

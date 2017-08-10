@@ -55,13 +55,6 @@ public class StickPlayerToPlatform : MonoBehaviour {
 
             }
 
-
-
-            if (rb.useGravity || !rb.isKinematic )
-            {
-                //rb.useGravity = false;
-               // rb.isKinematic = true;
-            }
         }
     
 
