@@ -105,13 +105,13 @@ public class InputManager : MonoBehaviour
         if (PlayerIsStunned)
         {
             if (rController.device.GetPressDown(SteamVR_Controller.ButtonMask.Grip) 
-                || rController.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)
+                || (rController.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)&&rController.canGrip)
                 )
             {
                 rController.ControllerError();
             }
             if (lController.device.GetPressDown(SteamVR_Controller.ButtonMask.Grip)
-    || lController.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger)
+    || (lController.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && lController.canGrip)
     )
             {
                 lController.ControllerError();
@@ -155,24 +155,25 @@ public class InputManager : MonoBehaviour
 
 
 
-            CheckPickUp(rController);
-            CheckPickUp(lController);
         }
         else
         {
             climb.Drop(Body);
             glide.StopGliding(PlayerIsStunned);
-            DropEverything();
+            //DropEverything();
         }
 
         if (PlayerIsStunned)
         {
-            DropEverything();
+            //DropEverything();
         }
 
         //running and dash step still work when stunned
         CheckWalking(rController, ref rTouchpadPressTime);
         CheckWalking(lController, ref lTouchpadPressTime);
+
+        CheckPickUp(rController);
+        CheckPickUp(lController);
         CheckRunning();
 
 

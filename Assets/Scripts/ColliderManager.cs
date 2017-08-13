@@ -302,6 +302,7 @@ public class ColliderManager : MonoBehaviour {
         }
         while ((Time.time - stunnedStart) < StunLength)
         {
+            if((Time.time - stunnedStart < 1f)) { im.DropEverything(); }
             
             InjuredMask.color = Color.Lerp(Color.red, Color.clear, ((Time.time - stunnedStart) / StunLength)*.4f);
             RingingInEarsSound.volume = 1f - (Time.time - stunnedStart) / StunLength;
