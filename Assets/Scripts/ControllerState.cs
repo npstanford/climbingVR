@@ -16,7 +16,7 @@ public class ControllerState : MonoBehaviour
     public AudioSource ChargingSuccess;
     public AudioSource ErrorSound;
     public ParticleSystem InteractionCircle;
-
+    public GameObject BranchAttachPoint;
 
     //end area of locomotion variables
 

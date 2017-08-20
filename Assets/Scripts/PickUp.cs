@@ -55,6 +55,14 @@ public class PickUp : MonoBehaviour {
 
                 //end experimental code
                 rb.transform.parent = controller.transform;
+
+                if (rb.gameObject.CompareTag("Branch"))
+                {
+                    rb.transform.parent = controller.BranchAttachPoint.transform;
+                    rb.transform.localPosition = Vector3.zero;
+                    rb.transform.localRotation = Quaternion.identity;
+                }
+
                 controller.Holding = rb;
                 rb.useGravity = false;
                 rb.isKinematic = true;
@@ -66,7 +74,8 @@ public class PickUp : MonoBehaviour {
             }
         }
 
-        else if (controller.canPickUp && controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        //else if (controller.canPickUp && controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+        else if (controller.device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
             Drop(controller);
         }

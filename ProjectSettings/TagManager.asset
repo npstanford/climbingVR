@@ -15,6 +15,7 @@ TagManager:
   - PHHead
   - PHPropeller
   - PHWeakPoint
+  - Branch
   layers:
   - Default
   - TransparentFX
