@@ -37,7 +37,7 @@ public class ColliderManager : MonoBehaviour {
     public AudioSource ShortCircuitRight;
 
     private IEnumerator StunCoroutine;
-
+    private bool StunImmunity = false;
 
     //stun info
     public float ImpactDistance;
@@ -204,7 +204,7 @@ public class ColliderManager : MonoBehaviour {
         InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
         if (ia != null)
         {
-            if (ia.HurtsPlayer)
+            if (ia.HurtsPlayer && !StunImmunity)
             {
 
                 PlayerHit(other.gameObject);
@@ -279,7 +279,7 @@ public class ColliderManager : MonoBehaviour {
         ShortCircuitLeft.Play();
         ShortCircuitRight.Stop();
         ShortCircuitRight.Play();
-
+        StunImmunity = true;
 
         //make screen red or something
         //Debug.DrawRay(playerLocation, hitDirection, Color.black, 30f);
@@ -303,7 +303,8 @@ public class ColliderManager : MonoBehaviour {
         while ((Time.time - stunnedStart) < StunLength)
         {
             if((Time.time - stunnedStart < 1f)) { im.DropEverything(); }
-            
+            if (Time.time - stunnedStart > 4f) { StunImmunity = false; }
+
             InjuredMask.color = Color.Lerp(Color.red, Color.clear, ((Time.time - stunnedStart) / StunLength)*.4f);
             RingingInEarsSound.volume = 1f - (Time.time - stunnedStart) / StunLength;
             yield return null;

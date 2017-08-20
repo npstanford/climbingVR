@@ -11,6 +11,10 @@ TagManager:
   - Grapple
   - RoundRock
   - Teleporter
+  - PHNose
+  - PHHead
+  - PHPropeller
+  - PHWeakPoint
   layers:
   - Default
   - TransparentFX

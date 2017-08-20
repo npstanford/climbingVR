@@ -200,6 +200,58 @@ public class Enemy : MonoBehaviour {
         StartCoroutine("StunCoroutine");
     }
 
+    public void Explode()
+    {
+        
+        if (IsStunned) { return; }
+
+        StopCoroutine("Staggered"); //not sure if this line works..
+        StopCoroutine("StunCoroutine");
+
+        Transform[] children = this.transform.GetComponentsInChildren<Transform>();
+        foreach (Transform child in children)
+        {
+            Debug.Log(child.name);
+            if (child.CompareTag("PHHead") || child.CompareTag("PHNose") || child.CompareTag("PHPropeller") || child.CompareTag("PHWeakPoint"))
+            {
+                child.parent = null;
+                Rigidbody rbChild;
+
+                rbChild = child.gameObject.AddComponent<Rigidbody>();
+
+                if (child.CompareTag("PHWeakPoint")) {
+                    Destroy(child.gameObject);
+                    break;
+                }
+
+
+                rbChild.isKinematic = false;
+                rbChild.useGravity = true;
+                rbChild.velocity = Random.onUnitSphere * 5;
+
+                InteractionAttributes ia = child.GetComponent<InteractionAttributes>();
+                if (ia!=null)
+                {
+                    ia.HurtsPlayer = false;
+                    ia.ObjectToPickUp = rbChild;
+                }
+
+                PickUpCollisionSounds sound = child.GetComponent<PickUpCollisionSounds>();
+                if (sound != null) { sound.enabled = true; }
+
+                if (child.CompareTag("PHPropeller"))
+                {
+                    RotatingPlatform rp = child.GetComponent<RotatingPlatform>();
+                    if (rp != null)
+                    {
+                        rp.RotationEnabled = false;
+                    }
+                }
+            }
+        }
+        Destroy(this.gameObject);
+    }
+
     private IEnumerator TrackPlayer()
     {
         while (true) { 
