@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
+    public enum PHTypes { Red, Blue };
+    public PHTypes PHType;
+
     public bool Broken;
     public float FireRate;
     public float BulletVelocity;
@@ -44,6 +47,10 @@ public class Enemy : MonoBehaviour {
         IEnumerator shoot = Shoot();
         IEnumerator trackPlayer= TrackPlayer();
         StartCoroutine(shoot);
+        /*
+        if (PHType == Enemy.PHTypes.Red) {  }
+        else if (PHType == Enemy.PHTypes.Blue) { }
+        */
         StartCoroutine(trackPlayer);
         startPosition = EnemyBody.transform.localPosition;
         HomePosition = transform.position;
@@ -76,7 +83,6 @@ public class Enemy : MonoBehaviour {
         attack = (playerDist < AttackRadius);
         oldPlayerLocation = newPlayerLocation;
         newPlayerLocation = Player.transform.position;
-        
 
         if (attack && !IsStunned)
         {
@@ -104,16 +110,61 @@ public class Enemy : MonoBehaviour {
                         CanSeePlayer = false;
                     }
                 }
-            } else
+            }
+            else
             {
                 CanSeePlayer = false;
             }
 
 
-        } else
+        }
+        else
         {
             trackPlayerIsRunning = false;
         }
+
+
+
+        if (PHType == Enemy.PHTypes.Red)
+        {
+           
+            if ((transform.position - HomePosition).magnitude > .2f && !IsStunned)
+            {
+                Vector3 DirectionHome = (HomePosition - transform.position).normalized;
+                transform.position += DirectionHome * FlySpeed * Time.deltaTime;
+            }
+
+        } 
+
+        else if (PHType == Enemy.PHTypes.Blue && !IsStunned)
+        {
+                RaycastHit hit;
+                LayerMask lm = (1 << 13); //enemy
+                lm += (1 << 2); //ignroe raycast
+                lm += (1 << 9); //body
+                lm += (1 << 8); //controller
+                lm += (1 << 14); //bullet
+                lm = ~lm;
+
+
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 2, lm))
+                {
+                    float step = rotateSpeed *2 * Time.deltaTime;
+                    transform.Rotate(Vector3.up, step, Space.World);
+                    //TODO: have it "look" 30 degrees up right down left and pick the first one where it doesn't hit the same object
+
+                    if (!Physics.Raycast(transform.position, transform.forward, out hit, 1f, lm))
+                    {
+                        this.transform.position += transform.forward * FlySpeed / 3 * Time.deltaTime;
+                    }
+                }
+
+            this.transform.position += transform.forward * FlySpeed * Time.deltaTime;
+
+
+        }
+
+
 
         //bob up and down
         if (!IsStunned)
@@ -136,11 +187,7 @@ public class Enemy : MonoBehaviour {
         }
 
 
-        if ((transform.position - HomePosition).magnitude > .2f && !IsStunned)
-        {
-            Vector3 DirectionHome = (HomePosition - transform.position).normalized;
-            transform.position += DirectionHome * FlySpeed * Time.deltaTime;
-        }
+
 
         if (Broken && !rb.useGravity && !IsStunned)
         {
@@ -306,7 +353,7 @@ public class Enemy : MonoBehaviour {
                 //ia.CanClimb = true;
                 ia.IsGround = true;
                 ia.CanPickUp = true;
-                //ia.CanHookshot = true;
+                ia.CanHookshot = true;
             }
         }
 
@@ -341,7 +388,7 @@ public class Enemy : MonoBehaviour {
                 //ia.CanClimb = false;
                 ia.IsGround = false;
                 ia.CanPickUp = true;
-                //ia.CanHookshot = false;
+                ia.CanHookshot = false;
             }
         }
 
@@ -350,7 +397,7 @@ public class Enemy : MonoBehaviour {
         {
             GetComponentInChildren<RotatingPlatform>().RotationEnabled = true;
             rb.useGravity = false;
-            rb.isKinematic = true;
+            if (PHType == Enemy.PHTypes.Red) { rb.isKinematic = true; }
             PropellerNoise.Play();
         }
         rb.velocity = Vector3.zero;
@@ -383,7 +430,7 @@ public class Enemy : MonoBehaviour {
             }
         }
 
-        if (other.CompareTag("Grapple"))
+        if (other.CompareTag("Grapple") && !IsStunned)
         {
             Vector3 staggerDirection = (transform.position - other.transform.position).normalized;
             StartCoroutine(Staggered(staggerDirection));
@@ -458,7 +505,8 @@ public class Enemy : MonoBehaviour {
          */
 
         yield return new WaitForSeconds(staggeredTime);
-        rb.isKinematic = true;
+        if (PHType == Enemy.PHTypes.Red) { rb.isKinematic = true; }
+
         rb.useGravity = false;
         IsStunned = false;
     }

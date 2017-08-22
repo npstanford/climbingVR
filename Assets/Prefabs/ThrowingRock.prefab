@@ -42,7 +42,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553004075643892}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 0, z: -7.5}
+  m_LocalPosition: {x: -6.67, y: 0, z: -5.8}
   m_LocalScale: {x: 0.29999998, y: 0.29999998, z: 0.29999998}
   m_Children: []
   m_Father: {fileID: 0}
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CanClimb: 0
-  CanHookshot: 0
+  CanHookshot: 1
   RespondsToHookshot: 0
   IsGround: 0
   IsPartOfBody: 0

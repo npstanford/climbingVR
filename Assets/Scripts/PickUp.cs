@@ -8,6 +8,8 @@ public class PickUp : MonoBehaviour {
     public Collider PlayerCollider;
     public bool HasPickedUp = false;
     public float GripDepletionRate; // this is what is set
+    public GameObject PlayerHead;
+    public float throwingScalingFactor;
 
     //this is only needed to enforce a state
     public ControllerState rController;
@@ -100,7 +102,21 @@ public class PickUp : MonoBehaviour {
             rb.useGravity = true;
             IsPickingUp = false;
             Vector3 force = (controller.controller.transform.localPosition - controller.prevPos) / Time.deltaTime;
+            Debug.Log("force: " + force.magnitude);
+            float aimCoefficient = 0;
+            if (force.magnitude > 10f)
+            {
+                if (!rb.gameObject.CompareTag("Branch"))
+                {
+                    aimCoefficient = force.magnitude / throwingScalingFactor;
+                }
+            }
+
+
+            force = (force.normalized + PlayerHead.transform.forward * aimCoefficient).normalized * force.magnitude;
+            //force = force / 4;
             rb.AddForce(force / rb.mass, ForceMode.VelocityChange);
+            //idea, add extra force in the direction the player is looking
         }
     }
 

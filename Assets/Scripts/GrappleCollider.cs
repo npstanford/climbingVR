@@ -17,6 +17,8 @@ public class GrappleCollider : MonoBehaviour
     private ControllerState controller;
     private float GrappleSpeed;
     private LineRenderer lr;
+    private Rigidbody ItemToReelIn;
+   
     IEnumerator coroutineShoot;
 
     // Use this for initialization
@@ -35,7 +37,7 @@ public class GrappleCollider : MonoBehaviour
         InteractionAttributes ia = other.GetComponent<InteractionAttributes>();
         if (ia != null)
         {
-            if (ia.CanHookshot)
+            if (ia.CanHookshot && !ia.CanPickUp)
             {
                 this.transform.parent = other.gameObject.transform;
                 Grappled = true; //pretty sure this isn't used adn can be removed
@@ -44,7 +46,26 @@ public class GrappleCollider : MonoBehaviour
                 StartCoroutine(coroutineReelInPlayer);
 
                 StopCoroutine(coroutineShoot);
-            } else
+            } else if (ia.CanPickUp && ia.CanHookshot)
+            {
+                ItemToReelIn = ia.ObjectToPickUp;
+                //ItemToReelInOriginalScale = ItemToReelIn.transform.lossyScale;
+                ItemToReelIn.transform.parent = this.transform;
+                //ItemToReelIn.transform.localScale = ItemToReelInOriginalScale;
+
+                //ItemToReelIn.transform.localScale = Vector3.one;
+
+                /*
+                Grappled = true; //pretty sure this isn't used adn can be removed
+                IEnumerator coroutineReelInItem;
+                coroutineReelInItem = ReelInItem(controller, other.gameObject);
+                StartCoroutine(coroutineReelInItem);
+                StopCoroutine(coroutineShoot);
+                */
+
+            }
+
+            else
             {
                 RicochetSound.Play();
             }
@@ -120,7 +141,18 @@ public class GrappleCollider : MonoBehaviour
         HookshotFired = false;
         _GripTool.ShowHook();
 
+        if (ItemToReelIn)
+        {
+            ItemToReelIn.transform.parent = null;
+            ItemToReelIn.velocity = Vector3.zero;
+            ItemToReelIn.useGravity = true;
+            ItemToReelIn = null;
+        }
+
     }
+
+
+
 
     IEnumerator ReelInPlayer(ControllerState controller)
     {
@@ -168,7 +200,7 @@ public class GrappleCollider : MonoBehaviour
         this.transform.parent = null;
         this.transform.position = Vector3.zero;
         this.transform.rotation = Quaternion.identity;
-        this.transform.localScale = new Vector3(.05f, .001f, .02f);
+        //this.transform.localScale = new Vector3(.05f, .001f, .02f);
 
     }
 
@@ -176,14 +208,14 @@ public class GrappleCollider : MonoBehaviour
     void UnHideGrapple()
     {
         this.GetComponent<MeshRenderer>().enabled = true;
-        this.GetComponent<SphereCollider>().enabled = true;
+        this.GetComponent<Collider>().enabled = true;
     }
 
     void HideGrapple()
     {
 
         this.GetComponent<MeshRenderer>().enabled = false;
-        this.GetComponent<SphereCollider>().enabled = false;
+        this.GetComponent<Collider>().enabled = false;
         //this.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //this is a hack to see if the reason we can detach ourselves from blcoks is the continued presence of the grapple
     }
 

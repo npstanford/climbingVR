@@ -1484,7 +1484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CanClimb: 0
-  CanHookshot: 0
+  CanHookshot: 1
   RespondsToHookshot: 0
   IsGround: 0
   IsPartOfBody: 0

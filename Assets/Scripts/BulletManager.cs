@@ -56,10 +56,8 @@ public class BulletManager : MonoBehaviour
                     ControllerState cs = other.GetComponent<ControllerState>();
                     if (cs !=null)
                     {
-                        Debug.Log("Hit a hand");
                         if (cs.Holding != null)
                         {
-                            Debug.Log("Hit a hand holding something");
                             return;
                         }
                     }
@@ -102,7 +100,17 @@ public class BulletManager : MonoBehaviour
                 //(1) confine deflected velocity within a range, (2) combine with a richoct velocity 
                 deflectionVelocity = deflectionVelocity.normalized * Mathf.Clamp(deflectionVelocity.magnitude, 4f, 30f);
 
-                float reflectionIndex = (deflectionVelocity.magnitude / 21f) * 10f;
+                float reflectionIndex;
+                if (other.gameObject.CompareTag("Branch"))
+                {
+                    reflectionIndex= (deflectionVelocity.magnitude / 30f) * 7f;
+                } else
+                {
+                    //if it is a stone or anything else not good for whacking
+                    reflectionIndex = (deflectionVelocity.magnitude / 30f) * 2f;
+                }
+                    
+                    
                 InteractionAttributes iaBullet = this.GetComponent<InteractionAttributes>();
                 iaBullet.CanPickUp = true;
 
@@ -111,7 +119,8 @@ public class BulletManager : MonoBehaviour
                     rb.useGravity = true;
                 }
 
-                rb.velocity = (deflectionVelocity.normalized + 6*(originPosition - this.transform.position).normalized).normalized * deflectionVelocity.magnitude;
+
+                rb.velocity = (deflectionVelocity.normalized + reflectionIndex*(originPosition - this.transform.position).normalized).normalized * deflectionVelocity.magnitude;
             } 
 
         }

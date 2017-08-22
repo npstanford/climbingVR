@@ -16,7 +16,6 @@ public class PropellerHeadTutorial : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("Player") && !PlayedTutorial)
         {
-            Debug.Log("Attempting to play PH tutorial");
             Speaker.LaunchAudio(SkyHookSpeaker.SpeakerPrograms.PropellerHead);
             PlayedTutorial = true;
         }
