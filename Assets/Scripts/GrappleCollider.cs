@@ -102,7 +102,59 @@ public class GrappleCollider : MonoBehaviour
         lr.enabled = true;
         lr.SetPosition(0, grappleStart);
         lr.SetPosition(1, this.transform.position);
+        Vector3 shootDirection = (grappleTarget.transform.position - this.transform.position).normalized;
 
+
+        //this code shoots and pretty much guarantees that the grapple hits the object, if the object is stationary
+        while (elapsedTime < totalTime)
+        {
+            if (!ShootingSound.isPlaying)
+            {
+                ShootingSound.Play();
+            }
+            this.transform.position = Vector3.Lerp(grappleStart, grappleTarget.transform.position, elapsedTime / totalTime);
+            elapsedTime += Time.deltaTime;
+            lr.SetPosition(1, this.transform.position);
+            lr.SetPosition(0, controller.controller.transform.position);
+
+            yield return null;
+        }
+
+        // if the grapple reaches the original target, but hasn't hit anything, keep going. This isn't perfect,
+        // than what we currently have
+        while ((this.transform.position - grappleStart).magnitude < GrappleLength)
+        {
+            //Debug.Log("grapple distance: " + (this.transform.position - grappleStart).magnitude);
+            if (!ShootingSound.isPlaying)
+            {
+                ShootingSound.Play();
+            }
+            this.transform.position += shootDirection * GrappleSpeed * Time.deltaTime;
+            lr.SetPosition(1, this.transform.position);
+            lr.SetPosition(0, controller.controller.transform.position);
+            yield return null;
+        }
+
+
+        Vector3 returnDirection;
+
+        while ((this.transform.position - controller.controller.transform.position).magnitude > .2 )
+        {
+            if (!ShootingSound.isPlaying)
+            {
+                ShootingSound.Play();
+            }
+
+            returnDirection = (controller.controller.transform.position - this.transform.position).normalized;
+
+            this.transform.position += returnDirection * GrappleSpeed * Time.deltaTime;
+
+            lr.SetPosition(1, this.transform.position);
+            yield return null;
+
+        }
+        
+        /*
         while (elapsedTime < totalTime)
         {
             if (!ShootingSound.isPlaying)
@@ -131,7 +183,7 @@ public class GrappleCollider : MonoBehaviour
             lr.SetPosition(1, this.transform.position);
             yield return null;
         }
-
+        */
         ShootingSound.Stop();
 
         HideGrapple();

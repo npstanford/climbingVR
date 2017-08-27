@@ -267,7 +267,6 @@ public class ControllerState : MonoBehaviour
                 GripObject = null;
                 curPosWall = Vector3.zero;
                 prevPosWall = Vector3.zero;
-                Debug.Log("Exited climb object");
             }
             else if (ia.CanPickUp) // THIS IS THE PROBLEM! THIS IS A HUGE BUG. Some objects switch from pickup==true to pickup==false on their own
             {
@@ -287,6 +286,11 @@ public class ControllerState : MonoBehaviour
 
             InteractionCircle.SetParticles(particles, numParticles);
         }
+    }
+
+    public void VibrateController(ushort length)
+    {
+        device.TriggerHapticPulse(length);
     }
 
 

@@ -730,8 +730,8 @@ Rigidbody:
   m_GameObject: {fileID: 1374356210614950}
   serializedVersion: 2
   m_Mass: 4
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 10
+  m_AngularDrag: 10
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -1529,8 +1529,8 @@ MonoBehaviour:
   Broken: 0
   FireRate: 1
   BulletVelocity: 14
-  AttackRadius: 20
-  rotateSpeed: 45
+  AttackRadius: 50
+  rotateSpeed: 60
   bobHeight: 0.25
   bobVelocity: 1
   IsStunned: 0
@@ -1542,12 +1542,13 @@ MonoBehaviour:
   Player: {fileID: 0}
   stunnedMaterial: {fileID: 2100000, guid: 59db93694bfd3784fa7309992802bc1a, type: 2}
   EnemyBody: {fileID: 1169658832146374}
-  FlySpeed: 1
+  FlySpeed: 3
   PropellerNoise: {fileID: 82391458350098254}
   SuckingNoise: {fileID: 82134483224647074}
   SuckingParticles: {fileID: 198982197457432454}
   PHDefeatedSound: {fileID: 82591458912000394}
   CanSeePlayer: 0
+  SmashVelocity: 15
 --- !u!114 &114680761049461008
 MonoBehaviour:
   m_ObjectHideFlags: 1

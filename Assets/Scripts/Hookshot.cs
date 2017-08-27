@@ -95,8 +95,8 @@ public class Hookshot : MonoBehaviour
             HookShotLaserScanSound.Stop();
             LaserStartTimer = LaserStartTime * 2;
 
-            ushort pulseLength = 2000;
-            controller.device.TriggerHapticPulse(pulseLength);
+            //ushort pulseLength = 2000;
+            controller.device.TriggerHapticPulse((ushort) 2000);
             Grapple.transform.position = _grappleOrigin.transform.position;
             Grapple.transform.rotation = _grappleOrigin.transform.rotation;
 

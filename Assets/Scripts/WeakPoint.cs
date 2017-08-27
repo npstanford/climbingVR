@@ -10,8 +10,8 @@ public class WeakPoint : MonoBehaviour {
 
         if (other.gameObject.CompareTag("Grapple"))
         {
-
-            enemy.Explode();
+            if (!enemy.IsStunned) { enemy.Explode(); }
+            
         }
     }
 

@@ -4,10 +4,9 @@ using System.Collections;
 public class EnemyManager : MonoBehaviour {
 
     public enum EnemyStates { Attacking, Stunned };
-    public enum PHTypes { Red, Blue};
 
     public EnemyStates EnemyState;
-    public PHTypes PHType; 
+
     public GameController gc;
     public float StunTime;
 

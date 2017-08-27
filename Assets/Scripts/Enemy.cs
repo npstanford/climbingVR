@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour {
     public AudioSource SuckingNoise;
     public ParticleSystem SuckingParticles;
     public AudioSource PHDefeatedSound;
+    public AudioSource ExplosionSound;
 
     private bool attack;
     public bool CanSeePlayer;
@@ -41,6 +42,12 @@ public class Enemy : MonoBehaviour {
     private bool trackPlayerIsRunning = false;
     private Vector3 HomePosition; // this is where propeller heads will return to if you displace them
     private Rigidbody rb;
+
+    //for detecting when you smash them
+    private int contactIndex;
+    private Vector3[] deflectionPositions;
+    private int numDeflections = 2;
+    public float SmashVelocity;
 
     // Use this for initialization
     void Start() {
@@ -250,16 +257,22 @@ public class Enemy : MonoBehaviour {
     public void Explode()
     {
         
-        if (IsStunned) { return; }
+      
 
         StopCoroutine("Staggered"); //not sure if this line works..
         StopCoroutine("StunCoroutine");
+        ExplosionSound.Play();
 
         Transform[] children = this.transform.GetComponentsInChildren<Transform>();
         foreach (Transform child in children)
         {
-            Debug.Log(child.name);
-            if (child.CompareTag("PHHead") || child.CompareTag("PHNose") || child.CompareTag("PHPropeller") || child.CompareTag("PHWeakPoint"))
+            if (child.CompareTag("PHDestructionNoise"))
+            {
+                child.transform.parent = null;
+                break;
+            }
+            if (child.CompareTag("PHHead") || child.CompareTag("PHNose") || 
+                child.CompareTag("PHPropeller") || child.CompareTag("PHWeakPoint"))
             {
                 child.parent = null;
                 Rigidbody rbChild;
@@ -274,7 +287,8 @@ public class Enemy : MonoBehaviour {
 
                 rbChild.isKinematic = false;
                 rbChild.useGravity = true;
-                rbChild.velocity = Random.onUnitSphere * 5;
+                rbChild.velocity = Random.onUnitSphere * 15;
+                rbChild.angularVelocity = Random.onUnitSphere * 25;
 
                 InteractionAttributes ia = child.GetComponent<InteractionAttributes>();
                 if (ia!=null)
@@ -296,6 +310,13 @@ public class Enemy : MonoBehaviour {
                 }
             }
         }
+        StartCoroutine("DelayedDeath");
+        
+    }
+
+    private IEnumerator DelayedDeath()
+    {
+        yield return new WaitForSeconds(.5f);
         Destroy(this.gameObject);
     }
 
@@ -458,7 +479,18 @@ public class Enemy : MonoBehaviour {
                 }
                 */
             }
+
+            if (ia.CanClimb || ia.IsGround)
+            {
+                //Debug.Log("PH collision velocity:" + rb.velocity.magnitude);
+                if(rb.velocity.magnitude > SmashVelocity)
+                {
+                    Debug.Log("Explode the PH");
+                    Explode();
+                }
+            }
         }
+
     }
 
     /*
@@ -483,7 +515,8 @@ public class Enemy : MonoBehaviour {
     private IEnumerator Staggered(Vector3 staggerDirection)
     {
         float staggeredTime = .6f;
-
+        ExplosionSound.Play();
+        ExplosionSound.volume = .98f;
         IsStunned = true;
         SuckingParticles.Stop();
 
@@ -510,4 +543,37 @@ public class Enemy : MonoBehaviour {
         rb.useGravity = false;
         IsStunned = false;
     }
+
+    /*
+    private void OnTriggerStay(Collider other)
+    {
+        InteractionAttributes ia = other.gameObject.GetComponent<InteractionAttributes>();
+
+
+        if (ia != null && contactIndex < numDeflections)
+        {
+            if (ia.IsGround || ia.CanClimb)
+            {
+                //idea, if we swing fast enough, this bounces back toward the PH
+                //rb.velocity = (this.transform.position - other.transform.position).normalized * rb.velocity.magnitude;
+                deflectionPositions[contactIndex] = other.transform.position;
+                contactIndex += 1;
+            }
+
+            if (!(contactIndex < numDeflections))
+            {
+                Vector3 deflectionVelocity = Vector3.zero;
+                for (int i = 1; i < numDeflections; i++)
+                {
+                    deflectionVelocity += (deflectionPositions[i] - deflectionPositions[i - 1]) / Time.deltaTime;
+                }
+
+                deflectionVelocity = deflectionVelocity / (numDeflections - 1);
+
+                
+            }
+
+        }
+    }*/
+
 }

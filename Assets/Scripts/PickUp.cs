@@ -102,7 +102,7 @@ public class PickUp : MonoBehaviour {
             rb.useGravity = true;
             IsPickingUp = false;
             Vector3 force = (controller.controller.transform.localPosition - controller.prevPos) / Time.deltaTime;
-            Debug.Log("force: " + force.magnitude);
+            //Debug.Log("force: " + force.magnitude);
             float aimCoefficient = 0;
             if (force.magnitude > 10f)
             {

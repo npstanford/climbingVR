@@ -120,6 +120,14 @@ public class BulletManager : MonoBehaviour
                 }
 
 
+                
+                ControllerState cs = other.GetComponentInParent<ControllerState>();
+                if (cs!=null)
+                {
+                    cs.VibrateController((ushort) 1000);
+                }
+
+
                 rb.velocity = (deflectionVelocity.normalized + reflectionIndex*(originPosition - this.transform.position).normalized).normalized * deflectionVelocity.magnitude;
             } 
 
