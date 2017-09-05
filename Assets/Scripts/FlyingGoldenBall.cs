@@ -7,24 +7,35 @@ public class FlyingGoldenBall : MonoBehaviour {
     public GoldenBall gb;
     public float minAcceleration;
     public float maxAcceleration;
-
+    public float minTimeToChange;
+    public float maxTimeToChange;
+    public bool FlyingEnabled;
 
     private Bounds bounds;
     private Vector3 ballAcceleration;
     private Rigidbody gbRb;
+    private Transform originalParent;
 
 	// Use this for initialization
 	void Start () {
+        FlyingEnabled = true;
         Collider c = this.GetComponent<Collider>();
         bounds = c.bounds;
         gbRb = gb.GetComponent<Rigidbody>();
         ballAcceleration = NewAccelerationVector();
+        originalParent = gb.transform.parent;
+        
         StartCoroutine("AccelerationManager");
+        
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+        //tODO, better behavior is that the ball flies around the player until becomes attached
+        if (gb.transform.parent != originalParent) { GameObject.Destroy(this.gameObject); }
+
         gbRb.AddForce(ballAcceleration, ForceMode.Acceleration);
+
 	}
 
     public void OnTriggerExit(Collider other)
@@ -58,7 +69,7 @@ public class FlyingGoldenBall : MonoBehaviour {
         while (true)
         {
             ballAcceleration = NewAccelerationVector();
-            secondsTillNextAccelerationChange = Random.Range(3f, 15f);
+            secondsTillNextAccelerationChange = Random.Range(minTimeToChange, maxTimeToChange);
             yield return new WaitForSeconds(secondsTillNextAccelerationChange);
         }
 

@@ -250,7 +250,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1374356210614950}
   m_LocalRotation: {x: -0, y: -0.5868919, z: -0, w: 0.8096653}
-  m_LocalPosition: {x: -68.89029, y: 3.1, z: -105.461815}
+  m_LocalPosition: {x: -68.89029, y: 137.6, z: -105.461815}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4268238431651324}
@@ -455,7 +455,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 292d18ce0525f804091cd17ccffa0b36, type: 2}
+  - {fileID: 2100000, guid: 6ad17d8d9e0c72742bda09b3d570139e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1530,11 +1530,13 @@ MonoBehaviour:
   FireRate: 1
   BulletVelocity: 14
   AttackRadius: 50
+  ShootRadius: 20
   rotateSpeed: 60
   bobHeight: 0.25
   bobVelocity: 1
   IsStunned: 0
   StunLength: 6
+  MaxRoamingDistance: 15
   PlayerDetector: {fileID: 65547896932419540}
   MisslePrefab: {fileID: 54826560214493218, guid: 77b432a265ebe2e4cb38a5bf6da2fc56,
     type: 2}
@@ -1547,8 +1549,9 @@ MonoBehaviour:
   SuckingNoise: {fileID: 82134483224647074}
   SuckingParticles: {fileID: 198982197457432454}
   PHDefeatedSound: {fileID: 82591458912000394}
+  ExplosionSound: {fileID: 0}
   CanSeePlayer: 0
-  SmashVelocity: 15
+  SmashVelocity: 4
 --- !u!114 &114680761049461008
 MonoBehaviour:
   m_ObjectHideFlags: 1

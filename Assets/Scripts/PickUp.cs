@@ -34,15 +34,23 @@ public class PickUp : MonoBehaviour {
         }
     }
 
-    public void Grab(ControllerState controller)
+    public void Grab(ControllerState controller, bool grabAnyway=false, Rigidbody ToPickUp=null)
     {
 
-        if (controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        if (controller.device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) || grabAnyway)
         {
-            if (controller.canPickUp)
+           // Debug.Log("Attemting to grab anyway. CanPickUp: " + controller.canPickUp);
+            if (controller.canPickUp || ToPickUp!=null)
             {
                 HasPickedUp = true;
-                Rigidbody rb = controller.ObjectToPickUp;
+                Rigidbody rb;
+                if (ToPickUp != null)
+                {
+                    rb = ToPickUp;
+                } else
+                {
+                    rb = controller.ObjectToPickUp;
+                }
                 GripDepletion = GripDepletionRate * rb.mass;
                 //begin experimental coce
                 Collider[] pickUpColliders = rb.GetComponentsInChildren<Collider>();

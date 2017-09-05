@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour {
     public float FireRate;
     public float BulletVelocity;
     public float AttackRadius;
+    public float ShootRadius;
     public float rotateSpeed;
     public float bobHeight;
     public float bobVelocity;
@@ -42,6 +43,7 @@ public class Enemy : MonoBehaviour {
     private bool trackPlayerIsRunning = false;
     private Vector3 HomePosition; // this is where propeller heads will return to if you displace them
     private Rigidbody rb;
+    private Vector3 startPositionGlobal;
 
     //for detecting when you smash them
     private int contactIndex;
@@ -60,6 +62,7 @@ public class Enemy : MonoBehaviour {
         */
         StartCoroutine(trackPlayer);
         startPosition = EnemyBody.transform.localPosition;
+        startPositionGlobal = this.transform.position;
         HomePosition = transform.position;
         mrs = GetComponentsInChildren<MeshRenderer>();
         ias = GetComponentsInChildren<InteractionAttributes>();
@@ -143,9 +146,14 @@ public class Enemy : MonoBehaviour {
 
         } 
 
-        else if (PHType == Enemy.PHTypes.Blue && !IsStunned)
+
+        else if (PHType == Enemy.PHTypes.Blue && !IsStunned
+            && ((this.transform.position + transform.forward * FlySpeed * Time.deltaTime) - startPositionGlobal).magnitude < AttackRadius)
+            //)
         {
-                RaycastHit hit;
+            //Debug.Log("roaming distance: " + ((this.transform.position + transform.forward * FlySpeed * Time.deltaTime) - startPositionGlobal).magnitude);
+
+            RaycastHit hit;
                 LayerMask lm = (1 << 13); //enemy
                 lm += (1 << 2); //ignroe raycast
                 lm += (1 << 9); //body
@@ -227,16 +235,18 @@ public class Enemy : MonoBehaviour {
 
             if (attack && !IsStunned && CanSeePlayer)
             {
-                SuckingNoise.Play();
-                SuckingParticles.Play();
-                yield return new WaitForSeconds(SuckingNoise.clip.length + .1f);
-                SuckingParticles.Stop();
-                if (attack && !IsStunned && CanSeePlayer)
+                if ((Player.transform.position - this.transform.position).magnitude < ShootRadius)
                 {
-                    Rigidbody bullet = Instantiate(MisslePrefab, MissleOrigin.transform.position, Quaternion.identity) as Rigidbody;
-                    bullet.velocity = transform.forward * BulletVelocity;
+                    SuckingNoise.Play();
+                    SuckingParticles.Play();
+                    yield return new WaitForSeconds(SuckingNoise.clip.length + .1f);
+                    SuckingParticles.Stop();
+                    if (attack && !IsStunned && CanSeePlayer)
+                    {
+                        Rigidbody bullet = Instantiate(MisslePrefab, MissleOrigin.transform.position, Quaternion.identity) as Rigidbody;
+                        bullet.velocity = transform.forward * BulletVelocity;
+                    }
                 }
-
             }
             float timeToNextShot = Random.value;
             timeToNextShot = timeToNextShot * FireRate + FireRate * 0.5f;
@@ -515,8 +525,8 @@ public class Enemy : MonoBehaviour {
     private IEnumerator Staggered(Vector3 staggerDirection)
     {
         float staggeredTime = .6f;
-        ExplosionSound.Play();
-        ExplosionSound.volume = .98f;
+        //ExplosionSound.Play();
+        //ExplosionSound.volume = .98f;
         IsStunned = true;
         SuckingParticles.Stop();
 

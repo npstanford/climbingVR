@@ -18,12 +18,14 @@ public class GrappleCollider : MonoBehaviour
     private float GrappleSpeed;
     private LineRenderer lr;
     private Rigidbody ItemToReelIn;
+    private PickUp pu;
    
     IEnumerator coroutineShoot;
 
     // Use this for initialization
     void Start()
     {
+        pu = FindObjectOfType<InputManager>().pu;
     }
 
     // Update is called once per frame
@@ -68,6 +70,12 @@ public class GrappleCollider : MonoBehaviour
             else
             {
                 RicochetSound.Play();
+                /*
+                StopCoroutine(coroutineShoot);
+                IEnumerator coroutineUnShoot;
+                coroutineUnShoot = UnShootGrapple(controller);
+                StartCoroutine(coroutineUnShoot);
+                */
             }
         }
     }
@@ -104,7 +112,7 @@ public class GrappleCollider : MonoBehaviour
         lr.SetPosition(1, this.transform.position);
         Vector3 shootDirection = (grappleTarget.transform.position - this.transform.position).normalized;
 
-
+        /*
         //this code shoots and pretty much guarantees that the grapple hits the object, if the object is stationary
         while (elapsedTime < totalTime)
         {
@@ -134,11 +142,17 @@ public class GrappleCollider : MonoBehaviour
             lr.SetPosition(0, controller.controller.transform.position);
             yield return null;
         }
+        */
+        /*
+        IEnumerator coroutineUnShoot;
+        coroutineUnShoot = UnShootGrapple(controller);
+        StartCoroutine(coroutineUnShoot);
+        */
 
-
+        /*
         Vector3 returnDirection;
 
-        while ((this.transform.position - controller.controller.transform.position).magnitude > .2 )
+        while ((this.transform.position - controller.controller.transform.position).magnitude > .1 )
         {
             if (!ShootingSound.isPlaying)
             {
@@ -153,8 +167,8 @@ public class GrappleCollider : MonoBehaviour
             yield return null;
 
         }
-        
-        /*
+        */
+
         while (elapsedTime < totalTime)
         {
             if (!ShootingSound.isPlaying)
@@ -168,6 +182,7 @@ public class GrappleCollider : MonoBehaviour
 
             yield return null;
         }
+
 
         elapsedTime = 0.0f;
 
@@ -183,7 +198,65 @@ public class GrappleCollider : MonoBehaviour
             lr.SetPosition(1, this.transform.position);
             yield return null;
         }
-        */
+
+        this.transform.position = controller.controller.transform.position;
+
+        ShootingSound.Stop();
+
+        HideGrapple();
+        lr.enabled = false; //fyi, should refactor this into Hide Grapple
+
+        //Destroy(grappleTarget);
+        HookshotFired = false;
+        _GripTool.ShowHook();
+
+        if (ItemToReelIn)
+        {
+            
+            ItemToReelIn.velocity = Vector3.zero;
+            ItemToReelIn.useGravity = true;
+            ItemToReelIn.transform.parent = null;
+
+            if (controller.device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+            {
+                //Debug.Log("Attempting zipshot grab");
+                //float displacement = ItemToReelIn.GetComponent<Collider>().bounds.extents.z;
+                ItemToReelIn.transform.position = controller.controller.transform.position + controller.controller.transform.forward * .3f;
+                pu.Grab(controller, true, ItemToReelIn);
+            }
+
+            
+            
+
+            ItemToReelIn = null;
+        }
+
+
+
+    }
+
+    /*
+    IEnumerator UnShootGrapple(ControllerState controller)
+    {
+
+        Vector3 returnDirection;
+
+        while ((this.transform.position - controller.controller.transform.position).magnitude > .1)
+        {
+            if (!ShootingSound.isPlaying)
+            {
+                ShootingSound.Play();
+            }
+
+            returnDirection = (controller.controller.transform.position - this.transform.position).normalized;
+
+            this.transform.position += returnDirection * GrappleSpeed * Time.deltaTime;
+
+            lr.SetPosition(1, this.transform.position);
+            yield return null;
+
+        }
+
         ShootingSound.Stop();
 
         HideGrapple();
@@ -202,9 +275,7 @@ public class GrappleCollider : MonoBehaviour
         }
 
     }
-
-
-
+    */
 
     IEnumerator ReelInPlayer(ControllerState controller)
     {

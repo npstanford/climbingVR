@@ -311,7 +311,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1657719562575734}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -47.65, y: 3.1, z: -105.69}
+  m_LocalPosition: {x: -116.7, y: 111.7, z: -105.69}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4605116652258896}
@@ -1640,11 +1640,13 @@ MonoBehaviour:
   FireRate: 1
   BulletVelocity: 14
   AttackRadius: 20
+  ShootRadius: 20
   rotateSpeed: 45
   bobHeight: 0.25
   bobVelocity: 1
   IsStunned: 0
   StunLength: 6
+  MaxRoamingDistance: 0
   PlayerDetector: {fileID: 65164313651161284}
   MisslePrefab: {fileID: 54826560214493218, guid: 77b432a265ebe2e4cb38a5bf6da2fc56,
     type: 2}
